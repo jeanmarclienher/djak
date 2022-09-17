@@ -1,0 +1,15 @@
+
+class Amember {
+constructor Amember new(in int kind, in int type, 
+	in Atoken type_id, in Atoken name)
+{
+	return this;
+}
+
+method void dispose()
+{
+	return;
+}
+
+}
+

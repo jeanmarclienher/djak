@@ -1,0 +1,196 @@
+class Aclass {
+field Atoken tok;
+field Aclass next;
+field Aterm children;
+field Aterm current;
+field Aterm parenthesis;
+field int operation;
+
+field int prep_kind;
+field int prep_type;
+field Atoken prep_type_id;
+field Atoken prep_name;
+field hash members;
+field Amember member;
+
+const int Cstatic := 2;
+const int Cfield := 3;
+const int Cconst := 4;
+const int Cint	:= 5;
+const int Cchar := 6;
+const int Cvoid := 7;
+const int Cconstructor := 8;
+const int Cfunction := 9;
+const int Cmethod := 10;
+const int Cvirtual := 11;
+const int Cidentifier := 12;
+
+constructor Aclass new(in Atoken token)
+{
+	tok := token;
+	next := null;
+	members := hash.new(256);
+	return this;
+}
+
+method void dispose()
+{
+	// FIXME free children and data
+	members.dispose();
+	std.free(this);
+	return;
+}
+
+method void set_next(in Aclass n)
+{
+	next := n;
+	return;
+}
+
+method Aclass get_next()
+{
+	var response res;
+	res := response.new(object.$CAclass, this);
+
+	members.each(res);
+	res.dispose();	
+	return next;
+}
+
+method void each(in response res)
+{
+	console.log(res.get_string());
+	return;
+}
+
+method Atoken get_name()
+{
+	return tok;
+}
+
+method Aterm get_child()
+{
+	return children;
+}
+
+method void set_child(in Aterm child)
+{
+	children := child;
+	return;
+}
+
+method void pad(in int p)
+{
+	while (p > 0) {
+		p := p - 1;
+		console.log_str("\t");
+	}
+	return;
+}
+
+method void prepare_kind(in int kind_)
+{
+	prep_kind := kind_;
+	return;
+}
+
+
+method void prepare_type(in int type_)
+{
+	prep_type := type_;
+	return;
+}
+
+method void prepare_type_identifier(in Atoken id_)
+{	prep_type := Aclass.$Cidentifier;
+	prep_type_id := id_;
+	return;
+}
+
+method void prepare_set_name(in Atoken id_)
+{
+	prep_name := id_;
+	return;
+}
+
+method void valid_member_name()
+{
+	if (prep_kind == Aclass.$Cfield) {
+
+	} else if (prep_kind == Aclass.$Cstatic) {
+	} else {
+
+	}
+	member := Amember.new(prep_kind, prep_type, prep_type_id, prep_name);
+	members.add(prep_name.get_data(), member);
+	return;
+}
+
+
+method void finish_const(in Atoken initialiser_)
+{
+	return;
+}
+
+
+method void finish_subroutine()
+{
+	return;
+}
+
+method void finish_param()
+{
+	return;
+}
+
+method void start_param_list()
+{
+	return;
+}
+
+
+method void dump(in int depth)
+{
+	var string s;
+	if (this == null) {
+		return;
+	}
+	if (tok != null) {
+		s := tok.get_data();
+	} else {
+		s := "";
+	}
+	pad(depth);
+	console.log_int(this);
+	console.log_str(" ");
+	console.log(s);
+	pad(depth);
+	console.log("C");
+	if (children != null) {
+		children.dump(depth + 1);
+	}
+	return;
+}
+/*
+method void gen(in int depth, io string out_, io Aemmit emmi_)
+{
+	var string s;
+	if (this == null) {
+		return;
+	}
+	if (tok != null) {
+		s := tok.get_data();
+	} else {
+		s := "";
+	}
+	pad(depth);
+	console.log(s);
+	if (children != null) {
+		children.gen(depth + 1, out_, emmi_);
+	}
+	return;
+}
+*/
+
+
+} // class

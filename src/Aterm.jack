@@ -1,0 +1,198 @@
+class Aterm {
+field Atoken tok;
+field Aterm next;
+field Aterm children;
+field Aterm par;
+field int type;
+
+const int Cterminal 	:= 1;
+const int Cany 		:= 10;
+const int Cmaybe 	:= 100;
+const int Cor 		:= 1000;
+const int Cclosed 	:= 10000;
+const int Cparenthesis 	:= 100000;
+
+constructor Aterm new(in Atoken token, in Aterm parent)
+{
+	tok := token;
+	next := null;
+	children := null;
+	par := parent;
+	type := 0;
+	return this;
+}
+
+method void dispose()
+{
+	// FIXME free children and data
+	std.free(this);
+	return;
+}
+
+
+method int isset(in int flag_)
+{
+	var int p;
+	p := (type / (flag_ * 10)) * (flag_ * 10);
+	p := type - p;
+	if (p >= flag_) {
+		return 1;
+	}	
+	return 0;
+}
+
+method Aterm get_parent()
+{
+	return par;
+}
+
+method void set_parent(in Aterm parent_)
+{
+	par := parent_;
+	return;
+}
+
+method Atoken get_token()
+{
+	return tok;
+}
+
+method void set_next(in Aterm n)
+{
+	next := n;
+	return;
+}
+
+method void set_type(in int type_)
+{
+	type := type + type_;
+	return;
+}
+
+method void unset_type(in int type_)
+{
+	type := type - type_;
+	return;
+}
+
+method Aterm close_parenthesis()
+{
+	var Aterm p;
+	p := par;
+
+	while ((p != null) && (p.isset(Aterm.$Cparenthesis) == 0)) {
+		p := p.get_parent();
+	}
+	if (p != null) {
+		p.unset_type(Aterm.$Cparenthesis);
+		p.set_type(Aterm.$Cclosed);
+	}
+
+	return p;
+}
+
+method Aterm get_next()
+{
+	return next;
+}
+
+method Aterm get_child()
+{
+	return children;
+}
+
+method void set_child(in Aterm child)
+{
+	children := child;
+	return;
+}
+
+method void pad(in int p)
+{
+	while (p > 0) {
+		p := p - 1;
+		console.log_str("\t");
+	}
+	return;
+}
+
+method void dump(in int depth)
+{
+	var string s;
+	if (this == null) {
+		return;
+	}
+	if (tok != null) {
+		s := tok.get_data();
+	} else {
+		s := "";
+	}
+	pad(depth);
+	console.log_int(this);
+	console.log_str(" ");
+	if (isset(Aterm.$Cor)) {
+		console.log_str(" | ");
+	}
+	if (isset(Aterm.$Cany)) {
+		console.log_str(" * ");
+	}
+	if (isset(Aterm.$Cmaybe)) {
+		console.log_str(" ? ");
+	}
+	console.log(s);
+	if (children != null) {
+		pad(depth);
+		console.log("C");
+		children.dump(depth + 1);
+	}
+	if (next != null) {
+		pad(depth);
+		console.log("N");
+		next.dump(depth);
+	}
+
+	return;
+}
+
+
+method void gen_func(in int depth, io string out_, in token prod_, in int or)
+{
+	var string s;
+	if (this == null) {
+		return;
+	}
+	if (tok != null) {
+		s := tok.get_data();
+	} else {
+		s := "-----";
+	}
+	if (isset(Aterm.$Cany)) {
+		console.log_str(" * ");
+	}
+	if (isset(Aterm.$Cmaybe)) {
+		console.log_str(" ? ");
+	}
+	console.log(s);
+	if (children != null) {
+		children.gen_func(depth + 1, out_, prod_, 0);
+	} else {
+		if ((isset(Aterm.$Cor) != 0) || (or != 0)) {
+			out_.add("\tif (r == 0) { r := ");
+			out_.add(s);
+			out_.add("(); }\n");
+			or := 1;
+		} else {
+			or := 0;
+			out_.add("\t");
+			out_.add(s);
+			out_.add("();\n");
+		}
+	}
+
+	if (next != null) {
+		next.gen_func(depth, out_, prod_, or);
+	}
+	return;
+}
+
+} // class

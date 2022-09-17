@@ -1,0 +1,83 @@
+
+class Aemmiter {
+field string _data;
+field Aclass clas;
+field string class_name;
+field buffer _proc;
+field buffer _stk;
+field Atoken token1;
+field Atoken token2;
+
+constructor Aemmiter new()
+{
+	_proc := buffer.new(100);
+	_stk := buffer.new(100);
+	_data := string.new(1024);
+	token1 := null;
+	token2 := null;
+	return this;
+}
+
+method void dispose()
+{
+	_proc.dispose();
+	_stk.dispose();
+	_data.dispose();
+	std.free(this);
+	return;
+}
+
+method int emmit(in Aparser par)
+{
+	clas := par.get_next();
+	while (clas != null) {
+		gen_class();
+		clas := clas.get_next();
+	}
+	console.log(_data);
+	return 1;
+}
+
+method void gen_class()
+{
+        var Atoken to;
+       	to := clas.get_name();
+       	class_name := to.get_data();
+	_data.add("// class ");
+       	_data.add(class_name);
+	_data.add("\n");
+	return;
+}
+
+method void error(in string e)
+{
+	console.log(e);
+	dump();
+	std.exit(-1);
+	return;
+}
+	
+method void dump()
+{
+/*
+	var linked c;
+	var Atoken to;
+	var string s;
+	var int l;
+	l := _proc.length();
+
+	while (l > 0) {
+		l := l - 1;
+		c := _proc.get_at(l);
+		to := c.get_data1();
+		s := to.get_data();
+		if (s != null) {
+			console.log_int(c.get_flags());
+			console.log(s);
+		}
+	}
+*/
+	return;
+}
+
+} // class

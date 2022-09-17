@@ -1,0 +1,58 @@
+/* CLASSSSSS */
+class main {
+field int f1;
+static char s1;
+static main self;
+const int Cconstant1 := 10;
+const string Cconstant2 := "jml";
+
+constructor main new(in int b, out int c)
+{
+	return this;
+}
+
+method int test1()
+{
+	var int letit;
+	letit := 0;
+	lets[9%+-+-i] := 0; 
+	while (1) {
+		x();
+		break;
+	}
+	cls.callll(9,4);
+	v(i,9);
+	w();
+	return;
+	return mix.tricks("one", 9);
+	return v;
+	return main.$Constant1;
+	return v(1, 2 ,3);
+	return "hello";
+	return 'A';
+	return arr[1891];
+	return 2 + 3 % 4 - -56 / (10 * 4);
+}
+
+virtual string to_string()
+{
+	if (1 != 2 && !(8 * 2 == 1 + 9 || (6 >= 7)) 
+		&& 8 <= 7 && 9 < 10 && !(10 > 8)) 
+	{
+		yes();
+	} else if (3 > 8) {
+		maybe();
+	} else {
+		no();
+	}
+
+	return "hello";
+}
+
+function void main()
+{
+	console.log("Hello World!");
+	return;
+}
+
+} // end of class

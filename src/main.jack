@@ -1,0 +1,128 @@
+
+class main {
+	function void main()
+	{
+/*
+		var string hello;
+		var response resp;
+		var file fd;
+		var bytes tmp;
+		var array args;
+		var int i;
+
+		hello := string.new(1);
+		hello.set(" hello ");
+		console.log_int(std.size(hello));
+		console.log_str(hello);
+		console.log_int(std.size("IIi"));
+		console.log("GO");
+
+		resp := response.new(0, null);
+		fd := file.new("./", resp);
+		fd.mkfolder();
+		console.log_int(resp.get_status());
+		hello := resp.get_string();
+		console.log(hello);	
+		fd.mkdir("yo1");
+		hello := resp.get_string();
+		console.log(hello);	
+	
+		console.log("jjjjj");
+		fd.read("AUTHORS.txt", 0, -1);
+		tmp := resp.get_bytes();
+		i := tmp.get_size();
+
+		console.log("JML");
+		while (i > 0) {
+			i := i - 1;
+			hello.add_char(tmp.get_at(i));
+		}
+		console.log(hello);
+
+		resp := response.new(0, null);
+		fd := file.new("./", resp);
+		fd.write("bob.txt", tmp, -1, tmp.get_size() - 50);
+		if (resp.get_status() == 200) {
+			console.log_int(tmp.get_size());
+			console.log("BOB");
+			fd.filesize("AUTHORS.txt");	
+			console.log(resp.get_string());
+			console.log("iioio::");
+			hello := resp.get_string();
+			console.log_int(hello.to_int());
+		} else {
+			hello := resp.get_string();
+			console.log(hello);	
+		}
+		fd.unlink("bob.txt");
+		console.log(resp.get_string());
+		
+		fd.scandir("../");
+		console.log(resp.get_string());
+		
+		args := std.get_args();
+		i := 0;
+		while (args[i] != 0) {
+			console.log(args[i]);
+			i := i + 1;
+		}
+		hello.set("0123456789");
+		tmp := hello.substr(3, 0);
+		console.log(tmp);
+*/
+		var string str;
+		var string tmp;
+		var array args;
+		var file fd;
+		var response res;
+		var bytes data;
+		var int n;
+		var int i;
+		var int off;
+		var Alexer lex;
+		var Aparser par;
+		var Aemmiter emi;
+
+		args := std.get_args();
+		n := args.get_size();
+		if (n != 2) {
+			console.log("wrong number of command line arguments");
+			std.exit(-1);
+		}
+		str := args[1];
+		console.log(str);
+
+		res := response.new(0, null);
+		fd := file.new("", res);
+		fd.read(str, 0, 10);
+		off := 0;
+		tmp := string.new(100);
+		lex := Alexer.new();
+		par := Aparser.new();
+		emi := Aemmiter.new();
+		while (res.get_status() == 200) {
+			data := res.get_bytes();
+			n := data.get_size();
+			i := 0;
+			while (i < n) {
+				tmp.add_char(data.get_at(i));
+				i := i + 1;
+			}
+			lex.add(tmp);
+			//console.log_str(tmp);
+			tmp.set("");
+			off := off + 10;
+			fd.read(str, off, 10);
+		}
+		lex.add("");
+		par.parse(lex);	
+		emi.emmit(par);
+		console.log(par.get_data());		
+		data := bytes.new(4);
+		data.set_at(0, 'X');
+		//fd.write(str, data, 1, 1);
+		fd.dispose();
+		res.dispose();
+		return;
+	}
+}
