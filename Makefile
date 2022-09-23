@@ -4,7 +4,7 @@ all:
 #	rm -rf zdjk_src/lib
 #	cp -r newlib zdjk_src/lib
 	./zjc src
-	gcc -m64 -ggdb -Wall -o zdjk src.c -lX11 -lGL -lGLU 
+	gcc -m64 -ggdb -Wall -o djak src.c -lX11 -lGL -lGLU 
 
 mac:
 #	scp jml@192.168.43.93:src/jack/jackc.c .
@@ -48,8 +48,8 @@ clean:
 	rm -f test.xml testo.xml
 	rm -f tests.py
 	rm -f tests.c
-	rm -f zdjk zdjk_src.c
-	rm -f zjc 
+	rm -f zdjk zdjk_src.c djak
+	rm -f zjc src.c 
 	rm -rf exe/lib
 	rm -rf ctests/lib
 	rm -rf tests/lib

@@ -1,0 +1,18 @@
+class main {
+function void main()
+{
+	while (1 == 1) {
+		if (1 == 1) {
+			break;
+		} else if (2 == 2) {
+			break;
+		}
+		if (9 == 9) {
+			break;
+		}
+		a := 1;
+	}
+	do();
+	return;
+}
+}

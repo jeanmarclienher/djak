@@ -1,10 +1,6 @@
 class Aclass {
 field Atoken tok;
 field Aclass next;
-field Aterm children;
-field Aterm current;
-field Aterm parenthesis;
-field int operation;
 
 field int prep_kind;
 field int prep_type;
@@ -12,6 +8,14 @@ field Atoken prep_type_id;
 field Atoken prep_name;
 field hash members;
 field Amember member;
+field int field_index;
+
+field Astatement statement;
+field buffer stm_stack;
+
+field Aexpr expression;
+field Aexpr cur_expr;
+field string expr_id;
 
 const int Cstatic := 2;
 const int Cfield := 3;
@@ -24,12 +28,52 @@ const int Cfunction := 9;
 const int Cmethod := 10;
 const int Cvirtual := 11;
 const int Cidentifier := 12;
+const int Cin := 13;
+const int Cout := 14;
+const int Cio := 15;
+const int Cvar := 16;
+const int Cbreak := 17;
+const int Cif := 18;
+const int Cwhile := 19;
+const int Creturn := 20;
+const int Cdo := 21;
+const int Clet := 22;
+const int Celse := 23;
+const int Celseif := 24;
+const int Cthis := 25;
+const int Cnull := 26;
+
+const int Croot := 1000;
+const int Cequal := 1026;
+const int Cnotequal := 1027;
+const int Clargerequal := 1028;
+const int Clesserequal := 1029;
+const int Clarger := 1030;
+const int Clesser := 1031;
+const int Clogicaland := 1032;
+const int Clogicalor := 1033;
+const int Cadd := 1034;
+const int Csub := 1035;
+const int Cmult := 1036;
+const int Cdiv := 1037;
+const int Cmodulo := 1038;
+const int Clogicalnot := 1039;
+const int Cparenthesis := 1040;
+const int Cunaryplus := 1041;
+const int Cunaryminus := 1042;
+
+const int Clr := 1;
+const int Crl := 2;
 
 constructor Aclass new(in Atoken token)
 {
 	tok := token;
 	next := null;
 	members := hash.new(256);
+	field_index := -1;
+	statement := null;
+	stm_stack := buffer.new(2);
+	expression := null;
 	return this;
 }
 
@@ -49,12 +93,13 @@ method void set_next(in Aclass n)
 
 method Aclass get_next()
 {
-	var response res;
-	res := response.new(object.$CAclass, this);
-
-	members.each(res);
-	res.dispose();	
 	return next;
+}
+
+method void foreach_members(in response res)
+{
+	members.foreach(res);
+	return;
 }
 
 method void each(in response res)
@@ -66,17 +111,6 @@ method void each(in response res)
 method Atoken get_name()
 {
 	return tok;
-}
-
-method Aterm get_child()
-{
-	return children;
-}
-
-method void set_child(in Aterm child)
-{
-	children := child;
-	return;
 }
 
 method void pad(in int p)
@@ -91,6 +125,9 @@ method void pad(in int p)
 method void prepare_kind(in int kind_)
 {
 	prep_kind := kind_;
+	prep_type := 0;
+	prep_type_id := null;
+	prep_name := null;
 	return;
 }
 
@@ -115,82 +152,222 @@ method void prepare_set_name(in Atoken id_)
 
 method void valid_member_name()
 {
+	member := Amember.new(prep_kind, prep_type, prep_type_id, prep_name);
 	if (prep_kind == Aclass.$Cfield) {
-
+		field_index := field_index + 1;
+		member.set_index(field_index);
 	} else if (prep_kind == Aclass.$Cstatic) {
+	} else if (prep_kind == Aclass.$Cconst) {
 	} else {
 
 	}
-	member := Amember.new(prep_kind, prep_type, prep_type_id, prep_name);
 	members.add(prep_name.get_data(), member);
+	return;
+}
+
+method void valid_param()
+{
+	member.add_param(prep_kind, prep_type, prep_type_id, prep_name);
+	return;
+}
+
+method void valid_var()
+{
+	member.add_var(prep_kind, prep_type, prep_type_id, prep_name);
+	return;
+}
+
+method void begin_else(in int type_)
+{
+	statement.add_else(type_);
+	return;
+}
+
+method void begin_stm(in int type_)
+{
+	var Astatement st;
+	stm_stack.push(statement);
+	st := Astatement.new(type_, statement, stm_stack.length());
+	if (statement == null) {
+		member.add_statement(st);
+	} else {
+		statement.add_statement(st);
+	}
+	statement := st;
+	return;
+}
+
+method void finish_stm()
+{
+	statement := stm_stack.pop();
 	return;
 }
 
 
 method void finish_const(in Atoken initialiser_)
 {
+	valid_member_name();
+	member.set_initial_value(initialiser_);
 	return;
 }
 
 
 method void finish_subroutine()
 {
-	return;
-}
-
-method void finish_param()
-{
-	return;
-}
-
-method void start_param_list()
-{
-	return;
-}
-
-
-method void dump(in int depth)
-{
-	var string s;
-	if (this == null) {
-		return;
+	while (stm_stack.length() > 0) {
+		stm_stack.pop();
 	}
-	if (tok != null) {
-		s := tok.get_data();
+	return;
+}
+
+method void begin_expr()
+{
+	expression := Aexpr.new(Aclass.$Croot, 0, 0);
+	cur_expr := expression;
+	return;
+}
+
+method void finish_expr()
+{
+	if (expression != null) {
+	//	expression.dump(0);
+		statement.set_expression(expression);
+	}
+	expression := null;
+	cur_expr := null;
+	return;
+}
+
+method void expr_op(in int op_)
+{
+	var Aexpr ex;
+	ex := null;
+	if (op_ == Aclass.$Croot) {
+	} else if (op_ == Aclass.$Cequal) {
+		ex := Aexpr.new(op_, 100, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cnotequal) {
+		ex := Aexpr.new(op_, 100, Aclass.$Crl);
+ 	} else if (op_ == Aclass.$Clargerequal) {
+		ex := Aexpr.new(op_, 110, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clesserequal) {
+		ex := Aexpr.new(op_, 110, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clarger) {
+		ex := Aexpr.new(op_, 110, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clesser) {
+		ex := Aexpr.new(op_, 110, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clogicaland) {
+		ex := Aexpr.new(op_, 60, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clogicalor) {
+		ex := Aexpr.new(op_, 50, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cadd) {
+		ex := Aexpr.new(op_, 130, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Csub) {
+		ex := Aexpr.new(op_, 130, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cmult) {
+		ex := Aexpr.new(op_, 140, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cdiv) {
+		ex := Aexpr.new(op_, 140, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cmodulo) {
+		ex := Aexpr.new(op_, 140, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Clogicalnot) {
+		ex := Aexpr.new(op_, 160, Aclass.$Crl);
+ 	} else if (op_ == Aclass.$Cunaryplus) {
+		ex := Aexpr.new(op_, 160, Aclass.$Crl);
+ 	} else if (op_ == Aclass.$Cunaryminus) {
+		ex := Aexpr.new(op_, 160, Aclass.$Crl);
 	} else {
-		s := "";
+		console.log("Unknown operator.");
+		std.exit(-1);
 	}
-	pad(depth);
-	console.log_int(this);
-	console.log_str(" ");
-	console.log(s);
-	pad(depth);
-	console.log("C");
-	if (children != null) {
-		children.dump(depth + 1);
+	if (ex != null) {
+		cur_expr := cur_expr.add(ex);
 	}
 	return;
 }
-/*
-method void gen(in int depth, io string out_, io Aemmit emmi_)
+
+method void expr_open_par()
 {
-	var string s;
-	if (this == null) {
-		return;
-	}
-	if (tok != null) {
-		s := tok.get_data();
-	} else {
-		s := "";
-	}
-	pad(depth);
-	console.log(s);
-	if (children != null) {
-		children.gen(depth + 1, out_, emmi_);
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cparenthesis, 1000, Aclass.$Clr);
+	cur_expr := cur_expr.add(ex);
+	ex.set_precedence(1);
+	return;
+}
+
+method void expr_close_par()
+{
+	return;
+}
+
+method void expr_open_index(in string id_)
+{
+	expr_id := id_;
+	return;
+}
+
+method void expr_begin_sub_call(in string class_, in string name_)
+{
+	return;
+}
+
+method void expr_next_expr()
+{
+	return;
+}
+
+method void expr_finish_sub_call()
+{
+	return;
+}
+
+method void expr_close_index()
+{
+	return;
+}
+
+
+method void expr_term(in int term_)
+{
+ 	if (term_ == Aclass.$Cnull) {
+ 	} else if (term_ == Aclass.$Cthis) {
 	}
 	return;
 }
-*/
+
+
+method void expr_constant(in string class_name_, in string const_name_)
+{
+	return;
+}
+
+method void expr_var(in string name_)
+{
+
+	return;
+}
+
+method void expr_char_const(in string value_)
+{
+
+	return;
+}
+
+method void expr_str_const(in string value_)
+{
+
+	return;
+}
+
+method void expr_int_const(in string value_)
+{
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cint, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	//ex.set_precedence(1);
+	ex.set_value(value_);
+	return;
+}
+
 
 
 } // class

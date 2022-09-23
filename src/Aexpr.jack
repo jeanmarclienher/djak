@@ -1,0 +1,171 @@
+
+class Aexpr {
+field int op;
+field int prec;
+field int asso;
+field Aexpr left;
+field Aexpr right;
+field Aexpr parent;
+field string value;
+field int flags;
+
+constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
+{
+	op := op_;
+	prec := precedence_;
+	asso := associativity_;
+	parent := null;
+	left := null;
+	right := null;
+	value := null;
+	flags := 0;
+	return this;
+}
+
+method void dispose()
+{
+	return;
+}
+
+method Aexpr get_right()
+{
+	return right;
+}
+
+method void set_right(in Aexpr r)
+{
+	right := r;
+	return;
+}
+
+
+method Aexpr get_left()
+{
+	return left;
+}
+
+method void set_left(in Aexpr l)
+{
+	left := l;
+	return;
+}
+
+method Aexpr get_parent()
+
+{
+	return parent;
+}
+
+method void set_parent(in Aexpr p)
+{
+	parent := p;
+	return;
+}
+
+
+method string get_value()
+{
+	return value;
+}
+
+method void set_value(in string v)
+{
+	value := v;
+	return;
+}
+
+method string get_op()
+{
+	return op;
+}
+
+method int get_flags()
+{
+	return flags;
+}
+
+method void set_flags(in int flags_)
+{
+	flags := flags_;
+	return;
+}
+
+method void set_precedence(in int p) {
+	prec := p;
+	return;
+}
+
+method void get_precedence() {
+	return prec;
+}
+
+method void get_associativity() {
+	return asso;
+}
+
+
+method Aexpr add(in Aexpr ex)
+{
+	var int pre;
+	var int ass;
+	var Aexpr cur;
+	var Aexpr ri;
+	var Aexpr le;
+	var Aexpr par;
+	var Aexpr child;
+	var int p;
+	pre := ex.get_precedence();
+	ass := ex.get_associativity();
+	cur := this;
+	par := cur.get_parent();
+	child := null;
+	while (par != null) {
+		p := cur.get_precedence();
+		if (p > pre) {
+			child := cur;
+			cur := par;
+			par := cur.get_parent();
+		} else {
+			if ((p == pre) && (ass == Aclass.$Clr)) {
+				child := cur;
+				cur := par;
+				par := cur.get_parent();
+			} else {
+				par := null;
+			}
+		}
+	}
+	ex.set_parent(cur);
+	ri := cur.get_right();
+	if (ri == child) {
+		if (ri != null) {
+			ex.set_left(ri);
+			ri.set_parent(ex);
+		}
+		cur.set_right(ex);
+	} else {
+		le := cur.get_left();
+		if (le != null) {
+			ex.set_left(le);
+			le.set_parent(ex);
+		}
+		cur.set_left(ex);
+	}
+	return ex;
+}
+
+method void dump(in int depth)
+{
+	if (left != null) {
+		left.dump(depth + 1);
+	}
+	console.log_int(op);
+	console.log("");
+	if (right != null) {
+		right.dump(depth + 1);
+	}
+	return;
+}
+
+} // class
+

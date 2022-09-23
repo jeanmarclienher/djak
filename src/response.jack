@@ -68,9 +68,13 @@ method array get_bytes()
 method void validate()
 {
 	var Aclass aclass;
+	var Aemmiter aemmiter;
 	if (typ == object.$CAclass) {
 		aclass := instan;
 		aclass.each(this);
+	} else if (typ == object.$CAemmiter) {
+		aemmiter:= instan;
+		aemmiter.each(this);
 	}
 	return;
 }

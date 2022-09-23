@@ -119,7 +119,7 @@ method array get(in string key)
 	return null;
 }
 
-method void each(in response res)
+method void foreach(in response res)
 {
 	var array next;
 	var int i;

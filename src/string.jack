@@ -1,12 +1,14 @@
 class string {
 field array _str;
 field int size;
+field array owner;
 
 constructor string new(in int alloc)
 {
 	_str := array.new(alloc + 1);
 	_str[0] := '\0';
 	size := alloc;
+	owner := null;
 	return this;
 }
 
@@ -15,6 +17,20 @@ method void dispose()
 	_str.dispose();
 	std.free(this);
 	return;
+}
+
+method void drop(in array owner_)
+{
+	if (owner == owner_) {
+		dispose();
+	}
+	return;
+}
+
+method string move(in array owner_)
+{
+	owner := owner_;
+	return this;
 }
 
 method array get_buf()

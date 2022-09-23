@@ -37,6 +37,18 @@ method int length()
 	return pos;
 }
 
+method void foreach(in response res)
+{
+        var int i;
+        i := 0;
+        while (i < pos) {
+                res.set_bytes(200, _arr[i]);
+                res.validate();
+                i := i + 1;
+        }
+        return;
+}
+
 method int empty()
 {
 	if (pos > 0) {
