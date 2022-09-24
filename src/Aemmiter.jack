@@ -146,6 +146,141 @@ method void pad(in int depth)
 	return;
 }
 
+method void expr_gen_call(in Aexpr expr)
+{
+	var Aexpr ex1;
+	var Aexpr ex2;
+	var string s;
+	s := string.new(8);
+	ex2 := _expr_stk.pop();
+	ex1 := _expr_stk.pop();
+	s.add(ex1.get_value());
+	s.add("(");
+	s.add(ex2.get_value());
+	s.add(")");
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen_sub_expr(in Aexpr expr)
+{
+	var string s;
+	if (expr.get_right() == null) {
+		s := string.new(8);
+		expr.set_value(s);
+		_expr_stk.push(expr);
+	}
+	return;
+}
+
+method void expr_gen_comma(in Aexpr expr)
+{
+	var Aexpr ex1;
+	var Aexpr ex2;
+	var string s;
+	ex2 := _expr_stk.pop();
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add(ex1.get_value());
+	s.add(",");
+	s.add(ex2.get_value());
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen_index(in Aexpr expr)
+{
+	var Aexpr ex1;
+	var Aexpr ex2;
+	var string s;
+	ex2 := _expr_stk.pop();
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add(ex1.get_value());
+	s.add("[");
+	s.add(ex2.get_value());
+	s.add("]");
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen_par(in Aexpr expr)
+{
+	var Aexpr ex1;
+	var string s;
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add("(");
+	s.add(ex1.get_value());
+	s.add(")");
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+
+
+method void expr_gen_dot(in Aexpr expr)
+{
+	var Aexpr ex1;
+	var Aexpr ex2;
+	var string s;
+	ex2 := _expr_stk.pop();
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add(ex1.get_value());
+	s.add(".");
+	s.add(ex2.get_value());
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen0(in Aexpr expr, in string op)
+{
+	var string s;
+	s := string.new(8);
+	s.add(op);
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen1(in Aexpr expr, in string op)
+{
+	var Aexpr ex1;
+	var string s;
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add(op);
+	s.add("(");
+	s.add(ex1.get_value());
+	s.add(")");
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen_assign(in Aexpr expr, in string op)
+{
+	var Aexpr ex1;
+	var Aexpr ex2;
+	var string s;
+	ex2 := _expr_stk.pop();
+	ex1 := _expr_stk.pop();
+	s := string.new(8);
+	s.add(ex1.get_value());
+	s.add(op);
+	s.add(ex2.get_value());
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+
 method void expr_gen2(in Aexpr expr, in string op)
 {
 	var Aexpr ex1;
@@ -153,7 +288,6 @@ method void expr_gen2(in Aexpr expr, in string op)
 	var string s;
 	ex2 := _expr_stk.pop();
 	ex1 := _expr_stk.pop();
-	_expr_stk.push(expr);
 	s := string.new(8);
 	s.add("(");
 	s.add(ex1.get_value());
@@ -163,6 +297,7 @@ method void expr_gen2(in Aexpr expr, in string op)
 	s.add(ex2.get_value());
 	s.add(")");
 	expr.set_value(s);
+	_expr_stk.push(expr);
 	return;
 }
 
@@ -173,37 +308,69 @@ method void expr_process(in Aexpr expr)
 
 	op := expr.get_op();
 	if (op < 1000) {
-		_expr_stk.push(expr);
+		if (op == Aclass.$Cnull) {
+			expr_gen0(expr, "null");
+		} else if (op == Aclass.$Cthis) {
+			expr_gen0(expr, "this");
+		} else {
+			_expr_stk.push(expr);
+		}
 		return;
 	}
 	if (op == Aclass.$Croot) {
 		if (_expr_stk.length() != 1) {
+			console.log_int(_expr_stk.length());
 			error("wrong expression...");
 			return;
 		}
 		ex := _expr_stk.pop();
 		_data.add(ex.get_value());
+	} else if (op == Aclass.$Cassign) {
+		expr_gen_assign(expr, "=");
 	} else if (op == Aclass.$Cequal) {
 		expr_gen2(expr, "==");
 	} else if (op == Aclass.$Cnotequal) {
 		expr_gen2(expr, "!=");
 	} else if (op == Aclass.$Clargerequal) {
+		expr_gen2(expr, ">=");
 	} else if (op == Aclass.$Clesserequal) {
+		expr_gen2(expr, "<=");
  	} else if (op == Aclass.$Clarger) {
+		expr_gen2(expr, ">");
  	} else if (op == Aclass.$Clesser) {
+		expr_gen2(expr, "<");
  	} else if (op == Aclass.$Clogicaland) {
 		expr_gen2(expr, "&&");
 	} else if (op == Aclass.$Clogicalor) {
 		expr_gen2(expr, "||");
  	} else if (op == Aclass.$Cadd) {
+		expr_gen2(expr, "+");
  	} else if (op == Aclass.$Csub) {
+		expr_gen2(expr, "-");
  	} else if (op == Aclass.$Cmult) {
+		expr_gen2(expr, "*");
  	} else if (op == Aclass.$Cdiv) {
+		expr_gen2(expr, "/");
  	} else if (op == Aclass.$Cmodulo) {
+		expr_gen2(expr, "%");
  	} else if (op == Aclass.$Clogicalnot) {
+		expr_gen1(expr, "!");
  	} else if (op == Aclass.$Cparenthesis) {
+		expr_gen_par(expr);
  	} else if (op == Aclass.$Cunaryplus) {
+		expr_gen1(expr, "+");
  	} else if (op == Aclass.$Cunaryminus) {
+		expr_gen1(expr, "-");
+ 	} else if (op == Aclass.$Cdot) {
+		expr_gen_dot(expr);
+ 	} else if (op == Aclass.$Ccall) {
+		expr_gen_call(expr);
+ 	} else if (op == Aclass.$Cindex) {
+		expr_gen_index(expr);
+ 	} else if (op == Aclass.$Ccomma) {
+		expr_gen_comma(expr);
+ 	} else if (op == Aclass.$Cexpr) {
+		expr_gen_sub_expr(expr);
 	} else {
 		error("UNKNOW OP\n");
 		return;
@@ -266,8 +433,18 @@ method void body_gen(in buffer vars_, in buffer body_)
 	i := 0;
 	while (i < l) {
 		va := vars_.get_at(i);
+		ty := va.get_type();
+		tok := va.get_type_id();
+		_data.add("\t");
+		if (ty == Aclass.$Cint) {
+			_data.add("int");
+		} else if (tok != null) {
+			_data.add(tok.get_data());
+		} else {
+			error("unknown type of variable");
+		}	
+		_data.add(" ");
 		tok := va.get_name();
-		_data.add("\tvar ");
 		_data.add(tok.get_data());
 		_data.add(";\n");
 		i := i + 1;
@@ -318,9 +495,17 @@ method void body_gen(in buffer vars_, in buffer body_)
 		} else if (ty == Aclass.$Creturn) {
 			_data.add("return");
 		} else if (ty == Aclass.$Cdo) {
-			_data.add("DO ");
+			ex := stm.get_expression();
+			if (ex != null) {
+				expr_gen(ex);
+			}	
+			_data.add(";");
 		} else if (ty == Aclass.$Clet) {
-			_data.add("LET ");
+			ex := stm.get_expression();
+			if (ex != null) {
+				expr_gen(ex);
+			}	
+			_data.add(";");
 		} else if (ty == Aclass.$Cwhile) {
 			_data.add("while () {");
 			stack.push(l);

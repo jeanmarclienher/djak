@@ -104,6 +104,20 @@ method void get_associativity() {
 }
 
 
+method Aexpr close(in int op_)
+{
+	
+	var Aexpr cur;
+	cur := this;
+	while (cur != null) {
+		if (cur.get_op() == op_) {
+			return cur;
+		}
+		cur := cur.get_parent();
+	}
+	return null;
+}
+
 method Aexpr add(in Aexpr ex)
 {
 	var int pre;
@@ -156,8 +170,17 @@ method Aexpr add(in Aexpr ex)
 
 method void dump(in int depth)
 {
+	var int i;
 	if (left != null) {
 		left.dump(depth + 1);
+	}
+	i := depth;
+	while (i > 0) {
+		i := i - 1;
+		console.log_str(" ");
+	}
+	if (value) {
+		console.log_str(value);
 	}
 	console.log_int(op);
 	console.log("");

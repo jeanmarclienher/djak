@@ -61,6 +61,12 @@ const int Clogicalnot := 1039;
 const int Cparenthesis := 1040;
 const int Cunaryplus := 1041;
 const int Cunaryminus := 1042;
+const int Cdot := 1043;
+const int Ccall := 1044;
+const int Cindex := 1045;
+const int Ccomma := 1046;
+const int Cexpr := 1047;
+const int Cassign := 1048;
 
 const int Clr := 1;
 const int Crl := 2;
@@ -82,6 +88,13 @@ method void dispose()
 	// FIXME free children and data
 	members.dispose();
 	std.free(this);
+	return;
+}
+
+method void error(in string err)
+{
+	console.log(err);
+	std.exit(-1);
 	return;
 }
 
@@ -130,7 +143,6 @@ method void prepare_kind(in int kind_)
 	prep_name := null;
 	return;
 }
-
 
 method void prepare_type(in int type_)
 {
@@ -193,6 +205,11 @@ method void begin_stm(in int type_)
 	} else {
 		statement.add_statement(st);
 	}
+	if (type_ == Aclass.$Cdo) {
+		begin_expr();
+	} else if (type_ == Aclass.$Clet) {
+		begin_expr();
+	}
 	statement := st;
 	return;
 }
@@ -210,7 +227,6 @@ method void finish_const(in Atoken initialiser_)
 	member.set_initial_value(initialiser_);
 	return;
 }
-
 
 method void finish_subroutine()
 {
@@ -230,7 +246,9 @@ method void begin_expr()
 method void finish_expr()
 {
 	if (expression != null) {
-	//	expression.dump(0);
+		console.log("DUMP");
+		expression.dump(0);
+		console.log("DUMP END");
 		statement.set_expression(expression);
 	}
 	expression := null;
@@ -243,6 +261,8 @@ method void expr_op(in int op_)
 	var Aexpr ex;
 	ex := null;
 	if (op_ == Aclass.$Croot) {
+	} else if (op_ == Aclass.$Cassign) {
+		ex := Aexpr.new(op_, 30, Aclass.$Crl);
 	} else if (op_ == Aclass.$Cequal) {
 		ex := Aexpr.new(op_, 100, Aclass.$Clr);
  	} else if (op_ == Aclass.$Cnotequal) {
@@ -275,6 +295,14 @@ method void expr_op(in int op_)
 		ex := Aexpr.new(op_, 160, Aclass.$Crl);
  	} else if (op_ == Aclass.$Cunaryminus) {
 		ex := Aexpr.new(op_, 160, Aclass.$Crl);
+ 	} else if (op_ == Aclass.$Cdot) {
+		ex := Aexpr.new(op_, 170, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Ccall) {
+		ex := Aexpr.new(op_, 170, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cindex) {
+		ex := Aexpr.new(op_, 170, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Ccomma) {
+		ex := Aexpr.new(op_, 10, Aclass.$Clr);
 	} else {
 		console.log("Unknown operator.");
 		std.exit(-1);
@@ -296,65 +324,115 @@ method void expr_open_par()
 
 method void expr_close_par()
 {
+	cur_expr := cur_expr.close(Aclass.$Cparenthesis);
+	if (cur_expr == null) {
+		error("What a mess in parenthesis..");
+	} else {
+		cur_expr.set_precedence(1000);
+	}
 	return;
 }
 
 method void expr_open_index(in string id_)
 {
-	expr_id := id_;
+	var Aexpr ex;
+	expr_var(id_);
+	expr_op(Aclass.$Cindex);
+	ex := Aexpr.new(Aclass.$Cexpr, 1000, Aclass.$Clr);
+	cur_expr := cur_expr.add(ex);
+	ex.set_precedence(2);
+	return;
+}
+
+method void expr_close_index()
+{	cur_expr := cur_expr.close(Aclass.$Cindex);
+	if (cur_expr == null) {
+		error("What a mess in index..");
+	} else {
+		cur_expr.set_precedence(1000);
+	}
 	return;
 }
 
 method void expr_begin_sub_call(in string class_, in string name_)
 {
+	var Aexpr ex;
+	if (class_ != null) {
+		expr_var(class_);
+		expr_op(Aclass.$Cdot);
+		expr_var(name_);
+		expr_op(Aclass.$Ccall);
+	} else {
+		expr_var(name_);
+		expr_op(Aclass.$Ccall);
+	}
+
+	ex := Aexpr.new(Aclass.$Cexpr, 1000, Aclass.$Clr);
+	cur_expr := cur_expr.add(ex);
+	ex.set_precedence(2);
 	return;
 }
 
 method void expr_next_expr()
 {
+	expr_op(Aclass.$Ccomma);
 	return;
 }
 
 method void expr_finish_sub_call()
 {
-	return;
-}
-
-method void expr_close_index()
-{
+	cur_expr := cur_expr.close(Aclass.$Ccall);
+	if (cur_expr == null) {
+		error("What a mess..");
+	} else {
+		cur_expr.set_precedence(1000);
+	}
 	return;
 }
 
 
 method void expr_term(in int term_)
 {
- 	if (term_ == Aclass.$Cnull) {
- 	} else if (term_ == Aclass.$Cthis) {
-	}
+	var Aexpr ex;
+	ex := Aexpr.new(term_, 1000, Aclass.$Clr);
+	cur_expr := cur_expr.add(ex);
 	return;
 }
 
 
 method void expr_constant(in string class_name_, in string const_name_)
 {
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	ex.set_value(const_name_); // FIXME
 	return;
 }
 
 method void expr_var(in string name_)
 {
-
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cvar, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	ex.set_value(name_);
 	return;
 }
 
 method void expr_char_const(in string value_)
 {
-
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	ex.set_value(value_); // FIXME
 	return;
 }
 
 method void expr_str_const(in string value_)
 {
-
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	ex.set_value(value_); // FIXME
 	return;
 }
 
@@ -363,11 +441,8 @@ method void expr_int_const(in string value_)
 	var Aexpr ex;
 	ex := Aexpr.new(Aclass.$Cint, 900, 0);
 	cur_expr := cur_expr.add(ex);
-	//ex.set_precedence(1);
 	ex.set_value(value_);
 	return;
 }
-
-
 
 } // class

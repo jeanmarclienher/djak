@@ -641,11 +641,14 @@ method int let_statem(in Atoken id)
 {
 	
 	if (match_op(":=") != 0) {
+		_class.expr_var(id.get_data());
+		_class.expr_op(Aclass.$Cassign);
 		eat();
 		push(Aparser.$Clet_statem1);
 		push(Aparser.$Cexpression);
 		return 1;
 	} else if (match_op("[") != 0) {
+		_class.expr_open_index(id.get_data());
 		eat();
 		push(Aparser.$Clet_statem2);
 		push(Aparser.$Cexpression);
@@ -661,6 +664,7 @@ method void let_statem1()
 		error("';' expected at end of let statement");
 		return;
 	}
+	_class.finish_expr();
 	_class.finish_stm();
 	eat();
 	return;
@@ -673,8 +677,10 @@ method void let_statem2()
 		error("']' expected in left side of let statement");
 		return;
 	}
+	_class.expr_close_index();
 	eat();
 	if (match_op(":=") != 0) {
+		_class.expr_op(Aclass.$Cassign);
 		eat();
 		push(Aparser.$Clet_statem1);
 		push(Aparser.$Cexpression);
@@ -683,6 +689,7 @@ method void let_statem2()
 	error("':=' expected in let statement");
 	return;
 }
+
 method int do_statem(in Atoken id)
 {
 	push(Aparser.$Cdo_statem1);
@@ -696,6 +703,7 @@ method void do_statem1()
 		error("';' expected at end of do statement");
 		return;
 	}
+	_class.finish_expr();
 	_class.finish_stm();
 	eat();
 	return;
@@ -845,7 +853,7 @@ method void term()
 		eat();
 	} else if (match_id("null") != 0) {
 		// key_const
-		_class.expr_term(Aclass.$Cthis);
+		_class.expr_term(Aclass.$Cnull);
 		eat();
 	} else if (lookahead.get_type() == Alexer.$Cidentifier) {
 		id := lookahead;
@@ -967,6 +975,7 @@ method void sub_call(in Atoken class_, in Atoken id)
 		push(Aparser.$Cexpression);
 		return;
 	}
+	_class.expr_finish_sub_call();	
 	return;
 }
 

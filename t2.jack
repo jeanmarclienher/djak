@@ -2,9 +2,12 @@
 class main {
 function main main()
 {
-	if (1 == 9 || 3 != 4 && 2 == 5) {
-	}
-	if (1 == 9 || 3 != 4 && 2 == 5) {
+	var int b;
+	var void b;
+	var terra mix;
+
+	jmlo.jml();
+	if (bob() == 9) {
 	}
 }
 }
