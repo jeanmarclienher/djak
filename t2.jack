@@ -1,13 +1,21 @@
 
 class main {
-function main main()
+function void main(in int argc, in bytes argv)
 {
 	var int b;
 	var void b;
 	var terra mix;
 
 	jmlo.jml();
-	if (bob() == 9) {
+	if (bob() == bob.$Con) {
+		io("jml");
+	} else if (bob() == bob.$Con) {
+		iio();
+		break;
+		iio();
+	} else {
+		elo();
 	}
+	return;
 }
 }

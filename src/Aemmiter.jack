@@ -239,6 +239,31 @@ method void expr_gen_dot(in Aexpr expr)
 	return;
 }
 
+method void expr_gen_str_const(in Aexpr expr)
+{
+	var string s;
+	s := string.new(8);
+	s.add_char(34);
+	s.add(expr.get_value());
+	s.add_char(34);
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+method void expr_gen_char_const(in Aexpr expr)
+{
+	var string s;
+	s := string.new(8);
+	s.add("'");
+	s.add(expr.get_value());
+	s.add("'");
+	expr.set_value(s);
+	_expr_stk.push(expr);
+	return;
+}
+
+
 method void expr_gen0(in Aexpr expr, in string op)
 {
 	var string s;
@@ -286,16 +311,27 @@ method void expr_gen2(in Aexpr expr, in string op)
 	var Aexpr ex1;
 	var Aexpr ex2;
 	var string s;
+	var int oper;
 	ex2 := _expr_stk.pop();
 	ex1 := _expr_stk.pop();
 	s := string.new(8);
-	s.add("(");
+	oper := ex1.get_op();
+	if (oper > Aclass.$Croot) {
+		s.add("(");
+	}
 	s.add(ex1.get_value());
-	s.add(")");
+	if (oper > Aclass.$Croot) {
+		s.add(")");
+	}
 	s.add(op);
-	s.add("(");
+	oper := ex2.get_op();
+	if (oper > Aclass.$Croot) {
+		s.add("(");
+	}
 	s.add(ex2.get_value());
-	s.add(")");
+	if (oper > Aclass.$Croot) {
+		s.add(")");
+	}
 	expr.set_value(s);
 	_expr_stk.push(expr);
 	return;
@@ -307,9 +343,15 @@ method void expr_process(in Aexpr expr)
 	var Aexpr ex;
 
 	op := expr.get_op();
-	if (op < 1000) {
+	if (op < Aclass.$Croot) {
 		if (op == Aclass.$Cnull) {
 			expr_gen0(expr, "null");
+		} else if (op == Aclass.$Cchar_const) {
+			expr_gen_char_const(expr);
+		} else if (op == Aclass.$Cint_const) {
+			_expr_stk.push(expr);
+		} else if (op == Aclass.$Cstr_const) {
+			expr_gen_str_const(expr);
 		} else if (op == Aclass.$Cthis) {
 			expr_gen0(expr, "this");
 		} else {
@@ -422,6 +464,7 @@ method void body_gen(in buffer vars_, in buffer body_)
 	var buffer stack;
 	var int padde;
 	var Aexpr ex;
+	var buffer buf;
 
 	_data.add("{\n");
 	stack := buffer.new(4);
@@ -433,16 +476,8 @@ method void body_gen(in buffer vars_, in buffer body_)
 	i := 0;
 	while (i < l) {
 		va := vars_.get_at(i);
-		ty := va.get_type();
-		tok := va.get_type_id();
 		_data.add("\t");
-		if (ty == Aclass.$Cint) {
-			_data.add("int");
-		} else if (tok != null) {
-			_data.add(tok.get_data());
-		} else {
-			error("unknown type of variable");
-		}	
+		gen_type(va);
 		_data.add(" ");
 		tok := va.get_name();
 		_data.add(tok.get_data());
@@ -474,12 +509,13 @@ method void body_gen(in buffer vars_, in buffer body_)
 			stack.push(l);
 			stack.push(i + 1);
 			stack.push(body_);
-			body_ := stm.get_else();
-			if (body_ != null) {
-				stack.push(body_.length());
+			buf := stm.get_else();
+			if (buf != null) {
+				stack.push(buf.length());
 				stack.push(0);
-				stack.push(body_);
+				stack.push(buf);
 			}
+
 			padde := padde + 1;
 			i := -1;
 			l := 0;
@@ -491,9 +527,16 @@ method void body_gen(in buffer vars_, in buffer body_)
 			_data.add(" else {");
 			padde := padde + 1;
 		} else if (ty == Aclass.$Cbreak) {
-			_data.add("break");
+			_data.add("break;");
 		} else if (ty == Aclass.$Creturn) {
-			_data.add("return");
+			ex := stm.get_expression();
+			if (ex != null) {
+				_data.add("return ");
+				expr_gen(ex);
+				_data.add(";");
+			} else {
+				_data.add("return;");
+			}	
 		} else if (ty == Aclass.$Cdo) {
 			ex := stm.get_expression();
 			if (ex != null) {
@@ -507,7 +550,12 @@ method void body_gen(in buffer vars_, in buffer body_)
 			}	
 			_data.add(";");
 		} else if (ty == Aclass.$Cwhile) {
-			_data.add("while () {");
+			_data.add("while (");
+			ex := stm.get_expression();
+			if (ex != null) {
+				expr_gen(ex);
+			}	
+			_data.add(") {");
 			stack.push(l);
 			stack.push(i + 1);
 			stack.push(body_);
@@ -546,6 +594,29 @@ method void body_gen(in buffer vars_, in buffer body_)
 	return;
 }
 
+
+method void gen_type(in Amember mb)
+{
+	var int ty; 
+	var Atoken tok;
+	tok := mb.get_type_id();
+	if (tok != null) {
+		_data.add(tok.get_data());
+	} else {
+		ty := mb.get_type();
+		if (ty == Aclass.$Cint) {
+			_data.add("long");
+		} else if (ty == Aclass.$Cvoid) {
+			_data.add("void");
+		} else if (ty == Aclass.$Cbytes) {
+			_data.add("void*");
+		} else {
+			error("unknown type");
+		}
+	}
+	return;
+}
+	
 method void pass_3(in response res, io string str, in Amember mb, in int k)
 {
 	var Amember param;
@@ -554,7 +625,7 @@ method void pass_3(in response res, io string str, in Amember mb, in int k)
 	var buffer body;
 	var int sub;
 	var int i;
-	var int l; 
+	var int l;
 	var Atoken tok;
 
 	sub := 0;
@@ -568,10 +639,7 @@ method void pass_3(in response res, io string str, in Amember mb, in int k)
 		sub := 1;
 	}
 	if (sub != 0) {
-		tok := mb.get_type_id();
-		if (tok != null) {
-			_data.add(tok.get_data());
-		}
+		gen_type(mb);
 		_data.add(" ");
         	_data.add(res.get_string());
 		params := mb.get_params();
@@ -584,6 +652,8 @@ method void pass_3(in response res, io string str, in Amember mb, in int k)
 				if (i > 0) {
 					_data.add(", ");
 				}
+				gen_type(param);
+				_data.add(" ");
 				tok := param.get_name();
 				_data.add(tok.get_data());
 				i := i + 1;

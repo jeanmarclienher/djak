@@ -212,8 +212,10 @@ method void type()
 {
 	if (match_id("int") != 0) {
 		_class.prepare_type(Aclass.$Cint);
-	} else if (match_id("char") != 0) {
-		_class.prepare_type(Aclass.$Cchar);
+	} else if (match_id("bytes") != 0) {
+		_class.prepare_type(Aclass.$Cbytes);
+	} else if (match_id("void") != 0) {
+		_class.prepare_type(Aclass.$Cvoid);
 	} else if (match_id(null) != 0) {
 		_class.prepare_type_identifier(lookahead);
 	} else {
@@ -428,12 +430,12 @@ method void statement()
 	if (match_id("break") != 0) {
 		r := 1;
 		_class.begin_stm(Aclass.$Cbreak);
-		_class.finish_stm();
 		eat();
 		if (match_op(";") == 0) {
 			error("';' expected after break");
 			return;
 		}
+		_class.finish_stm();
 		eat();
 		return;
 	}
@@ -501,8 +503,6 @@ method void else_statem()
 	eat();
 	
 	if (match_id("if") != 0) {
-		//_class.begin_else(Aclass.$Celseif);
-		//push(Aparser.$Celse_statem2);
 		_class.finish_stm();
 		if_statem(Aclass.$Celseif);
 		return;
@@ -531,15 +531,6 @@ method void else_statem1()
 	eat();
 	return;
 }
-/*
-method void else_statem2()
-{
-	pop();
-	_class.finish_stm();
-	return;
-}
-*/
-
 
 method int while_statem()
 {
@@ -552,6 +543,7 @@ method int while_statem()
 		error("'(' expected after while.");
 		return 1;
 	}
+	_class.begin_expr();
 	eat();
 	push(Aparser.$Cwhile_statem1);
 	push(Aparser.$Cbool_expr);
@@ -565,6 +557,7 @@ method void while_statem1()
 		error("')' expected after while condition.");
 		return;
 	}
+	_class.finish_expr();
 	eat();
 	if (match_op("{") == 0) {
 		error("'{' expected after while ().");
@@ -599,6 +592,7 @@ method int return_statem()
 		_class.finish_stm();
 		eat();
 	} else {
+		_class.begin_expr();
 		push(Aparser.$Creturn_statem1);
 		push(Aparser.$Cexpression);
 	}
@@ -609,6 +603,7 @@ method int return_statem()
 method void return_statem1()
 {
 	if (match_op(";") != 0) {
+		_class.finish_expr();
 		_class.finish_stm();
 		eat();
 		pop();

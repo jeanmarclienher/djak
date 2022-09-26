@@ -21,7 +21,7 @@ const int Cstatic := 2;
 const int Cfield := 3;
 const int Cconst := 4;
 const int Cint	:= 5;
-const int Cchar := 6;
+const int Cbytes := 6;
 const int Cvoid := 7;
 const int Cconstructor := 8;
 const int Cfunction := 9;
@@ -42,6 +42,9 @@ const int Celse := 23;
 const int Celseif := 24;
 const int Cthis := 25;
 const int Cnull := 26;
+const int Cint_const := 27;
+const int Cchar_const := 28;
+const int Cstr_const := 29;
 
 const int Croot := 1000;
 const int Cequal := 1026;
@@ -399,16 +402,6 @@ method void expr_term(in int term_)
 	return;
 }
 
-
-method void expr_constant(in string class_name_, in string const_name_)
-{
-	var Aexpr ex;
-	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
-	cur_expr := cur_expr.add(ex);
-	ex.set_value(const_name_); // FIXME
-	return;
-}
-
 method void expr_var(in string name_)
 {
 	var Aexpr ex;
@@ -418,31 +411,43 @@ method void expr_var(in string name_)
 	return;
 }
 
+method void expr_int_const(in string value_)
+{
+	var Aexpr ex;
+	ex := Aexpr.new(Aclass.$Cint_const, 900, 0);
+	cur_expr := cur_expr.add(ex);
+	ex.set_value(value_);
+	return;
+}
+
 method void expr_char_const(in string value_)
 {
 	var Aexpr ex;
-	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	ex := Aexpr.new(Aclass.$Cchar_const, 900, 0);
 	cur_expr := cur_expr.add(ex);
-	ex.set_value(value_); // FIXME
+	ex.set_value(value_); 
 	return;
 }
 
 method void expr_str_const(in string value_)
 {
 	var Aexpr ex;
-	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	ex := Aexpr.new(Aclass.$Cstr_const, 900, 0);
 	cur_expr := cur_expr.add(ex);
-	ex.set_value(value_); // FIXME
+	ex.set_value(value_); 
 	return;
 }
 
-method void expr_int_const(in string value_)
+method void expr_constant(in string class_name_, in string const_name_)
 {
 	var Aexpr ex;
-	ex := Aexpr.new(Aclass.$Cint, 900, 0);
+	expr_var(class_name_);
+	expr_op(Aclass.$Cdot);
+	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
 	cur_expr := cur_expr.add(ex);
-	ex.set_value(value_);
+	ex.set_value(const_name_);
 	return;
 }
+
 
 } // class

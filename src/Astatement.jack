@@ -79,9 +79,15 @@ method void set_expression(in Aexpr expr_)
 {
 	if (type == Aclass.$Cif) {
 		expr := expr_;	
+	} else if (type == Aclass.$Celseif) {
+		expr := expr_;	
 	} else if (type == Aclass.$Clet) {
 		expr := expr_;	
 	} else if (type == Aclass.$Cdo) {
+		expr := expr_;	
+	} else if (type == Aclass.$Cwhile) {
+		expr := expr_;	
+	} else if (type == Aclass.$Creturn) {
 		expr := expr_;	
 	} else {
 		console.log("DONT KNOW WAHT");
