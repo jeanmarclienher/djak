@@ -6,7 +6,7 @@ field int prep_kind;
 field int prep_type;
 field Atoken prep_type_id;
 field Atoken prep_name;
-field hash members;
+field buffer members;
 field Amember member;
 field int field_index;
 
@@ -21,7 +21,7 @@ const int Cstatic := 2;
 const int Cfield := 3;
 const int Cconst := 4;
 const int Cint	:= 5;
-const int Cbytes := 6;
+//const int Cbytes := 6;
 const int Cvoid := 7;
 const int Cconstructor := 8;
 const int Cfunction := 9;
@@ -70,6 +70,7 @@ const int Cindex := 1045;
 const int Ccomma := 1046;
 const int Cexpr := 1047;
 const int Cassign := 1048;
+const int Cconstant := 1049;
 
 const int Clr := 1;
 const int Crl := 2;
@@ -78,7 +79,7 @@ constructor Aclass new(in Atoken token)
 {
 	tok := token;
 	next := null;
-	members := hash.new(256);
+	members := buffer.new(256);
 	field_index := -1;
 	statement := null;
 	stm_stack := buffer.new(2);
@@ -101,6 +102,16 @@ method void error(in string err)
 	return;
 }
 
+method hash get_members()
+{
+	return members;
+}
+
+method int get_nb_fields()
+{
+	return field_index + 1;
+}
+
 method void set_next(in Aclass n)
 {
 	next := n;
@@ -110,18 +121,6 @@ method void set_next(in Aclass n)
 method Aclass get_next()
 {
 	return next;
-}
-
-method void foreach_members(in response res)
-{
-	members.foreach(res);
-	return;
-}
-
-method void each(in response res)
-{
-	console.log(res.get_string());
-	return;
 }
 
 method Atoken get_name()
@@ -176,7 +175,7 @@ method void valid_member_name()
 	} else {
 
 	}
-	members.add(prep_name.get_data(), member);
+	members.push(member);
 	return;
 }
 
@@ -198,7 +197,7 @@ method void begin_else(in int type_)
 	return;
 }
 
-method void begin_stm(in int type_)
+method void begin_stm(in int type_, in Atoken orig)
 {
 	var Astatement st;
 	stm_stack.push(statement);
@@ -209,9 +208,9 @@ method void begin_stm(in int type_)
 		statement.add_statement(st);
 	}
 	if (type_ == Aclass.$Cdo) {
-		begin_expr();
+		begin_expr(orig);
 	} else if (type_ == Aclass.$Clet) {
-		begin_expr();
+		begin_expr(orig);
 	}
 	statement := st;
 	return;
@@ -239,9 +238,10 @@ method void finish_subroutine()
 	return;
 }
 
-method void begin_expr()
+method void begin_expr(in Atoken orig)
 {
 	expression := Aexpr.new(Aclass.$Croot, 0, 0);
+	expression.set_origin(orig);
 	cur_expr := expression;
 	return;
 }
@@ -249,9 +249,11 @@ method void begin_expr()
 method void finish_expr()
 {
 	if (expression != null) {
+/*
 		console.log("DUMP");
 		expression.dump(0);
 		console.log("DUMP END");
+*/
 		statement.set_expression(expression);
 	}
 	expression := null;
@@ -259,7 +261,7 @@ method void finish_expr()
 	return;
 }
 
-method void expr_op(in int op_)
+method void expr_op(in int op_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := null;
@@ -300,6 +302,8 @@ method void expr_op(in int op_)
 		ex := Aexpr.new(op_, 160, Aclass.$Crl);
  	} else if (op_ == Aclass.$Cdot) {
 		ex := Aexpr.new(op_, 170, Aclass.$Clr);
+ 	} else if (op_ == Aclass.$Cconstant) {
+		ex := Aexpr.new(op_, 170, Aclass.$Clr);
  	} else if (op_ == Aclass.$Ccall) {
 		ex := Aexpr.new(op_, 170, Aclass.$Clr);
  	} else if (op_ == Aclass.$Cindex) {
@@ -311,6 +315,7 @@ method void expr_op(in int op_)
 		std.exit(-1);
 	}
 	if (ex != null) {
+		ex.set_origin(orig);
 		cur_expr := cur_expr.add(ex);
 	}
 	return;
@@ -325,6 +330,16 @@ method void expr_open_par()
 	return;
 }
 
+method void expr_in_par()
+{
+	var Aexpr ex;
+	ex := cur_expr.close(Aclass.$Cparenthesis);
+	if (ex == null) {
+		return 0;
+	}
+	return 1;
+}
+
 method void expr_close_par()
 {
 	cur_expr := cur_expr.close(Aclass.$Cparenthesis);
@@ -336,11 +351,11 @@ method void expr_close_par()
 	return;
 }
 
-method void expr_open_index(in string id_)
+method void expr_open_index(in string id_, in Atoken orig)
 {
 	var Aexpr ex;
-	expr_var(id_);
-	expr_op(Aclass.$Cindex);
+	expr_var(id_, orig);
+	expr_op(Aclass.$Cindex, orig);
 	ex := Aexpr.new(Aclass.$Cexpr, 1000, Aclass.$Clr);
 	cur_expr := cur_expr.add(ex);
 	ex.set_precedence(2);
@@ -357,28 +372,30 @@ method void expr_close_index()
 	return;
 }
 
-method void expr_begin_sub_call(in string class_, in string name_)
+method void expr_begin_sub_call(in string class_, in string name_, 
+	in Atoken orig)
 {
 	var Aexpr ex;
 	if (class_ != null) {
-		expr_var(class_);
-		expr_op(Aclass.$Cdot);
-		expr_var(name_);
-		expr_op(Aclass.$Ccall);
+		expr_var(class_, orig);
+		expr_op(Aclass.$Cdot, orig);
+		expr_var(name_, orig);
+		expr_op(Aclass.$Ccall, orig);
 	} else {
-		expr_var(name_);
-		expr_op(Aclass.$Ccall);
+		expr_var(name_, orig);
+		expr_op(Aclass.$Ccall, orig);
 	}
 
 	ex := Aexpr.new(Aclass.$Cexpr, 1000, Aclass.$Clr);
 	cur_expr := cur_expr.add(ex);
 	ex.set_precedence(2);
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_next_expr()
+method void expr_next_expr(in Atoken orig)
 {
-	expr_op(Aclass.$Ccomma);
+	expr_op(Aclass.$Ccomma, orig);
 	return;
 }
 
@@ -394,56 +411,63 @@ method void expr_finish_sub_call()
 }
 
 
-method void expr_term(in int term_)
+method void expr_term(in int term_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := Aexpr.new(term_, 1000, Aclass.$Clr);
 	cur_expr := cur_expr.add(ex);
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_var(in string name_)
+method void expr_var(in string name_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := Aexpr.new(Aclass.$Cvar, 900, 0);
 	cur_expr := cur_expr.add(ex);
 	ex.set_value(name_);
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_int_const(in string value_)
+method void expr_int_const(in string value_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := Aexpr.new(Aclass.$Cint_const, 900, 0);
 	cur_expr := cur_expr.add(ex);
 	ex.set_value(value_);
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_char_const(in string value_)
+method void expr_char_const(in string value_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := Aexpr.new(Aclass.$Cchar_const, 900, 0);
 	cur_expr := cur_expr.add(ex);
 	ex.set_value(value_); 
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_str_const(in string value_)
+method void expr_str_const(in string value_, in Atoken orig)
 {
 	var Aexpr ex;
 	ex := Aexpr.new(Aclass.$Cstr_const, 900, 0);
 	cur_expr := cur_expr.add(ex);
 	ex.set_value(value_); 
+	ex.set_origin(orig);
 	return;
 }
 
-method void expr_constant(in string class_name_, in string const_name_)
+method void expr_constant(in string class_name_, in string const_name_, 
+	in Atoken orig)
 {
 	var Aexpr ex;
-	expr_var(class_name_);
-	expr_op(Aclass.$Cdot);
+	expr_var(class_name_, orig);
+	expr_op(Aclass.$Cconstant, orig);
 	ex := Aexpr.new(Aclass.$Cconst, 900, 0);
+	ex.set_origin(orig);
 	cur_expr := cur_expr.add(ex);
 	ex.set_value(const_name_);
 	return;

@@ -1,11 +1,12 @@
 
 class Alexer {
 
-field file _src;
+field string _src;
 field string _str;
 field buffer _pool;
 field int pos;
 field int line;
+field buffer _files;
 field string _token;
 field int type;
 field int c;
@@ -39,8 +40,8 @@ constructor Alexer new()
 {
 	_str := string.new(1024);
 	_token := string.new(256);
-	_src := string.new(1);
 	_pool := buffer.new(32);
+	_files := buffer.new(32);
 	pos := 0;
 	line := 1;
 	c := 0;
@@ -66,10 +67,20 @@ constructor Alexer new()
 method void dispose()
 {
 	_pool.dispose();
-	_src.dispose();
 	_token.dispose();
 	_str.dispose();
+	_files.dispose();
 	std.free(this);
+	return;
+}
+
+method void begin(in string file_)
+{
+	pos := 0;
+	line := 1;
+	_src := string.new(12);
+	_src.add(file_);
+	_files.push(_src);
 	return;
 }
 
@@ -92,13 +103,6 @@ method int empty()
 method void set_enable_escape(in int v)
 {
 	enable_escape := v;
-	return;
-}
-
-method void set_source(in string source)
-{
-	_src.dispose();
-	_src := source.to_string();
 	return;
 }
 
@@ -273,9 +277,7 @@ method int state()
 			validate(Alexer.$Cquote);
 		} else if (c == 92) {	// FIXME
 		//if (c == '\\') {
-			if (enable_escape != 0) {
-				in_escape := 1;
-			}
+			in_escape := 1;
 		} else { 
 			_token.add_char(c);
 		}
@@ -388,7 +390,7 @@ method int state()
 		in_identifier := 0;
 		return 1;
 	} else if (in_space != 0) {
-		while (is_space(c)) {
+		while (is_space(c) != 0) {
 			if (c == '\n') {
 				validate(Alexer.$Cnewline);
 			}
@@ -400,7 +402,7 @@ method int state()
 		return 1;
 	} else {
 		l := _token.length();
-		if (is_space(c)) {
+		if (is_space(c) != 0) {
 			if (l != 0) {
 				validate(Alexer.$Coperator);
 			}

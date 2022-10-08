@@ -1,0 +1,10 @@
+
+class main {
+
+function void main()
+{
+	console.log("Hello World!");
+	return;
+}
+
+}

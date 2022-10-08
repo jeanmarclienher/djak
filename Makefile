@@ -3,9 +3,11 @@ all:
 	gcc -m64 -ggdb -Wall -o zjc zjc.c -lX11 -lGL -lGLU 
 #	rm -rf zdjk_src/lib
 #	cp -r newlib zdjk_src/lib
+#	./zjc old
+#	gcc -m64 -ggdb -Wall -o djak old.c -lX11 -lGL -lGLU 
 	./zjc src
-	gcc -m64 -ggdb -Wall -o djak src.c -lX11 -lGL -lGLU 
-
+	gcc -m64 -ggdb -Wall -o dj src.jack.c -lX11 -lGL -lGLU 
+	
 mac:
 #	scp jml@192.168.43.93:src/jack/jackc.c .
 	xcodebuild

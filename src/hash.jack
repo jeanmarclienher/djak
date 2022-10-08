@@ -10,7 +10,7 @@ const int Cvalue := 3;
 
 constructor hash new(in int size_)
 {
-	var int i;
+	var int i; 
 	size := size_;
 	_arr := array.new(size);
 	i := 0;
@@ -117,24 +117,6 @@ method array get(in string key)
 	}
 	
 	return null;
-}
-
-method void foreach(in response res)
-{
-	var array next;
-	var int i;
-	i := 0;
-	while (i < size) {
-		next := _arr[i];
-		while (next != null) {
-			res.set_string(200, next[hash.$Ckey]);
-			res.set_bytes(200, next[hash.$Cvalue]);
-			res.validate();
-			next := next[hash.$Cnext];
-		}
-		i := i + 1;
-	}
-	return;
 }
 
 } // class

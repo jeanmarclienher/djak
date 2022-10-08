@@ -1,58 +1,14 @@
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <dirent.h>
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <signal.h>
 
+#define GETSTR(s) ((char*) string__get_buf(s))
+#define GETLEN(s) ((long)strlen(GETSTR(s)))
 
-// FIXME
-var Memory__getString(var* str) {
-        static var in = 0;
-	var sb;
-        var m, i;
-        if (in) {
-                return 0;
-        }
-        in = -1;
-
-        i = 0;
-        while (str[i]) {
-                i++;
-        }
-        m = string__new(i + 1);
-	sb = string__get_buf(m);
-	i = 0;
-        while (str[i]) {
-		 __poke(sb+i, str[i]); // FIXME UTF-8
-		i++;
-	}
- 	__poke(sb+i, 0); 
-
-        in = 0;
-        return (var)m;
-}
-
-var std__alloc(var size, var type)
+var std__alloc(var size)
 {
 	var *m;
-	m = (var*)malloc(sizeof(var) * (size + 1));
-	m[0] = -(size + 1);
-//	m[1] = type;
-//	m[1] = 0; // FIXME 0 = bytes, 1 = array ...
-	return ((var)m / sizeof(var)) + 1;
-}
-
-// FIXME
-var Memory__alloc(var s) {
-	return std__alloc(s, 0);
+	m = (var*)malloc(sizeof(var) * (size + 2));
+	m[0] = 0;
+	m[1] = size;
+	return (var)(m + 2);
 }
 
 var bytes__new(var size)
@@ -60,25 +16,120 @@ var bytes__new(var size)
 	var s;
 	var r;
 	s = (size + sizeof(var) - 1) / sizeof(var);
-	r = std__alloc(s + 1, 0);
-	__poke(r+0, size);
+	r = std__alloc(s + 1);
+	((var*)r)[0] = size;
 	return r;
+}
+
+var bytes__dispose(var bb)
+{
+	std__free(bb);
+	return 0;
 }
 
 var bytes__get_buf(var bb)
 {
-	return (bb+1) * sizeof(var);
+	return (var)(((var*)bb) + 1);
 }
 
 var bytes__get_at(var bb, var at)
 {
-	return ((char*)((bb+1) * sizeof(var)))[at];
+	char *b = (char*)(((var*)bb) + 1);
+	return b[at];
 }
 
 var bytes__set_at(var bb, var at, var v)
 {
-	((char*)((bb+1) * sizeof(var)))[at] = v & 0xFF;
+	char *b = (char*)(((var*)bb) + 1);
+	b[at] = v & 0xFF;
 	return 0;
+}
+
+var bytes__set_size(var bb, var v)
+{
+	((var*)bb)[0] = v;
+	return 0;
+}
+
+
+var bytes__get_size(var bb)
+{
+	return ((var*)bb)[0];
+}
+
+
+var std__stralloc(var len)
+{
+	char *b;
+	b = malloc(len); // UTF-8
+	b[0] = 0;
+	return (var)b;
+}
+
+var std__strfree(var b)
+{
+	free((void*)b);
+	return 0;
+}
+
+var std__strlen(var str)
+{
+	return (var)strlen((char*)str);
+}
+
+var std__strcat(var dest, var src, var maxlen)
+{
+	strncat((char*)dest, (char*)src, maxlen);
+	return 0;
+}
+
+var std__strsub(var dest, var start,  var src, var maxlen)
+{
+	strncat((char*)dest, ((char*)src)+start, maxlen);
+	return 0;
+}
+
+var std__str_set_int(var dest, var maxlen, var n)
+{
+	snprintf((char*)dest, maxlen, "%ld", n);
+	return 0;
+}
+
+var std__str_set_at(var dest, var pos, var val)
+{
+	((char*)dest)[pos] = (char)val;
+	return 0;
+}
+
+var std__str_get_at(var dest, var pos)
+{
+	return ((char*)dest)[pos];
+}
+
+var std__strindex(var haystack, var offest, var needle)
+{
+	char *r;
+	r = strstr(((char*)haystack) + offest, (char*)needle);
+	if (r == NULL) {
+		return -1;
+	}
+	return (long)(r - ((char*)haystack));
+}
+
+var std__strcmp(var s1, var s2)
+{
+	return strcmp((char*)s1, (char*)s2);
+}
+
+var std__strhash(var s)
+{
+	char *p = (char*)s;
+	var h = 0;
+	while (*p) {
+		h = (h << 4) ^ *p;
+		p++;
+	}
+	return h;
 }
 
 var std__get_size(var mem)
@@ -90,23 +141,21 @@ var std__get_size(var mem)
 
 var std__free(var mem)
 {
-	var *m;
-	m = (var*)((mem - 1) * sizeof(var));
-	free(m);
+	free(((var*)mem) - 2);
 	return 0;
 }
 
 var std__string2native(var data, char *buf, size_t maxlen)
 {
 	var l;
-	var sb;
+	char *sb;
 	var i;
 
-	l = string__length(data);
-	sb = string__get_buf(data);
+	l = GETLEN(data);
+	sb = GETSTR(data);
 	i = 0;
 	while (i <= l && ((size_t)i < maxlen)) {
-		buf[i] = __peek(sb+i); // FIXME UTF-8
+		buf[i] = sb[i]; // FIXME UTF-8
 		i++;
 	}
 	if ((size_t)i == maxlen) {
@@ -120,16 +169,16 @@ var std__string2native(var data, char *buf, size_t maxlen)
 var std__native2string(char *buf)
 {
 	size_t l;
-	var sb;
+	char *sb;
 	var data;
 	size_t i;
 
 	l = strlen(buf);
 	data = string__new(l + 1);
-	sb = string__get_buf(data);
+	sb = GETSTR(data);
 	i = 0;
 	while (i <= l) {
-		__poke(sb + i, (var)buf[i]); // FIXME UTF-8
+		sb[i] = buf[i]; // FIXME UTF-8
 		i++;
 	}
 	return data;
@@ -226,8 +275,8 @@ var std__read(var folder, var name, var seek, var size, var fs_cb)
 	char *buf;
 	int r;
 	struct stat st;
-
 	fullpath = std__concat(folder, name, fname, sizeof(fname));
+
 	if (fullpath == 0) {
 		data = std__native2string("invalid name.");
 		status = 403;
@@ -248,7 +297,7 @@ var std__read(var folder, var name, var seek, var size, var fs_cb)
 			seek = 0;
 		}
 		if (size > 0 && status == 200) {
-			data = bytes__new(size);
+			data = bytes__new(size + 1);
 			buf = (char*)bytes__get_buf(data);
 			fp = fopen(fname, "r");
 			if (fp) {
@@ -258,7 +307,7 @@ var std__read(var folder, var name, var seek, var size, var fs_cb)
 			} else {
 				r = -1;
 			}
-			__poke(data+0, r);
+			bytes__set_size(data, r);
 			if (r > size || r < 0) {
 				bytes__dispose(data);
 				data = std__native2string(
@@ -268,6 +317,8 @@ var std__read(var folder, var name, var seek, var size, var fs_cb)
 			      	if (r == 0) {
 					status = 201;
 				}
+				buf[r] = '\0';
+				bytes__set_size(data, r);
 				response__set_bytes(fs_cb, status, data);
 				return 0;
 			}
@@ -314,17 +365,21 @@ var std__write(var folder, var name, var data, var seek, var size, var fs_cb)
 		}
 		if (size > 0 && status == 200) {
 			buf = (char*)bytes__get_buf(data);
+			buf -= sizeof(long);
 			fp = fopen(fname, mode);
 			if (fp) {
 				if (seek != 0) {
 					fseek(fp, seek, SEEK_SET);
 				}
-				r = fwrite(buf, 1, size, fp);
+				r = 0;
+				if (r < size) {
+					r = fwrite(buf, 1, size, fp);
+				}
 				fclose(fp);
 			} else {
 				r = -1;
 			}
-			__poke(data+0, r);
+			bytes__set_size(data, r);
 			if (r != size) {
 				string__dispose(fullpath);
 				outstr = std__native2string(
@@ -396,6 +451,7 @@ var std__scandir(var folder, var name, var fs_cb)
 	char *tmp;
 
 	fullpath = std__concat(folder, name, dname, sizeof(dname));
+
 	if (fullpath == 0) {
 		outstr = std__native2string("invalid name.");
 		status = 403;
@@ -551,13 +607,7 @@ var std__echo_int(var n)
 
 var std__echo(var str)
 {
-	var l;
-	char *buf;
-	l = string__length(str) * 6 + 1;
-	buf = malloc(l);
-	std__string2native(str, buf, l);
-	printf("%s", buf);
-	free(buf);
+	printf("%s", GETSTR(str));
 	return 0;
 }
 
@@ -580,9 +630,8 @@ int main(int argc, char *argv[]) {
 	std_args = array__new(argc);
 	for (i = 0; i < argc; i++) {
 		s = std__native2string(argv[i]);
-		__poke(std_args+i, s);
+		((var*)std_args)[i] = s;
 	}
-	//__poke(std_args+i, 0);
 	main__main();
 	// FIXME cleanup
 	return 0;

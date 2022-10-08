@@ -1,105 +1,56 @@
 
 class main {
-	function void main()
-	{
-/*
-		var string hello;
-		var response resp;
-		var file fd;
-		var bytes tmp;
-		var array args;
-		var int i;
+const int Cblock := 10;
 
-		hello := string.new(1);
-		hello.set(" hello ");
-		console.log_int(std.size(hello));
-		console.log_str(hello);
-		console.log_int(std.size("IIi"));
-		console.log("GO");
-
-		resp := response.new(0, null);
-		fd := file.new("./", resp);
-		fd.mkfolder();
-		console.log_int(resp.get_status());
-		hello := resp.get_string();
-		console.log(hello);	
-		fd.mkdir("yo1");
-		hello := resp.get_string();
-		console.log(hello);	
-	
-		console.log("jjjjj");
-		fd.read("AUTHORS.txt", 0, -1);
-		tmp := resp.get_bytes();
-		i := tmp.get_size();
-
-		console.log("JML");
-		while (i > 0) {
-			i := i - 1;
-			hello.add_char(tmp.get_at(i));
-		}
-		console.log(hello);
-
-		resp := response.new(0, null);
-		fd := file.new("./", resp);
-		fd.write("bob.txt", tmp, -1, tmp.get_size() - 50);
-		if (resp.get_status() == 200) {
-			console.log_int(tmp.get_size());
-			console.log("BOB");
-			fd.filesize("AUTHORS.txt");	
-			console.log(resp.get_string());
-			console.log("iioio::");
-			hello := resp.get_string();
-			console.log_int(hello.to_int());
-		} else {
-			hello := resp.get_string();
-			console.log(hello);	
-		}
-		fd.unlink("bob.txt");
-		console.log(resp.get_string());
-		
-		fd.scandir("../");
-		console.log(resp.get_string());
-		
-		args := std.get_args();
-		i := 0;
-		while (args[i] != 0) {
-			console.log(args[i]);
-			i := i + 1;
-		}
-		hello.set("0123456789");
-		tmp := hello.substr(3, 0);
-		console.log(tmp);
-*/
-		var string str;
-		var string tmp;
-		var array args;
+function void copyto(in string f, in string output)
+{
 		var file fd;
 		var response res;
 		var bytes data;
 		var int n;
 		var int i;
 		var int off;
-		var Alexer lex;
-		var Aparser par;
-		var Aemmiter emi;
-
-		args := std.get_args();
-		n := args.get_size();
-		if (n != 2) {
-			console.log("wrong number of command line arguments");
-			std.exit(-1);
-		}
-		str := args[1];
-		console.log(str);
-
+		console.log_str("Including : ");
+		console.log(f);
 		res := response.new(0, null);
 		fd := file.new("", res);
-		fd.read(str, 0, 10);
+		fd.read(f, 0, main.$Cblock);
 		off := 0;
-		tmp := string.new(100);
-		lex := Alexer.new();
-		par := Aparser.new();
-		emi := Aemmiter.new();
+		while (res.get_status() == 200) {
+			data := res.get_bytes();
+			n := data.get_size();
+			i := 0;
+			while (i < n) {
+				output.add_char(data.get_at(i));
+				i := i + 1;
+			}
+			off := off + main.$Cblock;
+			fd.read(f, off, main.$Cblock);
+		}
+		fd.dispose();
+		res.dispose();
+		return;
+}
+
+
+function void process_file(in string f, in Alexer lex)
+{
+		var string tmp;
+		var file fd;
+		var response res;
+		var bytes data;
+		var int n;
+		var int i;
+		var int off;
+
+		console.log_str("Compiling : ");
+		console.log(f);
+		lex.begin(f);
+		res := response.new(0, null);
+		fd := file.new("", res);
+		fd.read(f, 0, main.$Cblock);
+		off := 0;
+		tmp := string.new(10000);
 		while (res.get_status() == 200) {
 			data := res.get_bytes();
 			n := data.get_size();
@@ -109,20 +60,121 @@ class main {
 				i := i + 1;
 			}
 			lex.add(tmp);
-			//console.log_str(tmp);
 			tmp.set("");
-			off := off + 10;
-			fd.read(str, off, 10);
+			off := off + main.$Cblock;
+			fd.read(f, off, main.$Cblock);
 		}
-		lex.add("");
-		par.parse(lex);	
-		emi.emmit(par);
-		console.log(par.get_data());		
-		data := bytes.new(4);
-		data.set_at(0, 'X');
-		//fd.write(str, data, 1, 1);
+		fd.dispose();
+		res.dispose();
+		lex.finish();
+		return;
+}
+
+function void main()
+{
+		var string str;
+		var string tmp;
+		var array args;
+		var file fd;
+		var response res;
+		var string data;
+		var int n;
+		var int i;
+		var int end;
+		var int start;
+		var int len;
+		var Alexer lex;
+		var Aparser par;
+		var Aemmiter emi;
+		var string head;
+		var string body;
+		var string to;
+		var int l;
+
+		console.log("--- The Jack 3.0.3 ---");
+		args := std.get_args();
+		n := args.get_size();
+		if (n != 2) {
+			console.log("wrong number of command line arguments");
+			std.exit(-1);
+		}
+		head := string.new(2048000);
+		body := string.new(2048000);
+		str := args[1];
+		to := string.new(20);
+		to.add(str);
+		to.add(".jack.c");
+		res := response.new(0, null);
+		fd := file.new("", res);
+		fd.scandir(str);
+		tmp := string.new(100);
+		lex := Alexer.new();
+		par := Aparser.new();
+		emi := Aemmiter.new();
+		if (res.get_status() == 200) {
+			data := res.get_string();
+			len := data.length();
+			i := 0;
+			start := 0;
+			i := data.indexof(start, "\n");
+			while ((i >= 0) && (start < len)) { 
+				data.substr(start, i - start, tmp);
+				end := i - start;
+				if (tmp.indexof(0, ".jack") == (end - 5)) {
+					main.process_file(tmp, lex);
+					par.parse(lex);	
+					emi.emmit(par);
+					par.release();
+				} else if (tmp.indexof(0, ".h") == 
+					(end - 2)) 
+				{
+					main.copyto(tmp, head);
+				} else if (tmp.indexof(0, ".c") == 
+					(end - 2)) 
+				{
+					main.copyto(tmp, body);
+				}
+				start := i + 1;
+				i := data.indexof(start, "\n");
+				tmp.set("");
+			}
+		}
+		//emi.emmit(par);
+		//par.release();
+		emi.gen_virtuals();
+		fd.unlink(to);
+		i := 0;
+		str := head;
+		l := str.length();
+		if (l > 0) {
+			fd.write(to, str.get_buf(), i, l);
+			if (res.get_status() != 200) {
+				std.exit(-1);
+			}
+		}
+		i := i + l;
+		str := emi.get_head();
+		l := str.length();
+		if (l > 0) {
+			fd.write(to, str.get_buf(), i, l);
+		}
+		i := i + l;
+		str := body;
+		l := str.length();
+		if (l > 0) {
+			fd.write(to, str.get_buf(), i, l);
+		}
+		i := i + l;
+		str := emi.get_data();
+		l := str.length();
+		if (l > 0) {
+			fd.write(to, str.get_buf(), i, l);
+		}
+		console.log_str("Output to : ");
+		console.log(to);
+		to.dispose();
 		fd.dispose();
 		res.dispose();
 		return;
-	}
+}
 }

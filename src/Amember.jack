@@ -50,6 +50,12 @@ method Atoken get_name()
 	return name;
 }
 
+method Atoken get_name_string()
+{
+	return name.get_data();
+}
+
+
 method Atoken get_initial_value() 
 {
 	return initial_value;

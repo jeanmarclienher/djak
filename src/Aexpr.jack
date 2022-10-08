@@ -7,7 +7,9 @@ field Aexpr left;
 field Aexpr right;
 field Aexpr parent;
 field string value;
+field string value2;
 field int flags;
+field Atoken origin;
 
 constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
 {
@@ -18,12 +20,25 @@ constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
 	left := null;
 	right := null;
 	value := null;
+	value2 := null;
 	flags := 0;
+	origin := null;
 	return this;
 }
 
 method void dispose()
 {
+	return;
+}
+
+method Atoken get_origin()
+{
+	return origin;
+}
+
+method void set_origin(in Atoken orig)
+{
+	origin := orig;
 	return;
 }
 
@@ -62,6 +77,16 @@ method void set_parent(in Aexpr p)
 	return;
 }
 
+method string get_value2()
+{
+	return value2;
+}
+
+method void set_value2(in string v)
+{
+	value2 := v;
+	return;
+}
 
 method string get_value()
 {
@@ -179,7 +204,7 @@ method void dump(in int depth)
 		i := i - 1;
 		console.log_str(" ");
 	}
-	if (value) {
+	if (value != 0) {
 		console.log_str(value);
 	}
 	console.log_int(op);

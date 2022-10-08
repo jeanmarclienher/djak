@@ -4,7 +4,6 @@ field int type;
 field string _data;
 field int line;
 field string file_;
-field array owner;
 
 constructor Atoken new(in int type1, in string _data1, 
 	in int line1, in string file1)
@@ -13,7 +12,6 @@ constructor Atoken new(in int type1, in string _data1,
 	_data := _data1;
 	line := line1;
 	file_ := file1;
-	owner := null;
 	return this;
 }
 
@@ -23,20 +21,6 @@ method void dispose()
 	_data.dispose();
 	std.free(this);
 	return;
-}
-
-method void drop(in array owner_)
-{
-	if (owner == owner_) {
-		dispose();
-	}
-	return;
-}
-
-method Atoken move(in array owner_)
-{
-	owner := owner_;
-	return this;
 }
 
 method string get_data()

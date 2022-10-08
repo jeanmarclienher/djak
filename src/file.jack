@@ -31,10 +31,10 @@ method void mkdir(in string name)
 	return;
 }
 
-method void read(in string name, in int seek, in int size)
+method void read(in string name, in int seek, in int size_)
 {
 	fs_cb.clear();
-	std.read(_folder, name, seek, size, fs_cb);
+	std.read(_folder, name, seek, size_, fs_cb);
 	return;
 }
 
