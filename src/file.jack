@@ -9,7 +9,7 @@ constructor file new(in string folder, in response fscb)
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	fs_cb.clear();
 	_folder.dispose();

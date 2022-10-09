@@ -16,7 +16,7 @@ constructor Atoken new(in int type1, in string _data1,
 }
 
 
-method void dispose()
+virtual void dispose()
 {
 	_data.dispose();
 	std.free(this);

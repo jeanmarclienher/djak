@@ -14,6 +14,9 @@
 
 #define var long
 #define STR(s) ((long)(s + 2))
+#define NEW(c) long __this; \
+	__this = std__alloc(D__##c##___SIZE); \
+	((long*)__this)[-1] = D__##c##___ID
 
 var main__main(void);
 var std__free(var mem);

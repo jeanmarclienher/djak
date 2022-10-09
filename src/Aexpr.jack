@@ -26,8 +26,9 @@ constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
+	std.free(this);
 	return;
 }
 

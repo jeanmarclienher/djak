@@ -18,8 +18,9 @@ constructor Astatement new(in int type_, in statement parent_, in int depth_)
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
+	std.free(this);
 	return;
 }
 

@@ -1,14 +1,30 @@
 
 #define GETSTR(s) ((char*) string__get_buf(s))
 #define GETLEN(s) ((long)strlen(GETSTR(s)))
+#define FREE(m) free(m)
+#define MALLOC(s) malloc(s)
 
 var std__alloc(var size)
 {
 	var *m;
-	m = (var*)malloc(sizeof(var) * (size + 2));
-	m[0] = 0;
-	m[1] = size;
+	m = (var*)MALLOC(sizeof(var) * (size + 2));
+	m[0] = 0; // reserved for memory managemnt (ref counting...)
+	m[1] = 0; // overwritten in constructor by class ID
 	return (var)(m + 2);
+}
+
+var std__free(var mem)
+{
+	FREE(((var*)mem) - 2);
+	return 0;
+}
+
+var std__delete(var obj)
+{
+	if (((long*)obj)[-2] >= 1) {
+		virtual__dispose(obj);	
+	}
+	return 0;
 }
 
 var std__panic()
@@ -68,7 +84,7 @@ var bytes__get_size(var bb)
 var std__stralloc(var obj, var len)
 {
 	char *b;
-	b = malloc(len); // UTF-8
+	b = MALLOC(len); // UTF-8
 	b[0] = 0;
 	string__set_buf(obj, (var)b);
 	return (var)b;
@@ -76,7 +92,7 @@ var std__stralloc(var obj, var len)
 
 var std__strfree(var b)
 {
-	free((void*)string__get_buf(b));
+	FREE((void*)string__get_buf(b));
 	return 0;
 }
 
@@ -155,12 +171,6 @@ var std__get_size(var mem)
 	var *m;
 	m = (var*)((mem - 1) * sizeof(var));
 	return (-m[0]) - 1;
-}
-
-var std__free(var mem)
-{
-	free(((var*)mem) - 2);
-	return 0;
 }
 
 var std__string2native(var data, char *buf, size_t maxlen)
@@ -504,7 +514,7 @@ var std__scandir(var folder, var name, var fs_cb)
 		dp = readdir(dir);
 		outl = 0;
 		outa = 4096;
-		outp = malloc(outa);
+		outp = MALLOC(outa);
 		outp[0] = '\0';
 		while (dp != 0) {
 			s = dp->d_name;
@@ -516,10 +526,10 @@ var std__scandir(var folder, var name, var fs_cb)
 				l = strlen(s);
 				while ((outa - outl) <= (l + dl + 3)) {
 					outa += 4096;
-					tmp = malloc(outa);
+					tmp = MALLOC(outa);
 					tmp[0] = '\0';
 					strcat(tmp, outp);	
-					free(outp);
+					FREE(outp);
 					outp = tmp;
 				}
 				strcat(outp + outl, dname);
@@ -537,7 +547,7 @@ var std__scandir(var folder, var name, var fs_cb)
 		}
 		closedir(dir);
 		outstr = std__native2string(outp);
-		free(outp);
+		FREE(outp);
 	}
 	response__set_string(fs_cb, status, outstr);
 	return 0;
@@ -636,22 +646,38 @@ var std__exit(var n)
 }
 
 static var std_args = 0;
+static var std_argc = 0;
 
 var std__get_args()
 {
 	return std_args;
 }
 
+var std__get_argc()
+{
+	return std_argc;
+}
+
+
 int main(int argc, char *argv[]) {
 	int i;
 	var s;
-	std_args = array__new(argc);
+	std_argc = argc;
+	std_args = array__new(argc+1);
 	for (i = 0; i < argc; i++) {
 		s = std__native2string(argv[i]);
 		((var*)std_args)[i] = s;
 	}
+	((var*)std_args)[i] = 0;
 	main__main();
 	// FIXME cleanup
+	array__dispose(std_args);
+	std_args = 0;
 	return 0;
 }
+
+#undef GETSTR
+#undef GETLEN
+#undef FREE
+#undef MALLOC 
 

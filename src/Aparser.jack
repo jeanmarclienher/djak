@@ -51,7 +51,7 @@ constructor Aparser new()
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	_states.dispose();
 	std.free(this);

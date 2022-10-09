@@ -1,34 +1,4 @@
 
 class bytes {
-/*
-function bytes new(in int size)
-{
-	return std.bytes_new(size);
-}
-*/
-/*
-method void dispose()
-{
-	std.free(this);
-	return;
-}
-
-method int get_size()
-{
-	var array m;
-	m := this;
-	return m[0];
-}
-*/
-/*
-method char get_at(in int at)
-method void set_at(in int at, in char val)
-
-method array get_buf()
-{
-	return std.bytes_get_buf(this);
-}
-*/
-
 } // class
 

@@ -17,17 +17,28 @@ constructor buffer new(in int initial_size)
 	return this;
 }
 
-method void dispose()
+method void dispose_all()
 {
-/* FIXME
 	var int i;
+	if (_arr == null) {
+		dispose();
+		return;
+	}
 	i := 0;
 	while (i < size) {
 		std.delete(_arr[i]);
 		i := i + 1;
 	}
-*/
-	_arr.dispose();
+	dispose();
+	return;
+}
+
+virtual void dispose()
+{
+	if (_arr != null) {
+		_arr.dispose();
+		_arr := null;
+	}
 	std.free(this);
 	return;
 }

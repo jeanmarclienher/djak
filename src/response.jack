@@ -3,20 +3,16 @@ class response {
 field int status;
 field string str;
 field bytes byt;
-field int typ;
-field array instan;
 
-constructor response new(in int type_, in array instance_)
+constructor response new()
 {
 	status := 0;
-	typ := type_;
-	instan := instance_;
 	byt := null;
 	str := null;
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	std.free(this);
 	return;
@@ -65,19 +61,4 @@ method array get_bytes()
 	return byt;
 }
 
-/*
-method void validate()
-{
-	var Aclass aclass;
-	var Aemmiter aemmiter;
-	if (typ == object.$CAclass) {
-		aclass := instan;
-		aclass.each(this);
-	} else if (typ == object.$CAemmiter) {
-		aemmiter:= instan;
-		aemmiter.each(this);
-	}
-	return;
-}
-*/
 } // class

@@ -6,6 +6,7 @@ all: zjc
 #	gcc -m64 -ggdb -Wall -o djak old.c -lX11 -lGL -lGLU 
 	./zjc src
 	gcc -m64 -ggdb -Wall -o dj src.jack.c -lX11 -lGL -lGLU 
+	./dj src
 
 zjc: zjc.c
 	gcc -m64 -ggdb -Wall -o zjc zjc.c -lX11 -lGL -lGLU 

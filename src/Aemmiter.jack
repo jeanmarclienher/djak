@@ -27,7 +27,7 @@ constructor Aemmiter new()
 	_virtuals := buffer.new(100);
 	token1 := null;
 	token2 := null;
-	class_id := 0;
+	class_id := 10;
 	string_id := 0;
 	return this;
 }
@@ -37,6 +37,9 @@ method void dispose()
 	_proc.dispose();
 	_stk.dispose();
 	_data.dispose();
+	_head.dispose();
+	_mid.dispose();
+	_virtuals.dispose();
 	_expr_stk.dispose();
 	std.free(this);
 	return;
@@ -109,6 +112,9 @@ method void gen_class()
 		while (i < l) {
 			m := mem.get_at(i);	
 			gen_member(m);
+			if (pass == 2) {
+				m.dispose_body();
+			}
 			i := i + 1;
 		}
 		pass := pass + 1;
@@ -908,13 +914,9 @@ method void body_gen(in Amember mb, in int k, in buffer vars_, in buffer body_)
 	}
 
 	if (k == Aclass.$Cconstructor) {
-		_data.add("\tlong __this;\n");
-		_data.add("\t__this = std__alloc(D__");
+		_data.add("\tNEW(");
 		_data.add(class_name);	
-		_data.add("___SIZE);\n");
-		_data.add("\t((long*)__this)[-1] = D__");
-		_data.add(class_name);	
-		_data.add("___ID;\n");
+		_data.add(");\n");
 	}
 
 	l := body_.length();
@@ -1057,6 +1059,8 @@ method void add_virtual(in Amember mb)
 	var Avirtual v;
 	var Avirtual nv;
 	var int i;
+	var string s;
+
 	n := mb.get_name_string();
 
 	nv := Avirtual.new(mb, class_name);
@@ -1065,7 +1069,8 @@ method void add_virtual(in Amember mb)
 		i := i - 1;
 		v := _virtuals.get_at(i);
 		if (v != null) {
-			if (n.compare(v.get_member_name()) == 0) {
+			s := v.get_member_name();
+			if ((s != null) && (n.compare(s) == 0)) {
 				nv.set_next(v.get_next());
 				v.set_next(nv);
 				return;

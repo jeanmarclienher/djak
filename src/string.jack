@@ -13,7 +13,7 @@ constructor string new(in int alloc)
 virtual void dispose()
 {
 	std.strfree(this);
-	std.free(this); // FIXME
+	std.free(this); 
 	return;
 }
 

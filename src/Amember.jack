@@ -25,8 +25,24 @@ constructor Amember new(in int kind_, in int type_,
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
+	dispose_body();
+	// FIXME
+	std.free(this);
+	return;
+}
+
+method void dispose_body()
+{
+	if (body != null) {
+		body.dispose();
+		body := null;
+	}
+	if (vars != null) {
+		vars.dispose();
+		vars := null;
+	}
 	return;
 }
 

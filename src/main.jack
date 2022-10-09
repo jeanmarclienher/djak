@@ -13,7 +13,7 @@ function void copyto(in string f, in string output)
 		var int off;
 		console.log_str("Including : ");
 		console.log(f);
-		res := response.new(0, null);
+		res := response.new();
 		fd := file.new("", res);
 		fd.read(f, 0, main.$Cblock);
 		off := 0;
@@ -47,7 +47,7 @@ function void process_file(in string f, in Alexer lex)
 		console.log_str("Compiling : ");
 		console.log(f);
 		lex.begin(f);
-		res := response.new(0, null);
+		res := response.new();
 		fd := file.new("", res);
 		fd.read(f, 0, main.$Cblock);
 		off := 0;
@@ -95,18 +95,18 @@ function void main()
 		console.log(main.$Chello);
 
 		args := std.get_args();
-		n := args.get_size();
+		n := std.get_argc();
 		if (n != 2) {
 			console.log("wrong number of command line arguments");
 			std.exit(-1);
 		}
-		head := string.new(2048000);
-		body := string.new(2048000);
+		head := string.new(2048);
+		body := string.new(2048);
 		str := args[1];
 		to := string.new(20);
 		to.add(str);
 		to.add(".jack.c");
-		res := response.new(0, null);
+		res := response.new();
 		fd := file.new("", res);
 		fd.scandir(str);
 		tmp := string.new(100);
@@ -183,6 +183,9 @@ function void main()
 		to.dispose();
 		fd.dispose();
 		res.dispose();
+		lex.dispose();
+		par.dispose();
+		emi.dispose();
 		return;
 }
 }

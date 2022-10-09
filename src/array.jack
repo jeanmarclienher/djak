@@ -1,24 +1,19 @@
 class array {
-function array new(in int size)
+constructor array new(in int size)
 {
 	var array a;
+	var array t;
+	t := this;
 	a := std.alloc(size);
-	a[-1] := size;
+	a[-1] := t[-1]; // class ID
+	std.free(t);
 	return a;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	std.free(this);
 	return;
 }
-
-method int get_size()
-{
-	var array a;
-	a := this;
-	return a[-1];
-}
-
 } // class
 

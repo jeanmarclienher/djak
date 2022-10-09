@@ -12,8 +12,9 @@ constructor Avirtual new(in Amember memb_, in string class_)
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
+	std.free(this);
 	return;
 }
 

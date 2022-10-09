@@ -21,8 +21,23 @@ constructor hash new(in int size_)
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
+	var int i; 
+	var array next;
+	var array cur;
+	i := 0;
+	while (i < size) {
+		cur := _arr[i];
+		while (cur != null) {
+			next := next[hash.$Cnext];
+			cur.dispose();
+			cur := next;
+		}
+		_arr[i] := null;
+		i := i + 1;
+	}
+
 	_arr.dispose();
 	std.free(this);
 	return;

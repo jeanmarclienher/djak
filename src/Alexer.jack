@@ -64,7 +64,7 @@ constructor Alexer new()
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	_pool.dispose();
 	_token.dispose();
