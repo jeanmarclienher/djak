@@ -4,22 +4,28 @@ field int size;
 
 constructor string new(in int alloc)
 {
-	_str := std.stralloc(alloc + 1);
+	_str := null;
+	std.stralloc(this, alloc + 1);
 	size := alloc;
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
-	std.strfree(_str);
+	std.strfree(this);
 	std.free(this); // FIXME
 	return;
 }
 
-
 method array get_buf()
 {
 	return _str;
+}
+
+method void set_buf(in array b)
+{
+	_str := b;
+	return;
 }
 
 method int get_size()
@@ -29,14 +35,17 @@ method int get_size()
 
 method void set_size(in int ns)
 {
-	var array ops;
+	var string ops;
+	var array b;
 	if (size > ns) {
 		return;
 	}
-	ops := std.stralloc(ns+1);
-	std.strcat(ops, _str, ns);
-	std.strfree(_str);
-	_str := ops;
+	ops := string.new(ns+1);
+	std.strcat(ops, this, ns);
+	b := _str;
+	_str := ops.get_buf();
+	ops.set_buf(b);
+	ops.dispose();
 	size := ns;
 	return;
 
@@ -44,82 +53,69 @@ method void set_size(in int ns)
 
 method int length()
 {
-	return std.strlen(_str);
+	return std.strlen(this);
 }
 
 method void set_int(in int num)
 {
-	return std.str_set_int(_str, size, num);
+	return std.str_set_int(this, size, num);
 }
 
 method void set(in string src)
 {
 	var int sl;
-	sl := std.strlen(src.get_buf());
+	sl := std.strlen(src);
 	if (size < sl) {
-		std.strfree(_str);
-		_str := std.stralloc(sl+1);
+		std.strfree(this);
+		std.stralloc(this, sl+1);
 		size := sl;
 	}
-	std.str_set_at(_str, 0, '\0');
-	std.strcat(_str, src.get_buf(), sl);
+	std.str_set_at(this, 0, '\0');
+	std.strcat(this, src, sl);
 	return;
 }
 
 method void add_char(in int num)
 {
-	var array ops;
 	var int sl, tl, ns, i;
 	sl := 6;
-	tl := std.strlen(_str);
+	tl := std.strlen(this);
 		
 	ns := sl + tl + 1;
 	i := 0;
 	if (size <= ns) {
 		ns := ns + 8;
-		ops := std.stralloc(ns);
-		std.strcat(ops, _str, ns);
-		std.strfree(_str);
-		_str := ops;
-		size := ns;
+		set_size(ns);
 	}
 	i := tl;
-	std.str_set_at(_str, i, num); // FIXME UTF-8
+	std.str_set_at(this, i, num); // FIXME UTF-8
 	i := i + 1;
-	std.str_set_at(_str, i, '\0');
+	std.str_set_at(this, i, '\0');
 	return;
 }
 
-
 method void add(in string src)
 {
-	var array ops;
 	var int sl, tl, ns;
-	sl := std.strlen(src.get_buf());
-	tl := std.strlen(_str);
+	sl := std.strlen(src);
+	tl := std.strlen(this);
 	ns := sl + tl + 1;
-	ops := std.stralloc(ns);
-	std.strcat(ops, _str, ns);
-	std.strcat(ops, src.get_buf(), ns);
-	std.strfree(_str);
-	_str := ops;
+	set_size(ns);
+	std.strcat(this, src, ns);
 	size := ns;
 	return;
 }
 
 method int indexof(in int start_pos, in string needle)
 {
-	return std.strindex(_str, start_pos, needle.get_buf());
+	return std.strindex(this, start_pos, needle);
 }
-
-
 
 method void substr(in int start_pos, in int length_, out string result)
 {
-	var array ops;
 	var int len;
 
-	len := std.strlen(_str);
+	len := std.strlen(this);
 	if (start_pos < 0) {
 		start_pos := start_pos + len;
 	}
@@ -137,9 +133,8 @@ method void substr(in int start_pos, in int length_, out string result)
 		return;
 	}	
 	result.set_size(length_ + 1);
-	ops:= result.get_buf();
-	std.str_set_at(ops, 0, '\0');
-	std.strsub(ops, start_pos, _str, length_);
+	std.str_set_at(result, 0, '\0');
+	std.strsub(result, start_pos, this, length_);
 	return;
 }
 
@@ -154,53 +149,24 @@ method string to_string()
 }
 
 method int to_int()
-{	
-	var int l;
-	var int sign;
-	var int v;
-	var int c;
-
-	l := 0;
-	sign := 1;
-	if (size == 0) {
-		return 0;
-	}
-	v := 0;
-	if (std.str_get_at(_str, 0) == '-') {
-		sign := -1;
-		l := 1;
-	} else if (std.str_get_at(_str,0) == '+') {
-		l := 1;
-	}
-	while (l < size) {
-		c := std.str_get_at(_str,l);
-		if (c == '\0') {
-			l := size; // end og string
-		} else if ((c >= '0') && (c <= '9')) {
-			v := v * 10;
-			v := v + (c - '0');
-		} else {
-			l := size; // end of numbers in string
-		}
-		l := l + 1;
-	}
-	return v * sign;
+{
+	return std.str_toint(this);	
 }
 
 method int compare(in string other)
 {
-	return std.strcmp(_str, other.get_buf());
+	return std.strcmp(this, other);
 }
 
 method int get_hash()
 {
-	return std.strhash(_str);
+	return std.strhash(this);
 }
 
 method int get_at(in int at)
 {
 	if ((at < size) && (size >= 0)) {
-		return std.str_get_at(_str,at);
+		return std.str_get_at(this,at);
 	}
 	return '\0';
 }
@@ -208,11 +174,9 @@ method int get_at(in int at)
 method void set_at(in int at, in int v)
 {
 	if ((at < size) && (size >= 0)) {
-		std.str_set_at(_str, at, v); // FIXME UTF-8
+		std.str_set_at(this, at, v); // FIXME UTF-8
 	}
 	return;
 }
 
-
 } // class
-

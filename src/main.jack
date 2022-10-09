@@ -1,6 +1,7 @@
 
 class main {
 const int Cblock := 10;
+const string Chello := " --- The Jack 3.0.3 ---";
 
 function void copyto(in string f, in string output)
 {
@@ -91,7 +92,8 @@ function void main()
 		var string to;
 		var int l;
 
-		console.log("--- The Jack 3.0.3 ---");
+		console.log(main.$Chello);
+
 		args := std.get_args();
 		n := args.get_size();
 		if (n != 2) {
@@ -154,6 +156,12 @@ function void main()
 		}
 		i := i + l;
 		str := emi.get_head();
+		l := str.length();
+		if (l > 0) {
+			fd.write(to, str.get_buf(), i, l);
+		}
+		i := i + l;
+		str := emi.get_mid();
 		l := str.length();
 		if (l > 0) {
 			fd.write(to, str.get_buf(), i, l);

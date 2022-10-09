@@ -11,6 +11,13 @@ var std__alloc(var size)
 	return (var)(m + 2);
 }
 
+var std__panic()
+{
+	printf("PANIC!\n");
+	exit(-1);
+	return 0;
+}
+
 var bytes__new(var size)
 {
 	var s;
@@ -58,72 +65,83 @@ var bytes__get_size(var bb)
 }
 
 
-var std__stralloc(var len)
+var std__stralloc(var obj, var len)
 {
 	char *b;
 	b = malloc(len); // UTF-8
 	b[0] = 0;
+	string__set_buf(obj, (var)b);
 	return (var)b;
 }
 
 var std__strfree(var b)
 {
-	free((void*)b);
+	free((void*)string__get_buf(b));
 	return 0;
 }
 
 var std__strlen(var str)
 {
-	return (var)strlen((char*)str);
+	return (var)strlen((char*)string__get_buf(str));
 }
 
 var std__strcat(var dest, var src, var maxlen)
 {
-	strncat((char*)dest, (char*)src, maxlen);
+	strncat((char*)string__get_buf(dest), 
+		(char*)string__get_buf(src), maxlen);
 	return 0;
 }
 
 var std__strsub(var dest, var start,  var src, var maxlen)
 {
-	strncat((char*)dest, ((char*)src)+start, maxlen);
+	strncat((char*)string__get_buf(dest), 
+		((char*)string__get_buf(src))+start, maxlen);
 	return 0;
 }
 
 var std__str_set_int(var dest, var maxlen, var n)
 {
-	snprintf((char*)dest, maxlen, "%ld", n);
+	snprintf((char*)string__get_buf(dest), maxlen, "%ld", n);
 	return 0;
+}
+
+var std__str_toint(var src)
+{
+	return atol((char*)string__get_buf(src));
 }
 
 var std__str_set_at(var dest, var pos, var val)
 {
-	((char*)dest)[pos] = (char)val;
+	char *b = (char*)string__get_buf(dest);
+	b[pos] = (char)val;
 	return 0;
 }
 
 var std__str_get_at(var dest, var pos)
 {
-	return ((char*)dest)[pos];
+	return ((char*)string__get_buf(dest))[pos];
 }
 
 var std__strindex(var haystack, var offest, var needle)
 {
 	char *r;
-	r = strstr(((char*)haystack) + offest, (char*)needle);
+	char *h = (char*)string__get_buf(haystack);
+	char *n = (char*)string__get_buf(needle);
+	r = strstr(h + offest, n);
 	if (r == NULL) {
 		return -1;
 	}
-	return (long)(r - ((char*)haystack));
+	return (long)(r - h);
 }
 
 var std__strcmp(var s1, var s2)
 {
-	return strcmp((char*)s1, (char*)s2);
+	return strcmp((char*)string__get_buf(s1), (char*)string__get_buf(s2));
 }
 
 var std__strhash(var s)
 {
-	char *p = (char*)s;
+	char *p = (char*)string__get_buf(s);
 	var h = 0;
 	while (*p) {
 		h = (h << 4) ^ *p;

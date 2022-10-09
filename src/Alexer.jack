@@ -226,8 +226,9 @@ method int state()
 	if (in_escape != 0) {
 		if (enable_escape == 0) {
 			if (c != '\n') { 
-			//	_token.add_char('\\');
-				_token.add_char(92); // FIXME
+				_token.add_char('\\');
+				_token.add_char(c);
+				next();
 				in_escape := 0;
 				return 1;
 			}
@@ -244,8 +245,7 @@ method int state()
 			} else if (c == 'b') {
 				a := '\b';
 			} else {
-			//	_token.add_char('\\');
-				_token.add_char(92); // FIXME
+				_token.add_char('\\');
 			}
 			_token.add_char(a);
 		} else {
@@ -255,12 +255,10 @@ method int state()
 		in_escape := 0;
 		return 1;
 	} else if (in_string != 0) {
-		if (c == 34) { // FIXME
-		//if (c == '\"') {
+		if (c == '\"') { 
 			in_string := 0;
 			validate(Alexer.$Cstring);
-		} else  if (c == 92) { // FIXME
-		//if (c == '\\') {
+		} else  if (c == '\\') { 
 			in_escape := 1;
 		} else if (c == '\n') {
 			error("newline in string.");
@@ -271,12 +269,10 @@ method int state()
 		next();
 		return 1;
 	} else if (in_quote != 0) {
-		if (c == 39) {
-		//if (c == '\'') {
+		if (c == '\'') {
 			in_quote := 0;
 			validate(Alexer.$Cquote);
-		} else if (c == 92) {	// FIXME
-		//if (c == '\\') {
+		} else if (c == '\\') {	
 			in_escape := 1;
 		} else { 
 			_token.add_char(c);
@@ -415,8 +411,7 @@ method int state()
 			} else if ((c == '_') || (is_letter(c) != 0)) {
 				_token.add_char(c);
 				next(); in_identifier := 1; return 1;
-			} else if (c == 39) { // FIXME
-			//} else if (c == '\'') {
+			} else if (c == '\'') { 
 				next(); in_quote := 1; return 1;
 			} else if (c == '"') {
 				next(); in_string := 1; return 1;

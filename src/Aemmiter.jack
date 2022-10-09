@@ -2,6 +2,7 @@
 class Aemmiter {
 field string _data;
 field string _head;
+field string _mid;
 field Aclass clas;
 field string class_name;
 field Amember cur_memb;
@@ -22,6 +23,7 @@ constructor Aemmiter new()
 	_expr_stk := buffer.new(100);
 	_data := string.new(1);
 	_head := string.new(1);
+	_mid := string.new(1);
 	_virtuals := buffer.new(100);
 	token1 := null;
 	token2 := null;
@@ -59,6 +61,12 @@ method string get_data()
 {
 	return _data;
 }
+
+method string get_mid()
+{
+	return _mid;
+}
+
 
 method void gen_class()
 {
@@ -137,7 +145,7 @@ method void gen_conditional_call(in Avirtual v, in Amember mb)
 
 	_data.add("\tcase D__");
 	_data.add(v.get_class_name());
-	_data.add("___ID:\n\t\treturn D__");
+	_data.add("___ID:\n\t\treturn ");
 	params := mb.get_params();
 	_data.add(v.get_class_name());
 	_data.add("___V_");
@@ -174,7 +182,7 @@ method void gen_virtuals()
 		gen_method_decl(_data, "virtual", mb.get_name_string(), 
 			mb, Aclass.$Cvirtual);
 		_data.add("\n{\n\tlong cid;\n");
-		_data.add("\tcid := ((long*)__this)[-1];\n");
+		_data.add("\tcid = ((long*)__this)[-1];\n");
 		_data.add("\tswitch (cid) {\n");
 		while (v != null) {
 			gen_conditional_call(v, mb);
@@ -200,15 +208,15 @@ method void pass_0(io string str, in Amember mb, in int k)
 		t := mb.get_initial_value();
 		ty := t.get_type();
 		if (ty == Alexer.$Cstring) {
-			_head.add("std__string("); // FIXME
-			_head.add_char(34);
-			_head.add(t.get_data());
-			_head.add_char(34);
+			_head.add("STR(__string_");
+	  		_head.add(class_name);
+        		_head.add(mb.get_name_string());
 			_head.add(")");
+			gen_string(mb.get_name_string(), t.get_data());
 		} else if (ty == Alexer.$Cquote) {
-			_head.add_char(39);
+			_head.add_char('\'');
 			_head.add(t.get_data());
-			_head.add_char(39);
+			_head.add_char('\'');
 		} else {
 			_head.add(t.get_data());
 		}
@@ -216,7 +224,9 @@ method void pass_0(io string str, in Amember mb, in int k)
 	}
 	if (k == Aclass.$Cfield) {
 		str.set_int(mb.get_index());
-		_data.add("#define D__");
+		_data.add("#define _");
+		_data.add(class_name);
+		_data.add("_");
         	_data.add(mb.get_name_string());
 		_data.add(" ((long*)__this)[");
 		_data.add(str);
@@ -384,7 +394,7 @@ method void expr_gen_call(in Aexpr expr)
 	var Amember v;
 	var string p;
 	var string obj;
-	var string pref;
+	var int fld;
 
 	s := string.new(8);
 	ex2 := _expr_stk.pop();
@@ -417,7 +427,7 @@ method void expr_gen_call(in Aexpr expr)
 		return;
 	}
 
-	pref := "";
+	fld := 0;
 	v := find_local(obj);
 	if (v == null) {
 		v := find_param(obj);
@@ -425,7 +435,7 @@ method void expr_gen_call(in Aexpr expr)
 	if (v == null) {
 		v := find_field(obj);
 		if (v != null) {
-			pref := "D__";
+			fld := 1;
 		}
 	}
 	if (v != null) {
@@ -442,7 +452,11 @@ method void expr_gen_call(in Aexpr expr)
 		s.add(ex1.get_value());
 		p := ex2.get_value();
 		s.add("(");
-		s.add(pref);
+		if (fld != 0) {
+			s.add("_");
+			s.add(class_name);
+			s.add("_");
+		}
 		s.add(ex1.get_value2());
 		if (p.length() > 0) {
 			s.add(",");
@@ -554,6 +568,29 @@ method void expr_gen_dot(in Aexpr expr)
 	return;
 }
 
+method void gen_string(in string s2, in string value)
+{
+	_mid.add("static char __strings_");
+	_mid.add(class_name);
+	_mid.add(s2);
+	_mid.add("[]=");
+	_mid.add_char('"');
+	_mid.add(value);
+	_mid.add_char('"');
+	_mid.add(";\n");
+	_mid.add("static long __string_");
+
+	_mid.add(class_name);
+	_mid.add(s2);
+	_mid.add("[]={0,0, ");
+	_mid.add("(long) __strings_");
+	_mid.add(class_name);
+	_mid.add(s2);
+	_mid.add(",-1};\n");
+
+	return;
+}
+
 method void expr_gen_str_const(in Aexpr expr)
 {
 	var string s;
@@ -562,24 +599,13 @@ method void expr_gen_str_const(in Aexpr expr)
 	s2 := string.new(8);
 	string_id := string_id + 1;
 	s2.set_int(string_id);
-// FIXME	
-	_head.add("char __string__");
-	_head.add(s2);
-	_head.add("[]=");
-	_head.add_char(34);
-	_head.add(expr.get_value());
-	_head.add_char(34);
-	_head.add(";\n");
-	_head.add("long __string_");
-	_head.add(s2);
-	_head.add("[]={0,0, ");
-	_head.add("(long) __string__");
-	_head.add(s2);
-	_head.add(",-1};\n");
 
-	s.add("(long)(__string_");
+	gen_string(s2, expr.get_value()); 
+
+	s.add("STR(__string_");
+	s.add(class_name);
 	s.add(s2);
-	s.add(" + 2)");
+	s.add(")");
 	expr.set_value(s);
 	_expr_stk.push(expr);
 	s2.dispose();
@@ -705,7 +731,9 @@ method void expr_gen_var(in Aexpr expr)
 	}
 	if ((v != null) && (v.get_kind() == Aclass.$Cfield)) {
 		s := string.new(8);
-		s.add("D__");
+		s.add("_");
+		s.add(class_name);
+		s.add("_");
 		s.add(stri);
 		expr.set_value(s);
 		_expr_stk.push(expr);
@@ -739,7 +767,7 @@ method void expr_process(in Aexpr expr)
 		if (op == Aclass.$Cnull) {
 			expr_gen0(expr, "0");
 		} else if (op == Aclass.$Cchar_const) {
-			expr_gen_char_const(expr); // FIXME
+			expr_gen_char_const(expr); 
 		} else if (op == Aclass.$Cint_const) {
 			_expr_stk.push(expr);
 		} else if (op == Aclass.$Cstr_const) {
@@ -1172,13 +1200,7 @@ method void pass_3(io string str, in Amember mb, in int k)
 }
 	
 method void pass_4(in string str, in Amember mb, in int k)
-{	
-	if (k == Aclass.$Cfield) {
-		_data.add("#undef ");
-		_data.add("D__");
-        	_data.add(mb.get_name_string());
-		_data.add("\n");
-	}
+{
 	return;
 }
 

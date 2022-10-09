@@ -1,13 +1,15 @@
 
-all:
-	gcc -m64 -ggdb -Wall -o zjc zjc.c -lX11 -lGL -lGLU 
+all: zjc
 #	rm -rf zdjk_src/lib
 #	cp -r newlib zdjk_src/lib
 #	./zjc old
 #	gcc -m64 -ggdb -Wall -o djak old.c -lX11 -lGL -lGLU 
 	./zjc src
 	gcc -m64 -ggdb -Wall -o dj src.jack.c -lX11 -lGL -lGLU 
-	
+
+zjc: zjc.c
+	gcc -m64 -ggdb -Wall -o zjc zjc.c -lX11 -lGL -lGLU 
+
 mac:
 #	scp jml@192.168.43.93:src/jack/jackc.c .
 	xcodebuild
@@ -65,6 +67,7 @@ clean:
 	rm -f jack.run tests.run
 	rm -rf jack-linux
 	rm -f jack-linux.tar.gz
+	rm -f dj src.jack.c hello.jack.c zdj hi
 
 hello:
 	cc -o jack.run tools/jackc.c -lX11 -lGL -lGLU 

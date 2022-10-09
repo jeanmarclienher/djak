@@ -13,6 +13,7 @@
 #include <signal.h>
 
 #define var long
+#define STR(s) ((long)(s + 2))
 
 var main__main(void);
 var std__free(var mem);
