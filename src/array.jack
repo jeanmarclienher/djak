@@ -1,12 +1,9 @@
 class array {
-constructor array new(in int size)
+function array new(in int size)
 {
 	var array a;
-	var array t;
-	t := this;
 	a := std.alloc(size);
-	a[-1] := t[-1]; // class ID
-	std.free(t);
+	a[-1] := array.$_DcidD; // class ID
 	return a;
 }
 

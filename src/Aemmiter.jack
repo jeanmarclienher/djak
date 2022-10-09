@@ -32,7 +32,7 @@ constructor Aemmiter new()
 	return this;
 }
 
-method void dispose()
+virtual void dispose()
 {
 	_proc.dispose();
 	_stk.dispose();
@@ -88,17 +88,17 @@ method void gen_class()
 
 	s := string.new(4);
 	s.set_int(clas.get_nb_fields());
-       	_head.add("#define D__");
+       	_head.add("#define ");
        	_head.add(class_name);
-       	_head.add("___SIZE ");
+       	_head.add("___DsizeD ");
 	_head.add(s);
        	_head.add("\n");
 
 	class_id := class_id + 1;
 	s.set_int(class_id);
-       	_head.add("#define D__");
+       	_head.add("#define ");
        	_head.add(class_name);
-       	_head.add("___ID ");
+       	_head.add("___DcidD ");
 	_head.add(s);
        	_head.add("\n");
 	
@@ -149,9 +149,9 @@ method void gen_conditional_call(in Avirtual v, in Amember mb)
 	var int l;
 	var Atoken tok;
 
-	_data.add("\tcase D__");
+	_data.add("\tcase ");
 	_data.add(v.get_class_name());
-	_data.add("___ID:\n\t\treturn ");
+	_data.add("___DcidD:\n\t\treturn ");
 	params := mb.get_params();
 	_data.add(v.get_class_name());
 	_data.add("___V_");

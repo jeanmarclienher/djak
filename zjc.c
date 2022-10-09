@@ -15,21 +15,21 @@
 #define var long
 #define STR(s) ((long)(s + 2))
 #define NEW(c) long __this; \
-	__this = std__alloc(D__##c##___SIZE); \
-	((long*)__this)[-1] = D__##c##___ID
+	__this = std__alloc(c##___DsizeD); \
+	((long*)__this)[-1] = c##___DcidD
 
 var main__main(void);
 var std__free(var mem);
 
-#define D__std___SIZE 0
-#define D__std___ID 11
-#define D__console___SIZE 0
-#define D__console___ID 12
+#define std___DsizeD 0
+#define std___DcidD 11
+#define console___DsizeD 0
+#define console___DcidD 12
 long console__log(long str);
 long console__log_str(long str);
 long console__log_int(long n);
-#define D__buffer___SIZE 3
-#define D__buffer___ID 13
+#define buffer___DsizeD 3
+#define buffer___DcidD 13
 long buffer__new(long initial_size);
 long buffer__dispose_all(long __this);
 long buffer__dispose(long __this);
@@ -45,8 +45,8 @@ long buffer__get_last(long __this);
 long buffer__pop(long __this);
 long buffer__unshift(long __this, long elem);
 long buffer__shift(long __this);
-#define D__Alexer___SIZE 22
-#define D__Alexer___ID 14
+#define Alexer___DsizeD 22
+#define Alexer___DcidD 14
 #define Alexer__Cstring 1
 #define Alexer__Cquote 2
 #define Alexer__Ccomment 3
@@ -76,8 +76,8 @@ long Alexer__validate(long __this, long type_);
 long Alexer__error(long __this, long msg);
 long Alexer__state(long __this);
 long Alexer__finish(long __this);
-#define D__Aexpr___SIZE 10
-#define D__Aexpr___ID 15
+#define Aexpr___DsizeD 10
+#define Aexpr___DcidD 15
 long Aexpr__new(long op_, long precedence_, long associativity_);
 long Aexpr__dispose(long __this);
 #define Aexpr__dispose(___this) virtual__dispose(___this)
@@ -103,8 +103,8 @@ long Aexpr__get_associativity(long __this);
 long Aexpr__close(long __this, long op_);
 long Aexpr__add(long __this, long ex);
 long Aexpr__dump(long __this, long depth);
-#define D__Amember___SIZE 9
-#define D__Amember___ID 16
+#define Amember___DsizeD 9
+#define Amember___DcidD 16
 long Amember__new(long kind_, long type_, long type_id_, long name_);
 long Amember__dispose(long __this);
 #define Amember__dispose(___this) virtual__dispose(___this)
@@ -125,8 +125,8 @@ long Amember__get_params(long __this);
 long Amember__add_param(long __this, long kind_, long type_, long type_id_, long name_);
 long Amember__add_var(long __this, long kind_, long type_, long type_id_, long name_);
 long Amember__add_statement(long __this, long statement_);
-#define D__Aparser___SIZE 7
-#define D__Aparser___ID 17
+#define Aparser___DsizeD 7
+#define Aparser___DcidD 17
 #define Aparser__Croot 1
 #define Aparser__Cclass_dec 2
 #define Aparser__Cstatement 3
@@ -211,69 +211,8 @@ long Aparser__match_op(long __this, long id);
 long Aparser__match_newline(long __this);
 long Aparser__match_str(long __this, long id);
 long Aparser__state_machine(long __this);
-#define D__main___SIZE 0
-#define D__main___ID 18
-#define main__Cblock 10
-#define main__Chello STR(__string_mainChello)
-long main__copyto(long f, long output);
-long main__process_file(long f, long lex);
-long main__main();
-#define D__Aemmiter___SIZE 15
-#define D__Aemmiter___ID 19
-long Aemmiter__new();
-long Aemmiter__dispose(long __this);
-long Aemmiter__emmit(long __this, long par);
-long Aemmiter__get_head(long __this);
-long Aemmiter__get_data(long __this);
-long Aemmiter__get_mid(long __this);
-long Aemmiter__gen_class(long __this);
-long Aemmiter__gen_member(long __this, long mb);
-long Aemmiter__gen_conditional_call(long __this, long v, long mb);
-long Aemmiter__gen_virtuals(long __this);
-long Aemmiter__pass_0(long __this, long str, long mb, long k);
-long Aemmiter__pass_1(long __this, long str, long mb, long k);
-long Aemmiter__pass_2(long __this, long str, long mb, long k);
-long Aemmiter__pad(long __this, long depth);
-long Aemmiter__find_param(long __this, long stri);
-long Aemmiter__find_member(long __this, long stri);
-long Aemmiter__find_field(long __this, long stri);
-long Aemmiter__find_static(long __this, long stri);
-long Aemmiter__find_meth_virt(long __this, long stri);
-long Aemmiter__find_local(long __this, long stri);
-long Aemmiter__expr_gen_call(long __this, long expr);
-long Aemmiter__expr_gen_sub_expr(long __this, long expr);
-long Aemmiter__expr_gen_comma(long __this, long expr);
-long Aemmiter__expr_gen_index(long __this, long expr);
-long Aemmiter__expr_gen_par(long __this, long expr);
-long Aemmiter__expr_gen_constant(long __this, long expr);
-long Aemmiter__expr_gen_dot(long __this, long expr);
-long Aemmiter__gen_string(long __this, long s2, long value);
-long Aemmiter__expr_gen_str_const(long __this, long expr);
-long Aemmiter__expr_gen_char_const(long __this, long expr);
-long Aemmiter__expr_gen0(long __this, long expr, long op);
-long Aemmiter__expr_gen1(long __this, long expr, long op);
-long Aemmiter__expr_gen_assign(long __this, long expr, long op);
-long Aemmiter__expr_gen2(long __this, long expr, long op);
-long Aemmiter__expr_gen_var(long __this, long expr);
-long Aemmiter__expr_process(long __this, long expr);
-long Aemmiter__expr_gen(long __this, long expr);
-long Aemmiter__body_gen(long __this, long mb, long k, long vars_, long body_);
-long Aemmiter__gen_type(long __this, long mb);
-long Aemmiter__add_virtual(long __this, long mb);
-long Aemmiter__gen_virtual_caller(long __this, long mb);
-long Aemmiter__gen_method_decl(long __this, long dest, long c_name, long name, long mb, long k);
-long Aemmiter__pass_3(long __this, long str, long mb, long k);
-long Aemmiter__pass_4(long __this, long str, long mb, long k);
-long Aemmiter__error(long __this, long t, long e);
-long Aemmiter__dump(long __this);
-#define D__array___SIZE 0
-#define D__array___ID 20
-long array__new(long size);
-long array__dispose(long __this);
-#define array__dispose(___this) virtual__dispose(___this)
-long array___V_dispose(long __this);
-#define D__Astatement___SIZE 6
-#define D__Astatement___ID 21
+#define Astatement___DsizeD 6
+#define Astatement___DcidD 18
 long Astatement__new(long type_, long parent_, long depth_);
 long Astatement__dispose(long __this);
 #define Astatement__dispose(___this) virtual__dispose(___this)
@@ -287,8 +226,8 @@ long Astatement__get_expression(long __this);
 long Astatement__add_else(long __this, long type_);
 long Astatement__add_statement(long __this, long statement_);
 long Astatement__set_expression(long __this, long expr_);
-#define D__Atoken___SIZE 4
-#define D__Atoken___ID 22
+#define Atoken___DsizeD 4
+#define Atoken___DcidD 19
 long Atoken__new(long type1, long _data1, long line1, long file1);
 long Atoken__dispose(long __this);
 #define Atoken__dispose(___this) virtual__dispose(___this)
@@ -297,8 +236,8 @@ long Atoken__get_data(long __this);
 long Atoken__get_type(long __this);
 long Atoken__get_line(long __this);
 long Atoken__get_file(long __this);
-#define D__Avirtual___SIZE 3
-#define D__Avirtual___ID 23
+#define Avirtual___DsizeD 3
+#define Avirtual___DcidD 20
 long Avirtual__new(long memb_, long class_);
 long Avirtual__dispose(long __this);
 #define Avirtual__dispose(___this) virtual__dispose(___this)
@@ -308,10 +247,10 @@ long Avirtual__get_next(long __this);
 long Avirtual__get_class_name(long __this);
 long Avirtual__get_member(long __this);
 long Avirtual__get_member_name(long __this);
-#define D__bytes___SIZE 0
-#define D__bytes___ID 24
-#define D__file___SIZE 2
-#define D__file___ID 25
+#define bytes___DsizeD 0
+#define bytes___DcidD 21
+#define file___DsizeD 2
+#define file___DcidD 22
 long file__new(long folder, long fscb);
 long file__dispose(long __this);
 #define file__dispose(___this) virtual__dispose(___this)
@@ -324,8 +263,8 @@ long file__filesize(long __this, long name);
 long file__scandir(long __this, long name);
 long file__rmdir(long __this, long name);
 long file__unlink(long __this, long name);
-#define D__hash___SIZE 2
-#define D__hash___ID 26
+#define hash___DsizeD 2
+#define hash___DcidD 23
 #define hash__Cnext 0
 #define hash__Chash 1
 #define hash__Ckey 2
@@ -336,8 +275,8 @@ long hash__dispose(long __this);
 long hash___V_dispose(long __this);
 long hash__add(long __this, long key, long value);
 long hash__get(long __this, long key);
-#define D__response___SIZE 3
-#define D__response___ID 27
+#define response___DsizeD 3
+#define response___DcidD 24
 long response__new();
 long response__dispose(long __this);
 #define response__dispose(___this) virtual__dispose(___this)
@@ -348,8 +287,8 @@ long response__set_bytes(long __this, long status_, long data_);
 long response__get_status(long __this);
 long response__get_string(long __this);
 long response__get_bytes(long __this);
-#define D__string___SIZE 2
-#define D__string___ID 28
+#define string___DsizeD 2
+#define string___DcidD 25
 long string__new(long alloc);
 long string__dispose(long __this);
 #define string__dispose(___this) virtual__dispose(___this)
@@ -371,8 +310,8 @@ long string__compare(long __this, long other);
 long string__get_hash(long __this);
 long string__get_at(long __this, long at);
 long string__set_at(long __this, long at, long v);
-#define D__Aclass___SIZE 14
-#define D__Aclass___ID 29
+#define Aclass___DsizeD 14
+#define Aclass___DcidD 26
 #define Aclass__Cstatic 2
 #define Aclass__Cfield 3
 #define Aclass__Cconst 4
@@ -467,6 +406,69 @@ long Aclass__expr_int_const(long __this, long value_, long orig);
 long Aclass__expr_char_const(long __this, long value_, long orig);
 long Aclass__expr_str_const(long __this, long value_, long orig);
 long Aclass__expr_constant(long __this, long class_name_, long const_name_, long orig);
+#define main___DsizeD 0
+#define main___DcidD 27
+#define main__Cblock 10
+#define main__Chello STR(__string_mainChello)
+long main__copyto(long f, long output);
+long main__process_file(long f, long lex);
+long main__main();
+#define Aemmiter___DsizeD 15
+#define Aemmiter___DcidD 28
+long Aemmiter__new();
+long Aemmiter__dispose(long __this);
+#define Aemmiter__dispose(___this) virtual__dispose(___this)
+long Aemmiter___V_dispose(long __this);
+long Aemmiter__emmit(long __this, long par);
+long Aemmiter__get_head(long __this);
+long Aemmiter__get_data(long __this);
+long Aemmiter__get_mid(long __this);
+long Aemmiter__gen_class(long __this);
+long Aemmiter__gen_member(long __this, long mb);
+long Aemmiter__gen_conditional_call(long __this, long v, long mb);
+long Aemmiter__gen_virtuals(long __this);
+long Aemmiter__pass_0(long __this, long str, long mb, long k);
+long Aemmiter__pass_1(long __this, long str, long mb, long k);
+long Aemmiter__pass_2(long __this, long str, long mb, long k);
+long Aemmiter__pad(long __this, long depth);
+long Aemmiter__find_param(long __this, long stri);
+long Aemmiter__find_member(long __this, long stri);
+long Aemmiter__find_field(long __this, long stri);
+long Aemmiter__find_static(long __this, long stri);
+long Aemmiter__find_meth_virt(long __this, long stri);
+long Aemmiter__find_local(long __this, long stri);
+long Aemmiter__expr_gen_call(long __this, long expr);
+long Aemmiter__expr_gen_sub_expr(long __this, long expr);
+long Aemmiter__expr_gen_comma(long __this, long expr);
+long Aemmiter__expr_gen_index(long __this, long expr);
+long Aemmiter__expr_gen_par(long __this, long expr);
+long Aemmiter__expr_gen_constant(long __this, long expr);
+long Aemmiter__expr_gen_dot(long __this, long expr);
+long Aemmiter__gen_string(long __this, long s2, long value);
+long Aemmiter__expr_gen_str_const(long __this, long expr);
+long Aemmiter__expr_gen_char_const(long __this, long expr);
+long Aemmiter__expr_gen0(long __this, long expr, long op);
+long Aemmiter__expr_gen1(long __this, long expr, long op);
+long Aemmiter__expr_gen_assign(long __this, long expr, long op);
+long Aemmiter__expr_gen2(long __this, long expr, long op);
+long Aemmiter__expr_gen_var(long __this, long expr);
+long Aemmiter__expr_process(long __this, long expr);
+long Aemmiter__expr_gen(long __this, long expr);
+long Aemmiter__body_gen(long __this, long mb, long k, long vars_, long body_);
+long Aemmiter__gen_type(long __this, long mb);
+long Aemmiter__add_virtual(long __this, long mb);
+long Aemmiter__gen_virtual_caller(long __this, long mb);
+long Aemmiter__gen_method_decl(long __this, long dest, long c_name, long name, long mb, long k);
+long Aemmiter__pass_3(long __this, long str, long mb, long k);
+long Aemmiter__pass_4(long __this, long str, long mb, long k);
+long Aemmiter__error(long __this, long t, long e);
+long Aemmiter__dump(long __this);
+#define array___DsizeD 0
+#define array___DcidD 29
+long array__new(long size);
+long array__dispose(long __this);
+#define array__dispose(___this) virtual__dispose(___this)
+long array___V_dispose(long __this);
 long virtual__dispose(long __this);
 static char __strings_Alexer1[]="Lexer: ";
 static long __string_Alexer1[]={0,0, (long) __strings_Alexer1,-1};
@@ -746,350 +748,350 @@ static char __strings_Aparser138[]=",";
 static long __string_Aparser138[]={0,0, (long) __strings_Aparser138,-1};
 static char __strings_Aparser139[]="unexpected state";
 static long __string_Aparser139[]={0,0, (long) __strings_Aparser139,-1};
+static char __strings_Astatement140[]="DONT KNOW WAHT";
+static long __string_Astatement140[]={0,0, (long) __strings_Astatement140,-1};
+static char __strings_string141[]="";
+static long __string_string141[]={0,0, (long) __strings_string141,-1};
+static char __strings_Aclass142[]="\t";
+static long __string_Aclass142[]={0,0, (long) __strings_Aclass142,-1};
+static char __strings_Aclass143[]="Unknown operator.";
+static long __string_Aclass143[]={0,0, (long) __strings_Aclass143,-1};
+static char __strings_Aclass144[]="What a mess in parenthesis..";
+static long __string_Aclass144[]={0,0, (long) __strings_Aclass144,-1};
+static char __strings_Aclass145[]="What a mess in index..";
+static long __string_Aclass145[]={0,0, (long) __strings_Aclass145,-1};
+static char __strings_Aclass146[]="What a mess..";
+static long __string_Aclass146[]={0,0, (long) __strings_Aclass146,-1};
 static char __strings_mainChello[]=" --- The Jack 3.0.3 ---";
 static long __string_mainChello[]={0,0, (long) __strings_mainChello,-1};
-static char __strings_main140[]="Including : ";
-static long __string_main140[]={0,0, (long) __strings_main140,-1};
-static char __strings_main141[]="";
-static long __string_main141[]={0,0, (long) __strings_main141,-1};
-static char __strings_main142[]="Compiling : ";
-static long __string_main142[]={0,0, (long) __strings_main142,-1};
-static char __strings_main143[]="";
-static long __string_main143[]={0,0, (long) __strings_main143,-1};
-static char __strings_main144[]="";
-static long __string_main144[]={0,0, (long) __strings_main144,-1};
-static char __strings_main145[]="wrong number of command line arguments";
-static long __string_main145[]={0,0, (long) __strings_main145,-1};
-static char __strings_main146[]=".jack.c";
-static long __string_main146[]={0,0, (long) __strings_main146,-1};
-static char __strings_main147[]="";
+static char __strings_main147[]="Including : ";
 static long __string_main147[]={0,0, (long) __strings_main147,-1};
-static char __strings_main148[]="\n";
+static char __strings_main148[]="";
 static long __string_main148[]={0,0, (long) __strings_main148,-1};
-static char __strings_main149[]=".jack";
+static char __strings_main149[]="Compiling : ";
 static long __string_main149[]={0,0, (long) __strings_main149,-1};
-static char __strings_main150[]=".h";
+static char __strings_main150[]="";
 static long __string_main150[]={0,0, (long) __strings_main150,-1};
-static char __strings_main151[]=".c";
+static char __strings_main151[]="";
 static long __string_main151[]={0,0, (long) __strings_main151,-1};
-static char __strings_main152[]="\n";
+static char __strings_main152[]="wrong number of command line arguments";
 static long __string_main152[]={0,0, (long) __strings_main152,-1};
-static char __strings_main153[]="";
+static char __strings_main153[]=".jack.c";
 static long __string_main153[]={0,0, (long) __strings_main153,-1};
-static char __strings_main154[]="Output to : ";
+static char __strings_main154[]="";
 static long __string_main154[]={0,0, (long) __strings_main154,-1};
-static char __strings_Aemmiter155[]="// class ";
-static long __string_Aemmiter155[]={0,0, (long) __strings_Aemmiter155,-1};
-static char __strings_Aemmiter156[]="\n";
-static long __string_Aemmiter156[]={0,0, (long) __strings_Aemmiter156,-1};
-static char __strings_Aemmiter157[]="#define D__";
-static long __string_Aemmiter157[]={0,0, (long) __strings_Aemmiter157,-1};
-static char __strings_Aemmiter158[]="___SIZE ";
-static long __string_Aemmiter158[]={0,0, (long) __strings_Aemmiter158,-1};
-static char __strings_Aemmiter159[]="\n";
-static long __string_Aemmiter159[]={0,0, (long) __strings_Aemmiter159,-1};
-static char __strings_Aemmiter160[]="#define D__";
-static long __string_Aemmiter160[]={0,0, (long) __strings_Aemmiter160,-1};
-static char __strings_Aemmiter161[]="___ID ";
-static long __string_Aemmiter161[]={0,0, (long) __strings_Aemmiter161,-1};
-static char __strings_Aemmiter162[]="\n";
+static char __strings_main155[]="\n";
+static long __string_main155[]={0,0, (long) __strings_main155,-1};
+static char __strings_main156[]=".jack";
+static long __string_main156[]={0,0, (long) __strings_main156,-1};
+static char __strings_main157[]=".h";
+static long __string_main157[]={0,0, (long) __strings_main157,-1};
+static char __strings_main158[]=".c";
+static long __string_main158[]={0,0, (long) __strings_main158,-1};
+static char __strings_main159[]="\n";
+static long __string_main159[]={0,0, (long) __strings_main159,-1};
+static char __strings_main160[]="";
+static long __string_main160[]={0,0, (long) __strings_main160,-1};
+static char __strings_main161[]="Output to : ";
+static long __string_main161[]={0,0, (long) __strings_main161,-1};
+static char __strings_Aemmiter162[]="// class ";
 static long __string_Aemmiter162[]={0,0, (long) __strings_Aemmiter162,-1};
-static char __strings_Aemmiter163[]="\tcase D__";
+static char __strings_Aemmiter163[]="\n";
 static long __string_Aemmiter163[]={0,0, (long) __strings_Aemmiter163,-1};
-static char __strings_Aemmiter164[]="___ID:\n\t\treturn ";
+static char __strings_Aemmiter164[]="#define ";
 static long __string_Aemmiter164[]={0,0, (long) __strings_Aemmiter164,-1};
-static char __strings_Aemmiter165[]="___V_";
+static char __strings_Aemmiter165[]="___DsizeD ";
 static long __string_Aemmiter165[]={0,0, (long) __strings_Aemmiter165,-1};
-static char __strings_Aemmiter166[]="(__this";
+static char __strings_Aemmiter166[]="\n";
 static long __string_Aemmiter166[]={0,0, (long) __strings_Aemmiter166,-1};
-static char __strings_Aemmiter167[]=", ";
+static char __strings_Aemmiter167[]="#define ";
 static long __string_Aemmiter167[]={0,0, (long) __strings_Aemmiter167,-1};
-static char __strings_Aemmiter168[]=");\n";
+static char __strings_Aemmiter168[]="___DcidD ";
 static long __string_Aemmiter168[]={0,0, (long) __strings_Aemmiter168,-1};
-static char __strings_Aemmiter169[]="virtual";
+static char __strings_Aemmiter169[]="\n";
 static long __string_Aemmiter169[]={0,0, (long) __strings_Aemmiter169,-1};
-static char __strings_Aemmiter170[]=";\n";
+static char __strings_Aemmiter170[]="\tcase ";
 static long __string_Aemmiter170[]={0,0, (long) __strings_Aemmiter170,-1};
-static char __strings_Aemmiter171[]="virtual";
+static char __strings_Aemmiter171[]="___DcidD:\n\t\treturn ";
 static long __string_Aemmiter171[]={0,0, (long) __strings_Aemmiter171,-1};
-static char __strings_Aemmiter172[]="\n{\n\tlong cid;\n";
+static char __strings_Aemmiter172[]="___V_";
 static long __string_Aemmiter172[]={0,0, (long) __strings_Aemmiter172,-1};
-static char __strings_Aemmiter173[]="\tcid = ((long*)__this)[-1];\n";
+static char __strings_Aemmiter173[]="(__this";
 static long __string_Aemmiter173[]={0,0, (long) __strings_Aemmiter173,-1};
-static char __strings_Aemmiter174[]="\tswitch (cid) {\n";
+static char __strings_Aemmiter174[]=", ";
 static long __string_Aemmiter174[]={0,0, (long) __strings_Aemmiter174,-1};
-static char __strings_Aemmiter175[]="\tdefault:\n\t\tstd__panic();\n\t}\n";
+static char __strings_Aemmiter175[]=");\n";
 static long __string_Aemmiter175[]={0,0, (long) __strings_Aemmiter175,-1};
-static char __strings_Aemmiter176[]="\treturn 0;\n}\n";
+static char __strings_Aemmiter176[]="virtual";
 static long __string_Aemmiter176[]={0,0, (long) __strings_Aemmiter176,-1};
-static char __strings_Aemmiter177[]="#define ";
+static char __strings_Aemmiter177[]=";\n";
 static long __string_Aemmiter177[]={0,0, (long) __strings_Aemmiter177,-1};
-static char __strings_Aemmiter178[]="__";
+static char __strings_Aemmiter178[]="virtual";
 static long __string_Aemmiter178[]={0,0, (long) __strings_Aemmiter178,-1};
-static char __strings_Aemmiter179[]=" ";
+static char __strings_Aemmiter179[]="\n{\n\tlong cid;\n";
 static long __string_Aemmiter179[]={0,0, (long) __strings_Aemmiter179,-1};
-static char __strings_Aemmiter180[]="STR(__string_";
+static char __strings_Aemmiter180[]="\tcid = ((long*)__this)[-1];\n";
 static long __string_Aemmiter180[]={0,0, (long) __strings_Aemmiter180,-1};
-static char __strings_Aemmiter181[]=")";
+static char __strings_Aemmiter181[]="\tswitch (cid) {\n";
 static long __string_Aemmiter181[]={0,0, (long) __strings_Aemmiter181,-1};
-static char __strings_Aemmiter182[]="\n";
+static char __strings_Aemmiter182[]="\tdefault:\n\t\tstd__panic();\n\t}\n";
 static long __string_Aemmiter182[]={0,0, (long) __strings_Aemmiter182,-1};
-static char __strings_Aemmiter183[]="#define _";
+static char __strings_Aemmiter183[]="\treturn 0;\n}\n";
 static long __string_Aemmiter183[]={0,0, (long) __strings_Aemmiter183,-1};
-static char __strings_Aemmiter184[]="_";
+static char __strings_Aemmiter184[]="#define ";
 static long __string_Aemmiter184[]={0,0, (long) __strings_Aemmiter184,-1};
-static char __strings_Aemmiter185[]=" ((long*)__this)[";
+static char __strings_Aemmiter185[]="__";
 static long __string_Aemmiter185[]={0,0, (long) __strings_Aemmiter185,-1};
-static char __strings_Aemmiter186[]="]\n";
+static char __strings_Aemmiter186[]=" ";
 static long __string_Aemmiter186[]={0,0, (long) __strings_Aemmiter186,-1};
-static char __strings_Aemmiter187[]="static long ";
+static char __strings_Aemmiter187[]="STR(__string_";
 static long __string_Aemmiter187[]={0,0, (long) __strings_Aemmiter187,-1};
-static char __strings_Aemmiter188[]="__";
+static char __strings_Aemmiter188[]=")";
 static long __string_Aemmiter188[]={0,0, (long) __strings_Aemmiter188,-1};
-static char __strings_Aemmiter189[]=" = 0;\n";
+static char __strings_Aemmiter189[]="\n";
 static long __string_Aemmiter189[]={0,0, (long) __strings_Aemmiter189,-1};
-static char __strings_Aemmiter190[]="\t";
+static char __strings_Aemmiter190[]="#define _";
 static long __string_Aemmiter190[]={0,0, (long) __strings_Aemmiter190,-1};
-static char __strings_Aemmiter191[]="__";
+static char __strings_Aemmiter191[]="_";
 static long __string_Aemmiter191[]={0,0, (long) __strings_Aemmiter191,-1};
-static char __strings_Aemmiter192[]="(__this, ";
+static char __strings_Aemmiter192[]=" ((long*)__this)[";
 static long __string_Aemmiter192[]={0,0, (long) __strings_Aemmiter192,-1};
-static char __strings_Aemmiter193[]=")";
+static char __strings_Aemmiter193[]="]\n";
 static long __string_Aemmiter193[]={0,0, (long) __strings_Aemmiter193,-1};
-static char __strings_Aemmiter194[]="(__this)";
+static char __strings_Aemmiter194[]="static long ";
 static long __string_Aemmiter194[]={0,0, (long) __strings_Aemmiter194,-1};
-static char __strings_Aemmiter195[]="cannot find method.";
+static char __strings_Aemmiter195[]="__";
 static long __string_Aemmiter195[]={0,0, (long) __strings_Aemmiter195,-1};
-static char __strings_Aemmiter196[]="wrong type of method.";
+static char __strings_Aemmiter196[]=" = 0;\n";
 static long __string_Aemmiter196[]={0,0, (long) __strings_Aemmiter196,-1};
-static char __strings_Aemmiter197[]="__";
+static char __strings_Aemmiter197[]="\t";
 static long __string_Aemmiter197[]={0,0, (long) __strings_Aemmiter197,-1};
-static char __strings_Aemmiter198[]="(";
+static char __strings_Aemmiter198[]="__";
 static long __string_Aemmiter198[]={0,0, (long) __strings_Aemmiter198,-1};
-static char __strings_Aemmiter199[]="_";
+static char __strings_Aemmiter199[]="(__this, ";
 static long __string_Aemmiter199[]={0,0, (long) __strings_Aemmiter199,-1};
-static char __strings_Aemmiter200[]="_";
+static char __strings_Aemmiter200[]=")";
 static long __string_Aemmiter200[]={0,0, (long) __strings_Aemmiter200,-1};
-static char __strings_Aemmiter201[]=",";
+static char __strings_Aemmiter201[]="(__this)";
 static long __string_Aemmiter201[]={0,0, (long) __strings_Aemmiter201,-1};
-static char __strings_Aemmiter202[]=")";
+static char __strings_Aemmiter202[]="cannot find method.";
 static long __string_Aemmiter202[]={0,0, (long) __strings_Aemmiter202,-1};
-static char __strings_Aemmiter203[]="__";
+static char __strings_Aemmiter203[]="wrong type of method.";
 static long __string_Aemmiter203[]={0,0, (long) __strings_Aemmiter203,-1};
-static char __strings_Aemmiter204[]="(";
+static char __strings_Aemmiter204[]="__";
 static long __string_Aemmiter204[]={0,0, (long) __strings_Aemmiter204,-1};
-static char __strings_Aemmiter205[]=")";
+static char __strings_Aemmiter205[]="(";
 static long __string_Aemmiter205[]={0,0, (long) __strings_Aemmiter205,-1};
-static char __strings_Aemmiter206[]=",";
+static char __strings_Aemmiter206[]="_";
 static long __string_Aemmiter206[]={0,0, (long) __strings_Aemmiter206,-1};
-static char __strings_Aemmiter207[]="((long*)";
+static char __strings_Aemmiter207[]="_";
 static long __string_Aemmiter207[]={0,0, (long) __strings_Aemmiter207,-1};
-static char __strings_Aemmiter208[]=")[";
+static char __strings_Aemmiter208[]=",";
 static long __string_Aemmiter208[]={0,0, (long) __strings_Aemmiter208,-1};
-static char __strings_Aemmiter209[]="]";
+static char __strings_Aemmiter209[]=")";
 static long __string_Aemmiter209[]={0,0, (long) __strings_Aemmiter209,-1};
-static char __strings_Aemmiter210[]="(";
+static char __strings_Aemmiter210[]="__";
 static long __string_Aemmiter210[]={0,0, (long) __strings_Aemmiter210,-1};
-static char __strings_Aemmiter211[]=")";
+static char __strings_Aemmiter211[]="(";
 static long __string_Aemmiter211[]={0,0, (long) __strings_Aemmiter211,-1};
-static char __strings_Aemmiter212[]="__";
+static char __strings_Aemmiter212[]=")";
 static long __string_Aemmiter212[]={0,0, (long) __strings_Aemmiter212,-1};
-static char __strings_Aemmiter213[]="static char __strings_";
+static char __strings_Aemmiter213[]=",";
 static long __string_Aemmiter213[]={0,0, (long) __strings_Aemmiter213,-1};
-static char __strings_Aemmiter214[]="[]=";
+static char __strings_Aemmiter214[]="((long*)";
 static long __string_Aemmiter214[]={0,0, (long) __strings_Aemmiter214,-1};
-static char __strings_Aemmiter215[]=";\n";
+static char __strings_Aemmiter215[]=")[";
 static long __string_Aemmiter215[]={0,0, (long) __strings_Aemmiter215,-1};
-static char __strings_Aemmiter216[]="static long __string_";
+static char __strings_Aemmiter216[]="]";
 static long __string_Aemmiter216[]={0,0, (long) __strings_Aemmiter216,-1};
-static char __strings_Aemmiter217[]="[]={0,0, ";
+static char __strings_Aemmiter217[]="(";
 static long __string_Aemmiter217[]={0,0, (long) __strings_Aemmiter217,-1};
-static char __strings_Aemmiter218[]="(long) __strings_";
+static char __strings_Aemmiter218[]=")";
 static long __string_Aemmiter218[]={0,0, (long) __strings_Aemmiter218,-1};
-static char __strings_Aemmiter219[]=",-1};\n";
+static char __strings_Aemmiter219[]="__";
 static long __string_Aemmiter219[]={0,0, (long) __strings_Aemmiter219,-1};
-static char __strings_Aemmiter220[]="STR(__string_";
+static char __strings_Aemmiter220[]="static char __strings_";
 static long __string_Aemmiter220[]={0,0, (long) __strings_Aemmiter220,-1};
-static char __strings_Aemmiter221[]=")";
+static char __strings_Aemmiter221[]="[]=";
 static long __string_Aemmiter221[]={0,0, (long) __strings_Aemmiter221,-1};
-static char __strings_Aemmiter222[]="'";
+static char __strings_Aemmiter222[]=";\n";
 static long __string_Aemmiter222[]={0,0, (long) __strings_Aemmiter222,-1};
-static char __strings_Aemmiter223[]="'";
+static char __strings_Aemmiter223[]="static long __string_";
 static long __string_Aemmiter223[]={0,0, (long) __strings_Aemmiter223,-1};
-static char __strings_Aemmiter224[]="(";
+static char __strings_Aemmiter224[]="[]={0,0, ";
 static long __string_Aemmiter224[]={0,0, (long) __strings_Aemmiter224,-1};
-static char __strings_Aemmiter225[]=")";
+static char __strings_Aemmiter225[]="(long) __strings_";
 static long __string_Aemmiter225[]={0,0, (long) __strings_Aemmiter225,-1};
-static char __strings_Aemmiter226[]="(";
+static char __strings_Aemmiter226[]=",-1};\n";
 static long __string_Aemmiter226[]={0,0, (long) __strings_Aemmiter226,-1};
-static char __strings_Aemmiter227[]=")";
+static char __strings_Aemmiter227[]="STR(__string_";
 static long __string_Aemmiter227[]={0,0, (long) __strings_Aemmiter227,-1};
-static char __strings_Aemmiter228[]="(";
+static char __strings_Aemmiter228[]=")";
 static long __string_Aemmiter228[]={0,0, (long) __strings_Aemmiter228,-1};
-static char __strings_Aemmiter229[]=")";
+static char __strings_Aemmiter229[]="'";
 static long __string_Aemmiter229[]={0,0, (long) __strings_Aemmiter229,-1};
-static char __strings_Aemmiter230[]="_";
+static char __strings_Aemmiter230[]="'";
 static long __string_Aemmiter230[]={0,0, (long) __strings_Aemmiter230,-1};
-static char __strings_Aemmiter231[]="_";
+static char __strings_Aemmiter231[]="(";
 static long __string_Aemmiter231[]={0,0, (long) __strings_Aemmiter231,-1};
-static char __strings_Aemmiter232[]="__";
+static char __strings_Aemmiter232[]=")";
 static long __string_Aemmiter232[]={0,0, (long) __strings_Aemmiter232,-1};
-static char __strings_Aemmiter233[]="0";
+static char __strings_Aemmiter233[]="(";
 static long __string_Aemmiter233[]={0,0, (long) __strings_Aemmiter233,-1};
-static char __strings_Aemmiter234[]="__this";
+static char __strings_Aemmiter234[]=")";
 static long __string_Aemmiter234[]={0,0, (long) __strings_Aemmiter234,-1};
-static char __strings_Aemmiter235[]="wrong expression...";
+static char __strings_Aemmiter235[]="(";
 static long __string_Aemmiter235[]={0,0, (long) __strings_Aemmiter235,-1};
-static char __strings_Aemmiter236[]="=";
+static char __strings_Aemmiter236[]=")";
 static long __string_Aemmiter236[]={0,0, (long) __strings_Aemmiter236,-1};
-static char __strings_Aemmiter237[]="==";
+static char __strings_Aemmiter237[]="_";
 static long __string_Aemmiter237[]={0,0, (long) __strings_Aemmiter237,-1};
-static char __strings_Aemmiter238[]="!=";
+static char __strings_Aemmiter238[]="_";
 static long __string_Aemmiter238[]={0,0, (long) __strings_Aemmiter238,-1};
-static char __strings_Aemmiter239[]=">=";
+static char __strings_Aemmiter239[]="__";
 static long __string_Aemmiter239[]={0,0, (long) __strings_Aemmiter239,-1};
-static char __strings_Aemmiter240[]="<=";
+static char __strings_Aemmiter240[]="0";
 static long __string_Aemmiter240[]={0,0, (long) __strings_Aemmiter240,-1};
-static char __strings_Aemmiter241[]=">";
+static char __strings_Aemmiter241[]="__this";
 static long __string_Aemmiter241[]={0,0, (long) __strings_Aemmiter241,-1};
-static char __strings_Aemmiter242[]="<";
+static char __strings_Aemmiter242[]="wrong expression...";
 static long __string_Aemmiter242[]={0,0, (long) __strings_Aemmiter242,-1};
-static char __strings_Aemmiter243[]="&&";
+static char __strings_Aemmiter243[]="=";
 static long __string_Aemmiter243[]={0,0, (long) __strings_Aemmiter243,-1};
-static char __strings_Aemmiter244[]="||";
+static char __strings_Aemmiter244[]="==";
 static long __string_Aemmiter244[]={0,0, (long) __strings_Aemmiter244,-1};
-static char __strings_Aemmiter245[]="+";
+static char __strings_Aemmiter245[]="!=";
 static long __string_Aemmiter245[]={0,0, (long) __strings_Aemmiter245,-1};
-static char __strings_Aemmiter246[]="-";
+static char __strings_Aemmiter246[]=">=";
 static long __string_Aemmiter246[]={0,0, (long) __strings_Aemmiter246,-1};
-static char __strings_Aemmiter247[]="*";
+static char __strings_Aemmiter247[]="<=";
 static long __string_Aemmiter247[]={0,0, (long) __strings_Aemmiter247,-1};
-static char __strings_Aemmiter248[]="/";
+static char __strings_Aemmiter248[]=">";
 static long __string_Aemmiter248[]={0,0, (long) __strings_Aemmiter248,-1};
-static char __strings_Aemmiter249[]="%";
+static char __strings_Aemmiter249[]="<";
 static long __string_Aemmiter249[]={0,0, (long) __strings_Aemmiter249,-1};
-static char __strings_Aemmiter250[]="!";
+static char __strings_Aemmiter250[]="&&";
 static long __string_Aemmiter250[]={0,0, (long) __strings_Aemmiter250,-1};
-static char __strings_Aemmiter251[]="+";
+static char __strings_Aemmiter251[]="||";
 static long __string_Aemmiter251[]={0,0, (long) __strings_Aemmiter251,-1};
-static char __strings_Aemmiter252[]="-";
+static char __strings_Aemmiter252[]="+";
 static long __string_Aemmiter252[]={0,0, (long) __strings_Aemmiter252,-1};
-static char __strings_Aemmiter253[]="UNKNOW OP\n";
+static char __strings_Aemmiter253[]="-";
 static long __string_Aemmiter253[]={0,0, (long) __strings_Aemmiter253,-1};
-static char __strings_Aemmiter254[]="{\n";
+static char __strings_Aemmiter254[]="*";
 static long __string_Aemmiter254[]={0,0, (long) __strings_Aemmiter254,-1};
-static char __strings_Aemmiter255[]="\tlong ";
+static char __strings_Aemmiter255[]="/";
 static long __string_Aemmiter255[]={0,0, (long) __strings_Aemmiter255,-1};
-static char __strings_Aemmiter256[]=";\n";
+static char __strings_Aemmiter256[]="%";
 static long __string_Aemmiter256[]={0,0, (long) __strings_Aemmiter256,-1};
-static char __strings_Aemmiter257[]="\tNEW(";
+static char __strings_Aemmiter257[]="!";
 static long __string_Aemmiter257[]={0,0, (long) __strings_Aemmiter257,-1};
-static char __strings_Aemmiter258[]=");\n";
+static char __strings_Aemmiter258[]="+";
 static long __string_Aemmiter258[]={0,0, (long) __strings_Aemmiter258,-1};
-static char __strings_Aemmiter259[]="\n";
+static char __strings_Aemmiter259[]="-";
 static long __string_Aemmiter259[]={0,0, (long) __strings_Aemmiter259,-1};
-static char __strings_Aemmiter260[]=" else if (";
+static char __strings_Aemmiter260[]="UNKNOW OP\n";
 static long __string_Aemmiter260[]={0,0, (long) __strings_Aemmiter260,-1};
-static char __strings_Aemmiter261[]="if (";
+static char __strings_Aemmiter261[]="{\n";
 static long __string_Aemmiter261[]={0,0, (long) __strings_Aemmiter261,-1};
-static char __strings_Aemmiter262[]=") {";
+static char __strings_Aemmiter262[]="\tlong ";
 static long __string_Aemmiter262[]={0,0, (long) __strings_Aemmiter262,-1};
-static char __strings_Aemmiter263[]=" else {";
+static char __strings_Aemmiter263[]=";\n";
 static long __string_Aemmiter263[]={0,0, (long) __strings_Aemmiter263,-1};
-static char __strings_Aemmiter264[]="break;";
+static char __strings_Aemmiter264[]="\tNEW(";
 static long __string_Aemmiter264[]={0,0, (long) __strings_Aemmiter264,-1};
-static char __strings_Aemmiter265[]="return ";
+static char __strings_Aemmiter265[]=");\n";
 static long __string_Aemmiter265[]={0,0, (long) __strings_Aemmiter265,-1};
-static char __strings_Aemmiter266[]=";";
+static char __strings_Aemmiter266[]="\n";
 static long __string_Aemmiter266[]={0,0, (long) __strings_Aemmiter266,-1};
-static char __strings_Aemmiter267[]="return 0;";
+static char __strings_Aemmiter267[]=" else if (";
 static long __string_Aemmiter267[]={0,0, (long) __strings_Aemmiter267,-1};
-static char __strings_Aemmiter268[]=";";
+static char __strings_Aemmiter268[]="if (";
 static long __string_Aemmiter268[]={0,0, (long) __strings_Aemmiter268,-1};
-static char __strings_Aemmiter269[]=";";
+static char __strings_Aemmiter269[]=") {";
 static long __string_Aemmiter269[]={0,0, (long) __strings_Aemmiter269,-1};
-static char __strings_Aemmiter270[]="while (";
+static char __strings_Aemmiter270[]=" else {";
 static long __string_Aemmiter270[]={0,0, (long) __strings_Aemmiter270,-1};
-static char __strings_Aemmiter271[]=") {";
+static char __strings_Aemmiter271[]="break;";
 static long __string_Aemmiter271[]={0,0, (long) __strings_Aemmiter271,-1};
-static char __strings_Aemmiter272[]="ERROR !!";
+static char __strings_Aemmiter272[]="return ";
 static long __string_Aemmiter272[]={0,0, (long) __strings_Aemmiter272,-1};
-static char __strings_Aemmiter273[]="\n";
+static char __strings_Aemmiter273[]=";";
 static long __string_Aemmiter273[]={0,0, (long) __strings_Aemmiter273,-1};
-static char __strings_Aemmiter274[]="}";
+static char __strings_Aemmiter274[]="return 0;";
 static long __string_Aemmiter274[]={0,0, (long) __strings_Aemmiter274,-1};
-static char __strings_Aemmiter275[]="\n";
+static char __strings_Aemmiter275[]=";";
 static long __string_Aemmiter275[]={0,0, (long) __strings_Aemmiter275,-1};
-static char __strings_Aemmiter276[]="}";
+static char __strings_Aemmiter276[]=";";
 static long __string_Aemmiter276[]={0,0, (long) __strings_Aemmiter276,-1};
-static char __strings_Aemmiter277[]="\n";
+static char __strings_Aemmiter277[]="while (";
 static long __string_Aemmiter277[]={0,0, (long) __strings_Aemmiter277,-1};
-static char __strings_Aemmiter278[]="long";
+static char __strings_Aemmiter278[]=") {";
 static long __string_Aemmiter278[]={0,0, (long) __strings_Aemmiter278,-1};
-static char __strings_Aemmiter279[]="void";
+static char __strings_Aemmiter279[]="ERROR !!";
 static long __string_Aemmiter279[]={0,0, (long) __strings_Aemmiter279,-1};
-static char __strings_Aemmiter280[]="unknown type";
+static char __strings_Aemmiter280[]="\n";
 static long __string_Aemmiter280[]={0,0, (long) __strings_Aemmiter280,-1};
-static char __strings_Aemmiter281[]="#define ";
+static char __strings_Aemmiter281[]="}";
 static long __string_Aemmiter281[]={0,0, (long) __strings_Aemmiter281,-1};
-static char __strings_Aemmiter282[]="__";
+static char __strings_Aemmiter282[]="\n";
 static long __string_Aemmiter282[]={0,0, (long) __strings_Aemmiter282,-1};
-static char __strings_Aemmiter283[]="(___this";
+static char __strings_Aemmiter283[]="}";
 static long __string_Aemmiter283[]={0,0, (long) __strings_Aemmiter283,-1};
-static char __strings_Aemmiter284[]=", ";
+static char __strings_Aemmiter284[]="\n";
 static long __string_Aemmiter284[]={0,0, (long) __strings_Aemmiter284,-1};
-static char __strings_Aemmiter285[]=") virtual__";
+static char __strings_Aemmiter285[]="long";
 static long __string_Aemmiter285[]={0,0, (long) __strings_Aemmiter285,-1};
-static char __strings_Aemmiter286[]="(___this";
+static char __strings_Aemmiter286[]="void";
 static long __string_Aemmiter286[]={0,0, (long) __strings_Aemmiter286,-1};
-static char __strings_Aemmiter287[]=", ";
+static char __strings_Aemmiter287[]="unknown type";
 static long __string_Aemmiter287[]={0,0, (long) __strings_Aemmiter287,-1};
-static char __strings_Aemmiter288[]=")\n";
+static char __strings_Aemmiter288[]="#define ";
 static long __string_Aemmiter288[]={0,0, (long) __strings_Aemmiter288,-1};
-static char __strings_Aemmiter289[]="long ";
+static char __strings_Aemmiter289[]="__";
 static long __string_Aemmiter289[]={0,0, (long) __strings_Aemmiter289,-1};
-static char __strings_Aemmiter290[]="__";
+static char __strings_Aemmiter290[]="(___this";
 static long __string_Aemmiter290[]={0,0, (long) __strings_Aemmiter290,-1};
-static char __strings_Aemmiter291[]="(";
+static char __strings_Aemmiter291[]=", ";
 static long __string_Aemmiter291[]={0,0, (long) __strings_Aemmiter291,-1};
-static char __strings_Aemmiter292[]="long __this";
+static char __strings_Aemmiter292[]=") virtual__";
 static long __string_Aemmiter292[]={0,0, (long) __strings_Aemmiter292,-1};
-static char __strings_Aemmiter293[]=", ";
+static char __strings_Aemmiter293[]="(___this";
 static long __string_Aemmiter293[]={0,0, (long) __strings_Aemmiter293,-1};
-static char __strings_Aemmiter294[]="long ";
+static char __strings_Aemmiter294[]=", ";
 static long __string_Aemmiter294[]={0,0, (long) __strings_Aemmiter294,-1};
-static char __strings_Aemmiter295[]=")";
+static char __strings_Aemmiter295[]=")\n";
 static long __string_Aemmiter295[]={0,0, (long) __strings_Aemmiter295,-1};
-static char __strings_Aemmiter296[]=";\n";
+static char __strings_Aemmiter296[]="long ";
 static long __string_Aemmiter296[]={0,0, (long) __strings_Aemmiter296,-1};
-static char __strings_Aemmiter297[]="_V_";
+static char __strings_Aemmiter297[]="__";
 static long __string_Aemmiter297[]={0,0, (long) __strings_Aemmiter297,-1};
-static char __strings_Aemmiter298[]=";\n";
+static char __strings_Aemmiter298[]="(";
 static long __string_Aemmiter298[]={0,0, (long) __strings_Aemmiter298,-1};
-static char __strings_Aemmiter299[]="\n";
+static char __strings_Aemmiter299[]="long __this";
 static long __string_Aemmiter299[]={0,0, (long) __strings_Aemmiter299,-1};
-static char __strings_Aemmiter300[]="\n";
+static char __strings_Aemmiter300[]=", ";
 static long __string_Aemmiter300[]={0,0, (long) __strings_Aemmiter300,-1};
-static char __strings_Aemmiter301[]=": at line (";
+static char __strings_Aemmiter301[]="long ";
 static long __string_Aemmiter301[]={0,0, (long) __strings_Aemmiter301,-1};
-static char __strings_Aemmiter302[]=") '";
+static char __strings_Aemmiter302[]=")";
 static long __string_Aemmiter302[]={0,0, (long) __strings_Aemmiter302,-1};
-static char __strings_Aemmiter303[]="' ";
+static char __strings_Aemmiter303[]=";\n";
 static long __string_Aemmiter303[]={0,0, (long) __strings_Aemmiter303,-1};
-static char __strings_Astatement304[]="DONT KNOW WAHT";
-static long __string_Astatement304[]={0,0, (long) __strings_Astatement304,-1};
-static char __strings_string305[]="";
-static long __string_string305[]={0,0, (long) __strings_string305,-1};
-static char __strings_Aclass306[]="\t";
-static long __string_Aclass306[]={0,0, (long) __strings_Aclass306,-1};
-static char __strings_Aclass307[]="Unknown operator.";
-static long __string_Aclass307[]={0,0, (long) __strings_Aclass307,-1};
-static char __strings_Aclass308[]="What a mess in parenthesis..";
-static long __string_Aclass308[]={0,0, (long) __strings_Aclass308,-1};
-static char __strings_Aclass309[]="What a mess in index..";
-static long __string_Aclass309[]={0,0, (long) __strings_Aclass309,-1};
-static char __strings_Aclass310[]="What a mess..";
-static long __string_Aclass310[]={0,0, (long) __strings_Aclass310,-1};
+static char __strings_Aemmiter304[]="_V_";
+static long __string_Aemmiter304[]={0,0, (long) __strings_Aemmiter304,-1};
+static char __strings_Aemmiter305[]=";\n";
+static long __string_Aemmiter305[]={0,0, (long) __strings_Aemmiter305,-1};
+static char __strings_Aemmiter306[]="\n";
+static long __string_Aemmiter306[]={0,0, (long) __strings_Aemmiter306,-1};
+static char __strings_Aemmiter307[]="\n";
+static long __string_Aemmiter307[]={0,0, (long) __strings_Aemmiter307,-1};
+static char __strings_Aemmiter308[]=": at line (";
+static long __string_Aemmiter308[]={0,0, (long) __strings_Aemmiter308,-1};
+static char __strings_Aemmiter309[]=") '";
+static long __string_Aemmiter309[]={0,0, (long) __strings_Aemmiter309,-1};
+static char __strings_Aemmiter310[]="' ";
+static long __string_Aemmiter310[]={0,0, (long) __strings_Aemmiter310,-1};
 
 #define GETSTR(s) ((char*) string__get_buf(s))
 #define GETLEN(s) ((long)strlen(GETSTR(s)))
@@ -3802,1371 +3804,6 @@ long Aparser__state_machine(long __this)
 	}
 	return 1;
 }
-// class main
-long main__copyto(long f, long output)
-{
-	long fd;
-	long res;
-	long data;
-	long n;
-	long i;
-	long off;
-
-	console__log_str(STR(__string_main140));
-	console__log(f);
-	res=response__new();
-	fd=file__new(STR(__string_main141),res);
-	file__read(fd,f,0,main__Cblock);
-	off=0;
-	while ((response__get_status(res))==200) {
-		data=response__get_bytes(res);
-		n=bytes__get_size(data);
-		i=0;
-		while (i<n) {
-			string__add_char(output,bytes__get_at(data,i));
-			i=i+1;
-		}
-		off=off+(main__Cblock);
-		file__read(fd,f,off,main__Cblock);
-	}
-	file__dispose(fd);
-	response__dispose(res);
-	return 0;
-}
-long main__process_file(long f, long lex)
-{
-	long tmp;
-	long fd;
-	long res;
-	long data;
-	long n;
-	long i;
-	long off;
-
-	console__log_str(STR(__string_main142));
-	console__log(f);
-	Alexer__begin(lex,f);
-	res=response__new();
-	fd=file__new(STR(__string_main143),res);
-	file__read(fd,f,0,main__Cblock);
-	off=0;
-	tmp=string__new(10000);
-	while ((response__get_status(res))==200) {
-		data=response__get_bytes(res);
-		n=bytes__get_size(data);
-		i=0;
-		while (i<n) {
-			string__add_char(tmp,bytes__get_at(data,i));
-			i=i+1;
-		}
-		Alexer__add(lex,tmp);
-		string__set(tmp,STR(__string_main144));
-		off=off+(main__Cblock);
-		file__read(fd,f,off,main__Cblock);
-	}
-	file__dispose(fd);
-	response__dispose(res);
-	Alexer__finish(lex);
-	return 0;
-}
-long main__main()
-{
-	long str;
-	long tmp;
-	long args;
-	long fd;
-	long res;
-	long data;
-	long n;
-	long i;
-	long end;
-	long start;
-	long len;
-	long lex;
-	long par;
-	long emi;
-	long head;
-	long body;
-	long to;
-	long l;
-
-	console__log(main__Chello);
-	args=std__get_args();
-	n=std__get_argc();
-	if (n!=2) {
-		console__log(STR(__string_main145));
-		std__exit(-(1));
-	}
-	head=string__new(2048000);
-	body=string__new(2048000);
-	str=((long*)args)[1];
-	to=string__new(20);
-	string__add(to,str);
-	string__add(to,STR(__string_main146));
-	res=response__new();
-	fd=file__new(STR(__string_main147),res);
-	file__scandir(fd,str);
-	tmp=string__new(100);
-	lex=Alexer__new();
-	par=Aparser__new();
-	emi=Aemmiter__new();
-	if ((response__get_status(res))==200) {
-		data=response__get_string(res);
-		len=string__length(data);
-		i=0;
-		start=0;
-		i=string__indexof(data,start,STR(__string_main148));
-		while (((i>=0))&&((start<len))) {
-			string__substr(data,start,i-start,tmp);
-			end=i-start;
-			if ((string__indexof(tmp,0,STR(__string_main149)))==((end-5))) {
-				main__process_file(tmp,lex);
-				Aparser__parse(par,lex);
-				Aemmiter__emmit(emi,par);
-				Aparser__release(par);
-			} else if ((string__indexof(tmp,0,STR(__string_main150)))==((end-2))) {
-				main__copyto(tmp,head);
-			} else if ((string__indexof(tmp,0,STR(__string_main151)))==((end-2))) {
-				main__copyto(tmp,body);
-			}
-			start=i+1;
-			i=string__indexof(data,start,STR(__string_main152));
-			string__set(tmp,STR(__string_main153));
-		}
-	}
-	Aemmiter__gen_virtuals(emi);
-	file__unlink(fd,to);
-	i=0;
-	str=head;
-	l=string__length(str);
-	if (l>0) {
-		file__write(fd,to,string__get_buf(str),i,l);
-		if ((response__get_status(res))!=200) {
-			std__exit(-(1));
-		}
-	}
-	i=i+l;
-	str=Aemmiter__get_head(emi);
-	l=string__length(str);
-	if (l>0) {
-		file__write(fd,to,string__get_buf(str),i,l);
-	}
-	i=i+l;
-	str=Aemmiter__get_mid(emi);
-	l=string__length(str);
-	if (l>0) {
-		file__write(fd,to,string__get_buf(str),i,l);
-	}
-	i=i+l;
-	str=body;
-	l=string__length(str);
-	if (l>0) {
-		file__write(fd,to,string__get_buf(str),i,l);
-	}
-	i=i+l;
-	str=Aemmiter__get_data(emi);
-	l=string__length(str);
-	if (l>0) {
-		file__write(fd,to,string__get_buf(str),i,l);
-	}
-	console__log_str(STR(__string_main154));
-	console__log(to);
-	string__dispose(to);
-	file__dispose(fd);
-	response__dispose(res);
-	return 0;
-}
-// class Aemmiter
-#define _Aemmiter__data ((long*)__this)[0]
-#define _Aemmiter__head ((long*)__this)[1]
-#define _Aemmiter__mid ((long*)__this)[2]
-#define _Aemmiter_clas ((long*)__this)[3]
-#define _Aemmiter_class_name ((long*)__this)[4]
-#define _Aemmiter_cur_memb ((long*)__this)[5]
-#define _Aemmiter__proc ((long*)__this)[6]
-#define _Aemmiter__stk ((long*)__this)[7]
-#define _Aemmiter__expr_stk ((long*)__this)[8]
-#define _Aemmiter_token1 ((long*)__this)[9]
-#define _Aemmiter_token2 ((long*)__this)[10]
-#define _Aemmiter_pass ((long*)__this)[11]
-#define _Aemmiter__virtuals ((long*)__this)[12]
-#define _Aemmiter_class_id ((long*)__this)[13]
-#define _Aemmiter_string_id ((long*)__this)[14]
-long Aemmiter__new()
-{
-	NEW(Aemmiter);
-
-	_Aemmiter__proc=buffer__new(100);
-	_Aemmiter__stk=buffer__new(100);
-	_Aemmiter__expr_stk=buffer__new(100);
-	_Aemmiter__data=string__new(1);
-	_Aemmiter__head=string__new(1);
-	_Aemmiter__mid=string__new(1);
-	_Aemmiter__virtuals=buffer__new(100);
-	_Aemmiter_token1=0;
-	_Aemmiter_token2=0;
-	_Aemmiter_class_id=10;
-	_Aemmiter_string_id=0;
-	return __this;
-}
-long Aemmiter__dispose(long __this)
-{
-
-	buffer__dispose(_Aemmiter__proc);
-	buffer__dispose(_Aemmiter__stk);
-	string__dispose(_Aemmiter__data);
-	buffer__dispose(_Aemmiter__expr_stk);
-	std__free(__this);
-	return 0;
-}
-long Aemmiter__emmit(long __this, long par)
-{
-
-	_Aemmiter_clas=Aparser__get_next(par);
-	while (_Aemmiter_clas!=0) {
-		Aemmiter__gen_class(__this);
-		_Aemmiter_clas=Aclass__get_next(_Aemmiter_clas);
-	}
-	return 1;
-}
-long Aemmiter__get_head(long __this)
-{
-
-	return _Aemmiter__head;
-}
-long Aemmiter__get_data(long __this)
-{
-
-	return _Aemmiter__data;
-}
-long Aemmiter__get_mid(long __this)
-{
-
-	return _Aemmiter__mid;
-}
-long Aemmiter__gen_class(long __this)
-{
-	long to;
-	long s;
-	long mem;
-	long i;
-	long l;
-	long m;
-
-	to=Aclass__get_name(_Aemmiter_clas);
-	_Aemmiter_class_name=Atoken__get_data(to);
-	string__add(_Aemmiter__data,STR(__string_Aemmiter155));
-	string__add(_Aemmiter__data,_Aemmiter_class_name);
-	string__add(_Aemmiter__data,STR(__string_Aemmiter156));
-	s=string__new(4);
-	string__set_int(s,Aclass__get_nb_fields(_Aemmiter_clas));
-	string__add(_Aemmiter__head,STR(__string_Aemmiter157));
-	string__add(_Aemmiter__head,_Aemmiter_class_name);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter158));
-	string__add(_Aemmiter__head,s);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter159));
-	_Aemmiter_class_id=_Aemmiter_class_id+1;
-	string__set_int(s,_Aemmiter_class_id);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter160));
-	string__add(_Aemmiter__head,_Aemmiter_class_name);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter161));
-	string__add(_Aemmiter__head,s);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter162));
-	string__dispose(s);
-	_Aemmiter_pass=0;
-	while (_Aemmiter_pass<3) {
-		mem=Aclass__get_members(_Aemmiter_clas);
-		l=buffer__length(mem);
-		i=0;
-		while (i<l) {
-			m=buffer__get_at(mem,i);
-			Aemmiter__gen_member(__this, m);
-			if (_Aemmiter_pass==2) {
-				Amember__dispose_body(m);
-			}
-			i=i+1;
-		}
-		_Aemmiter_pass=_Aemmiter_pass+1;
-	}
-	return 0;
-}
-long Aemmiter__gen_member(long __this, long mb)
-{
-	long k;
-	long str;
-
-	str=string__new(8);
-	k=Amember__get_kind(mb);
-	if (_Aemmiter_pass==0) {
-		Aemmiter__pass_0(__this, str,mb,k);
-		Aemmiter__pass_1(__this, str,mb,k);
-		Aemmiter__pass_2(__this, str,mb,k);
-	} else if (_Aemmiter_pass==1) {
-		Aemmiter__pass_3(__this, str,mb,k);
-	} else if (_Aemmiter_pass==2) {
-		Aemmiter__pass_4(__this, str,mb,k);
-	}
-	string__dispose(str);
-	return 0;
-}
-long Aemmiter__gen_conditional_call(long __this, long v, long mb)
-{
-	long param;
-	long params;
-	long i;
-	long l;
-	long tok;
-
-	string__add(_Aemmiter__data,STR(__string_Aemmiter163));
-	string__add(_Aemmiter__data,Avirtual__get_class_name(v));
-	string__add(_Aemmiter__data,STR(__string_Aemmiter164));
-	params=Amember__get_params(mb);
-	string__add(_Aemmiter__data,Avirtual__get_class_name(v));
-	string__add(_Aemmiter__data,STR(__string_Aemmiter165));
-	string__add(_Aemmiter__data,Amember__get_name_string(mb));
-	string__add(_Aemmiter__data,STR(__string_Aemmiter166));
-	if (params!=0) {
-		l=buffer__length(params);
-		i=0;
-		while (i<l) {
-			param=buffer__get_at(params,i);
-			string__add(_Aemmiter__data,STR(__string_Aemmiter167));
-			tok=Amember__get_name(param);
-			string__add(_Aemmiter__data,Atoken__get_data(tok));
-			i=i+1;
-		}
-	}
-	string__add(_Aemmiter__data,STR(__string_Aemmiter168));
-	return 0;
-}
-long Aemmiter__gen_virtuals(long __this)
-{
-	long i;
-	long v;
-	long mb;
-
-	i=buffer__length(_Aemmiter__virtuals);
-	while (i>0) {
-		i=i-1;
-		v=buffer__get_at(_Aemmiter__virtuals,i);
-		mb=Avirtual__get_member(v);
-		Aemmiter__gen_method_decl(__this, _Aemmiter__head,STR(__string_Aemmiter169),Amember__get_name_string(mb),mb,Aclass__Cvirtual);
-		string__add(_Aemmiter__head,STR(__string_Aemmiter170));
-		Aemmiter__gen_method_decl(__this, _Aemmiter__data,STR(__string_Aemmiter171),Amember__get_name_string(mb),mb,Aclass__Cvirtual);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter172));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter173));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter174));
-		while (v!=0) {
-			Aemmiter__gen_conditional_call(__this, v,mb);
-			v=Avirtual__get_next(v);
-		}
-		string__add(_Aemmiter__data,STR(__string_Aemmiter175));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter176));
-	}
-	return 0;
-}
-long Aemmiter__pass_0(long __this, long str, long mb, long k)
-{
-	long t;
-	long ty;
-
-	if (k==(Aclass__Cconst)) {
-		string__add(_Aemmiter__head,STR(__string_Aemmiter177));
-		string__add(_Aemmiter__head,_Aemmiter_class_name);
-		string__add(_Aemmiter__head,STR(__string_Aemmiter178));
-		string__add(_Aemmiter__head,Amember__get_name_string(mb));
-		string__add(_Aemmiter__head,STR(__string_Aemmiter179));
-		t=Amember__get_initial_value(mb);
-		ty=Atoken__get_type(t);
-		if (ty==(Alexer__Cstring)) {
-			string__add(_Aemmiter__head,STR(__string_Aemmiter180));
-			string__add(_Aemmiter__head,_Aemmiter_class_name);
-			string__add(_Aemmiter__head,Amember__get_name_string(mb));
-			string__add(_Aemmiter__head,STR(__string_Aemmiter181));
-			Aemmiter__gen_string(__this, Amember__get_name_string(mb),Atoken__get_data(t));
-		} else if (ty==(Alexer__Cquote)) {
-			string__add_char(_Aemmiter__head,'\'');
-			string__add(_Aemmiter__head,Atoken__get_data(t));
-			string__add_char(_Aemmiter__head,'\'');
-		} else {
-			string__add(_Aemmiter__head,Atoken__get_data(t));
-		}
-		string__add(_Aemmiter__head,STR(__string_Aemmiter182));
-	}
-	if (k==(Aclass__Cfield)) {
-		string__set_int(str,Amember__get_index(mb));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter183));
-		string__add(_Aemmiter__data,_Aemmiter_class_name);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter184));
-		string__add(_Aemmiter__data,Amember__get_name_string(mb));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter185));
-		string__add(_Aemmiter__data,str);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter186));
-	}
-	return 0;
-}
-long Aemmiter__pass_1(long __this, long str, long mb, long k)
-{
-
-	if (k==(Aclass__Cstatic)) {
-		string__add(_Aemmiter__data,STR(__string_Aemmiter187));
-		string__add(_Aemmiter__data,_Aemmiter_class_name);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter188));
-		string__add(_Aemmiter__data,Amember__get_name_string(mb));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter189));
-	}
-	return 0;
-}
-long Aemmiter__pass_2(long __this, long str, long mb, long k)
-{
-
-	return 0;
-}
-long Aemmiter__pad(long __this, long depth)
-{
-
-	while (depth>0) {
-		string__add(_Aemmiter__data,STR(__string_Aemmiter190));
-		depth=depth-1;
-	}
-	return 0;
-}
-long Aemmiter__find_param(long __this, long stri)
-{
-	long v;
-	long i;
-	long vars;
-	long tok;
-	long s;
-
-	vars=Amember__get_params(_Aemmiter_cur_memb);
-	i=0;
-	if (vars!=0) {
-		i=buffer__length(vars);
-	}
-	while (i>0) {
-		i=i-1;
-		v=buffer__get_at(vars,i);
-		if (v!=0) {
-			tok=Amember__get_name(v);
-			s=Atoken__get_data(tok);
-			if (s!=0) {
-				if ((string__compare(stri,s))==0) {
-					return v;
-				}
-			}
-		}
-	}
-	return 0;
-}
-long Aemmiter__find_member(long __this, long stri)
-{
-	long v;
-	long i;
-	long vars;
-	long tok;
-	long s;
-
-	i=0;
-	vars=Aclass__get_members(_Aemmiter_clas);
-	if (vars!=0) {
-		i=buffer__length(vars);
-	}
-	while (i>0) {
-		i=i-1;
-		v=buffer__get_at(vars,i);
-		if (v!=0) {
-			tok=Amember__get_name(v);
-			s=Atoken__get_data(tok);
-			if ((s!=0)) {
-				if ((string__compare(stri,s))==0) {
-					return v;
-				}
-			}
-		}
-	}
-	return 0;
-}
-long Aemmiter__find_field(long __this, long stri)
-{
-	long v;
-
-	v=Aemmiter__find_member(__this, stri);
-	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cfield)))) {
-		return v;
-	}
-	return 0;
-}
-long Aemmiter__find_static(long __this, long stri)
-{
-	long v;
-
-	v=Aemmiter__find_member(__this, stri);
-	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cstatic)))) {
-		return v;
-	}
-	return 0;
-}
-long Aemmiter__find_meth_virt(long __this, long stri)
-{
-	long v;
-
-	v=Aemmiter__find_member(__this, stri);
-	if (v!=0) {
-		if ((((Amember__get_kind(v))==(Aclass__Cmethod)))||(((Amember__get_kind(v))==(Aclass__Cvirtual)))) {
-			return v;
-		}
-	}
-	return 0;
-}
-long Aemmiter__find_local(long __this, long stri)
-{
-	long v;
-	long i;
-	long vars;
-	long tok;
-	long s;
-
-	vars=Amember__get_vars(_Aemmiter_cur_memb);
-	i=0;
-	if (vars!=0) {
-		i=buffer__length(vars);
-	}
-	while (i>0) {
-		i=i-1;
-		v=buffer__get_at(vars,i);
-		if (v!=0) {
-			tok=Amember__get_name(v);
-			s=Atoken__get_data(tok);
-			if ((s!=0)) {
-				if ((string__compare(stri,s))==0) {
-					return v;
-				}
-			}
-		}
-	}
-	return 0;
-}
-long Aemmiter__expr_gen_call(long __this, long expr)
-{
-	long ex1;
-	long ex2;
-	long s;
-	long tok;
-	long stri;
-	long v;
-	long p;
-	long obj;
-	long fld;
-
-	s=string__new(8);
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	stri=Aexpr__get_value(ex1);
-	obj=Aexpr__get_value2(ex1);
-	if (obj==0) {
-		v=Aemmiter__find_meth_virt(__this, stri);
-		if ((v!=0)) {
-			s=string__new(8);
-			string__add(s,_Aemmiter_class_name);
-			string__add(s,STR(__string_Aemmiter191));
-			string__add(s,stri);
-			p=Aexpr__get_value(ex2);
-			if ((string__length(p))>0) {
-				string__add(s,STR(__string_Aemmiter192));
-				string__add(s,p);
-				string__add(s,STR(__string_Aemmiter193));
-			} else {
-				string__add(s,STR(__string_Aemmiter194));
-			}
-			Aexpr__set_value(expr,s);
-			buffer__push(_Aemmiter__expr_stk,expr);
-			return 0;
-		}
-		Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter195));
-		return 0;
-	}
-	fld=0;
-	v=Aemmiter__find_local(__this, obj);
-	if (v==0) {
-		v=Aemmiter__find_param(__this, obj);
-	}
-	if (v==0) {
-		v=Aemmiter__find_field(__this, obj);
-		if (v!=0) {
-			fld=1;
-		}
-	}
-	if (v!=0) {
-		tok=Amember__get_type_id(v);
-		if (tok==0) {
-			console__log(obj);
-			console__log(Amember__get_name_string(v));
-			Aemmiter__error(__this, Aexpr__get_origin(ex1),STR(__string_Aemmiter196));
-			return 0;
-		}
-		s=string__new(8);
-		string__add(s,Atoken__get_data(tok));
-		string__add(s,STR(__string_Aemmiter197));
-		string__add(s,Aexpr__get_value(ex1));
-		p=Aexpr__get_value(ex2);
-		string__add(s,STR(__string_Aemmiter198));
-		if (fld!=0) {
-			string__add(s,STR(__string_Aemmiter199));
-			string__add(s,_Aemmiter_class_name);
-			string__add(s,STR(__string_Aemmiter200));
-		}
-		string__add(s,Aexpr__get_value2(ex1));
-		if ((string__length(p))>0) {
-			string__add(s,STR(__string_Aemmiter201));
-			string__add(s,Aexpr__get_value(ex2));
-		}
-		string__add(s,STR(__string_Aemmiter202));
-		Aexpr__set_value(expr,s);
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	string__add(s,obj);
-	string__add(s,STR(__string_Aemmiter203));
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter204));
-	string__add(s,Aexpr__get_value(ex2));
-	string__add(s,STR(__string_Aemmiter205));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_sub_expr(long __this, long expr)
-{
-	long s;
-
-	if ((Aexpr__get_right(expr))==0) {
-		s=string__new(8);
-		Aexpr__set_value(expr,s);
-		buffer__push(_Aemmiter__expr_stk,expr);
-	}
-	return 0;
-}
-long Aemmiter__expr_gen_comma(long __this, long expr)
-{
-	long ex1;
-	long ex2;
-	long s;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter206));
-	string__add(s,Aexpr__get_value(ex2));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_index(long __this, long expr)
-{
-	long ex1;
-	long ex2;
-	long s;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,STR(__string_Aemmiter207));
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter208));
-	string__add(s,Aexpr__get_value(ex2));
-	string__add(s,STR(__string_Aemmiter209));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_par(long __this, long expr)
-{
-	long ex1;
-	long s;
-
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,STR(__string_Aemmiter210));
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter211));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_constant(long __this, long expr)
-{
-	long ex1;
-	long ex2;
-	long s;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter212));
-	string__add(s,Aexpr__get_value(ex2));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_dot(long __this, long expr)
-{
-	long ex1;
-	long ex2;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	Aexpr__set_value2(expr,Aexpr__get_value(ex1));
-	Aexpr__set_value(expr,Aexpr__get_value(ex2));
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__gen_string(long __this, long s2, long value)
-{
-
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter213));
-	string__add(_Aemmiter__mid,_Aemmiter_class_name);
-	string__add(_Aemmiter__mid,s2);
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter214));
-	string__add_char(_Aemmiter__mid,'"');
-	string__add(_Aemmiter__mid,value);
-	string__add_char(_Aemmiter__mid,'"');
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter215));
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter216));
-	string__add(_Aemmiter__mid,_Aemmiter_class_name);
-	string__add(_Aemmiter__mid,s2);
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter217));
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter218));
-	string__add(_Aemmiter__mid,_Aemmiter_class_name);
-	string__add(_Aemmiter__mid,s2);
-	string__add(_Aemmiter__mid,STR(__string_Aemmiter219));
-	return 0;
-}
-long Aemmiter__expr_gen_str_const(long __this, long expr)
-{
-	long s;
-	long s2;
-
-	s=string__new(8);
-	s2=string__new(8);
-	_Aemmiter_string_id=_Aemmiter_string_id+1;
-	string__set_int(s2,_Aemmiter_string_id);
-	Aemmiter__gen_string(__this, s2,Aexpr__get_value(expr));
-	string__add(s,STR(__string_Aemmiter220));
-	string__add(s,_Aemmiter_class_name);
-	string__add(s,s2);
-	string__add(s,STR(__string_Aemmiter221));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	string__dispose(s2);
-	return 0;
-}
-long Aemmiter__expr_gen_char_const(long __this, long expr)
-{
-	long s;
-
-	s=string__new(8);
-	string__add(s,STR(__string_Aemmiter222));
-	string__add(s,Aexpr__get_value(expr));
-	string__add(s,STR(__string_Aemmiter223));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen0(long __this, long expr, long op)
-{
-	long s;
-
-	s=string__new(8);
-	string__add(s,op);
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen1(long __this, long expr, long op)
-{
-	long ex1;
-	long s;
-
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,op);
-	string__add(s,STR(__string_Aemmiter224));
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,STR(__string_Aemmiter225));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_assign(long __this, long expr, long op)
-{
-	long ex1;
-	long ex2;
-	long s;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	string__add(s,Aexpr__get_value(ex1));
-	string__add(s,op);
-	string__add(s,Aexpr__get_value(ex2));
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen2(long __this, long expr, long op)
-{
-	long ex1;
-	long ex2;
-	long s;
-	long oper;
-
-	ex2=buffer__pop(_Aemmiter__expr_stk);
-	ex1=buffer__pop(_Aemmiter__expr_stk);
-	s=string__new(8);
-	oper=Aexpr__get_op(ex1);
-	if (oper>(Aclass__Croot)) {
-		string__add(s,STR(__string_Aemmiter226));
-	}
-	string__add(s,Aexpr__get_value(ex1));
-	if (oper>(Aclass__Croot)) {
-		string__add(s,STR(__string_Aemmiter227));
-	}
-	string__add(s,op);
-	oper=Aexpr__get_op(ex2);
-	if (oper>(Aclass__Croot)) {
-		string__add(s,STR(__string_Aemmiter228));
-	}
-	string__add(s,Aexpr__get_value(ex2));
-	if (oper>(Aclass__Croot)) {
-		string__add(s,STR(__string_Aemmiter229));
-	}
-	Aexpr__set_value(expr,s);
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_gen_var(long __this, long expr)
-{
-	long stri;
-	long v;
-	long s;
-	long ex;
-
-	stri=Aexpr__get_value(expr);
-	if (stri==0) {
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	v=Aemmiter__find_local(__this, stri);
-	if (v!=0) {
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	v=Aemmiter__find_param(__this, stri);
-	if (v!=0) {
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	ex=Aexpr__get_parent(expr);
-	v=0;
-	if ((Aexpr__get_op(ex))!=(Aclass__Cdot)) {
-		v=Aemmiter__find_member(__this, stri);
-	}
-	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cfield)))) {
-		s=string__new(8);
-		string__add(s,STR(__string_Aemmiter230));
-		string__add(s,_Aemmiter_class_name);
-		string__add(s,STR(__string_Aemmiter231));
-		string__add(s,stri);
-		Aexpr__set_value(expr,s);
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	v=Aemmiter__find_static(__this, stri);
-	if (v!=0) {
-		s=string__new(8);
-		string__add(s,_Aemmiter_class_name);
-		string__add(s,STR(__string_Aemmiter232));
-		string__add(s,stri);
-		Aexpr__set_value(expr,s);
-		buffer__push(_Aemmiter__expr_stk,expr);
-		return 0;
-	}
-	buffer__push(_Aemmiter__expr_stk,expr);
-	return 0;
-}
-long Aemmiter__expr_process(long __this, long expr)
-{
-	long op;
-	long ex;
-
-	op=Aexpr__get_op(expr);
-	if (op<(Aclass__Croot)) {
-		if (op==(Aclass__Cnull)) {
-			Aemmiter__expr_gen0(__this, expr,STR(__string_Aemmiter233));
-		} else if (op==(Aclass__Cchar_const)) {
-			Aemmiter__expr_gen_char_const(__this, expr);
-		} else if (op==(Aclass__Cint_const)) {
-			buffer__push(_Aemmiter__expr_stk,expr);
-		} else if (op==(Aclass__Cstr_const)) {
-			Aemmiter__expr_gen_str_const(__this, expr);
-		} else if (op==(Aclass__Cthis)) {
-			Aemmiter__expr_gen0(__this, expr,STR(__string_Aemmiter234));
-		} else {
-			Aemmiter__expr_gen_var(__this, expr);
-		}
-		return 0;
-	}
-	if (op==(Aclass__Croot)) {
-		if ((buffer__length(_Aemmiter__expr_stk))!=1) {
-			Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter235));
-			return 0;
-		}
-		ex=buffer__pop(_Aemmiter__expr_stk);
-		string__add(_Aemmiter__data,Aexpr__get_value(ex));
-	} else if (op==(Aclass__Cassign)) {
-		Aemmiter__expr_gen_assign(__this, expr,STR(__string_Aemmiter236));
-	} else if (op==(Aclass__Cequal)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter237));
-	} else if (op==(Aclass__Cnotequal)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter238));
-	} else if (op==(Aclass__Clargerequal)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter239));
-	} else if (op==(Aclass__Clesserequal)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter240));
-	} else if (op==(Aclass__Clarger)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter241));
-	} else if (op==(Aclass__Clesser)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter242));
-	} else if (op==(Aclass__Clogicaland)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter243));
-	} else if (op==(Aclass__Clogicalor)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter244));
-	} else if (op==(Aclass__Cadd)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter245));
-	} else if (op==(Aclass__Csub)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter246));
-	} else if (op==(Aclass__Cmult)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter247));
-	} else if (op==(Aclass__Cdiv)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter248));
-	} else if (op==(Aclass__Cmodulo)) {
-		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter249));
-	} else if (op==(Aclass__Clogicalnot)) {
-		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter250));
-	} else if (op==(Aclass__Cparenthesis)) {
-		Aemmiter__expr_gen_par(__this, expr);
-	} else if (op==(Aclass__Cunaryplus)) {
-		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter251));
-	} else if (op==(Aclass__Cunaryminus)) {
-		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter252));
-	} else if (op==(Aclass__Cdot)) {
-		Aemmiter__expr_gen_dot(__this, expr);
-	} else if (op==(Aclass__Cconstant)) {
-		Aemmiter__expr_gen_constant(__this, expr);
-	} else if (op==(Aclass__Ccall)) {
-		Aemmiter__expr_gen_call(__this, expr);
-	} else if (op==(Aclass__Cindex)) {
-		Aemmiter__expr_gen_index(__this, expr);
-	} else if (op==(Aclass__Ccomma)) {
-		Aemmiter__expr_gen_comma(__this, expr);
-	} else if (op==(Aclass__Cexpr)) {
-		Aemmiter__expr_gen_sub_expr(__this, expr);
-	} else {
-		Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter253));
-		return 0;
-	}
-	return 0;
-}
-long Aemmiter__expr_gen(long __this, long expr)
-{
-	long ex;
-	long ex1;
-	long stack;
-
-	stack=buffer__new(4);
-	ex=Aexpr__get_right(expr);
-	ex=expr;
-	Aexpr__set_flags(ex,0);
-	buffer__push(stack,ex);
-	while ((buffer__length(stack))>0) {
-		ex=buffer__get_last(stack);
-		if ((Aexpr__get_flags(ex))!=0) {
-			ex=buffer__pop(stack);
-			Aemmiter__expr_process(__this, ex);
-		} else {
-			ex1=ex;
-			Aexpr__set_flags(ex,1);
-			ex=Aexpr__get_right(ex);
-			if (ex!=0) {
-				Aexpr__set_flags(ex,0);
-				buffer__push(stack,ex);
-			}
-			ex=Aexpr__get_left(ex1);
-			if (ex!=0) {
-				Aexpr__set_flags(ex,0);
-				buffer__push(stack,ex);
-			}
-		}
-	}
-	buffer__dispose(stack);
-	return 0;
-}
-long Aemmiter__body_gen(long __this, long mb, long k, long vars_, long body_)
-{
-	long l;
-	long i;
-	long tok;
-	long va;
-	long stm;
-	long ty;
-	long stack;
-	long padde;
-	long ex;
-	long buf;
-
-	_Aemmiter_cur_memb=mb;
-	string__add(_Aemmiter__data,STR(__string_Aemmiter254));
-	stack=buffer__new(4);
-	if (vars_!=0) {
-		l=buffer__length(vars_);
-	} else {
-		l=0;
-	}
-	i=0;
-	while (i<l) {
-		va=buffer__get_at(vars_,i);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter255));
-		tok=Amember__get_name(va);
-		string__add(_Aemmiter__data,Atoken__get_data(tok));
-		string__add(_Aemmiter__data,STR(__string_Aemmiter256));
-		i=i+1;
-	}
-	if (k==(Aclass__Cconstructor)) {
-		string__add(_Aemmiter__data,STR(__string_Aemmiter257));
-		string__add(_Aemmiter__data,_Aemmiter_class_name);
-		string__add(_Aemmiter__data,STR(__string_Aemmiter258));
-	}
-	l=buffer__length(body_);
-	i=0;
-	padde=1;
-	while (i<l) {
-		stm=buffer__get_at(body_,i);
-		ty=Astatement__get_type(stm);
-		if (((ty!=(Aclass__Celseif)))&&((ty!=(Aclass__Celse)))) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter259));
-			Aemmiter__pad(__this, padde);
-		}
-		if (((ty==(Aclass__Cif)))||((ty==(Aclass__Celseif)))) {
-			if (ty==(Aclass__Celseif)) {
-				string__add(_Aemmiter__data,STR(__string_Aemmiter260));
-			} else {
-				string__add(_Aemmiter__data,STR(__string_Aemmiter261));
-			}
-			ex=Astatement__get_expression(stm);
-			if (ex!=0) {
-				Aemmiter__expr_gen(__this, ex);
-			}
-			string__add(_Aemmiter__data,STR(__string_Aemmiter262));
-			buffer__push(stack,l);
-			buffer__push(stack,i+1);
-			buffer__push(stack,body_);
-			buf=Astatement__get_else(stm);
-			if (buf!=0) {
-				buffer__push(stack,buffer__length(buf));
-				buffer__push(stack,0);
-				buffer__push(stack,buf);
-			}
-			padde=padde+1;
-			i=-(1);
-			l=0;
-			if (body_!=0) {
-				body_=Astatement__get_statements(stm);
-				if (body_!=0) {
-					l=buffer__length(body_);
-				}
-			}
-		} else if (ty==(Aclass__Celse)) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter263));
-			padde=padde+1;
-		} else if (ty==(Aclass__Cbreak)) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter264));
-		} else if (ty==(Aclass__Creturn)) {
-			ex=Astatement__get_expression(stm);
-			if (ex!=0) {
-				string__add(_Aemmiter__data,STR(__string_Aemmiter265));
-				Aemmiter__expr_gen(__this, ex);
-				string__add(_Aemmiter__data,STR(__string_Aemmiter266));
-			} else {
-				string__add(_Aemmiter__data,STR(__string_Aemmiter267));
-			}
-		} else if (ty==(Aclass__Cdo)) {
-			ex=Astatement__get_expression(stm);
-			if (ex!=0) {
-				Aemmiter__expr_gen(__this, ex);
-			}
-			string__add(_Aemmiter__data,STR(__string_Aemmiter268));
-		} else if (ty==(Aclass__Clet)) {
-			ex=Astatement__get_expression(stm);
-			if (ex!=0) {
-				Aemmiter__expr_gen(__this, ex);
-			}
-			string__add(_Aemmiter__data,STR(__string_Aemmiter269));
-		} else if (ty==(Aclass__Cwhile)) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter270));
-			ex=Astatement__get_expression(stm);
-			if (ex!=0) {
-				Aemmiter__expr_gen(__this, ex);
-			}
-			string__add(_Aemmiter__data,STR(__string_Aemmiter271));
-			buffer__push(stack,l);
-			buffer__push(stack,i+1);
-			buffer__push(stack,body_);
-			i=-(1);
-			l=0;
-			body_=Astatement__get_statements(stm);
-			if (body_!=0) {
-				l=buffer__length(body_);
-			}
-			padde=padde+1;
-		} else {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter272));
-		}
-		i=i+1;
-		if (i>=l) {
-			padde=padde-1;
-			string__add(_Aemmiter__data,STR(__string_Aemmiter273));
-			Aemmiter__pad(__this, padde);
-			string__add(_Aemmiter__data,STR(__string_Aemmiter274));
-		}
-		while (((i>=l))&&(((buffer__length(stack))>0))) {
-			body_=buffer__pop(stack);
-			i=buffer__pop(stack);
-			l=buffer__pop(stack);
-			if (i>=l) {
-				padde=padde-1;
-				string__add(_Aemmiter__data,STR(__string_Aemmiter275));
-				Aemmiter__pad(__this, padde);
-				string__add(_Aemmiter__data,STR(__string_Aemmiter276));
-			}
-		}
-	}
-	string__add(_Aemmiter__data,STR(__string_Aemmiter277));
-	buffer__dispose(stack);
-	return 0;
-}
-long Aemmiter__gen_type(long __this, long mb)
-{
-	long ty;
-	long tok;
-
-	tok=Amember__get_type_id(mb);
-	if (tok!=0) {
-		string__add(_Aemmiter__data,Atoken__get_data(tok));
-	} else {
-		ty=Amember__get_type(mb);
-		if (ty==(Aclass__Cint)) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter278));
-		} else if (ty==(Aclass__Cvoid)) {
-			string__add(_Aemmiter__data,STR(__string_Aemmiter279));
-		} else {
-			Aemmiter__error(__this, Amember__get_name(mb),STR(__string_Aemmiter280));
-		}
-	}
-	return 0;
-}
-long Aemmiter__add_virtual(long __this, long mb)
-{
-	long n;
-	long v;
-	long nv;
-	long i;
-	long s;
-
-	n=Amember__get_name_string(mb);
-	nv=Avirtual__new(mb,_Aemmiter_class_name);
-	i=buffer__length(_Aemmiter__virtuals);
-	while (i>0) {
-		i=i-1;
-		v=buffer__get_at(_Aemmiter__virtuals,i);
-		if (v!=0) {
-			s=Avirtual__get_member_name(v);
-			if (((s!=0))&&(((string__compare(n,s))==0))) {
-				Avirtual__set_next(nv,Avirtual__get_next(v));
-				Avirtual__set_next(v,nv);
-				return 0;
-			}
-		}
-	}
-	buffer__push(_Aemmiter__virtuals,nv);
-	return 0;
-}
-long Aemmiter__gen_virtual_caller(long __this, long mb)
-{
-	long param;
-	long params;
-	long i;
-	long l;
-	long tok;
-
-	params=Amember__get_params(mb);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter281));
-	string__add(_Aemmiter__head,_Aemmiter_class_name);
-	string__add(_Aemmiter__head,STR(__string_Aemmiter282));
-	string__add(_Aemmiter__head,Amember__get_name_string(mb));
-	string__add(_Aemmiter__head,STR(__string_Aemmiter283));
-	if (params!=0) {
-		l=buffer__length(params);
-		i=0;
-		while (i<l) {
-			param=buffer__get_at(params,i);
-			string__add(_Aemmiter__head,STR(__string_Aemmiter284));
-			tok=Amember__get_name(param);
-			string__add(_Aemmiter__head,Atoken__get_data(tok));
-			i=i+1;
-		}
-	}
-	string__add(_Aemmiter__head,STR(__string_Aemmiter285));
-	string__add(_Aemmiter__head,Amember__get_name_string(mb));
-	string__add(_Aemmiter__head,STR(__string_Aemmiter286));
-	if (params!=0) {
-		l=buffer__length(params);
-		i=0;
-		while (i<l) {
-			param=buffer__get_at(params,i);
-			string__add(_Aemmiter__head,STR(__string_Aemmiter287));
-			tok=Amember__get_name(param);
-			string__add(_Aemmiter__head,Atoken__get_data(tok));
-			i=i+1;
-		}
-	}
-	string__add(_Aemmiter__head,STR(__string_Aemmiter288));
-	return 0;
-}
-long Aemmiter__gen_method_decl(long __this, long dest, long c_name, long name, long mb, long k)
-{
-	long param;
-	long params;
-	long i;
-	long l;
-	long sub;
-	long tok;
-
-	string__add(dest,STR(__string_Aemmiter289));
-	string__add(dest,c_name);
-	string__add(dest,STR(__string_Aemmiter290));
-	string__add(dest,name);
-	params=Amember__get_params(mb);
-	string__add(dest,STR(__string_Aemmiter291));
-	sub=1;
-	if (((k==(Aclass__Cmethod)))||((k==(Aclass__Cvirtual)))) {
-		string__add(dest,STR(__string_Aemmiter292));
-		sub=2;
-	}
-	if (params!=0) {
-		l=buffer__length(params);
-		i=0;
-		while (i<l) {
-			param=buffer__get_at(params,i);
-			if (((i>0))||((sub==2))) {
-				string__add(dest,STR(__string_Aemmiter293));
-			}
-			string__add(dest,STR(__string_Aemmiter294));
-			tok=Amember__get_name(param);
-			string__add(dest,Atoken__get_data(tok));
-			i=i+1;
-		}
-	}
-	string__add(dest,STR(__string_Aemmiter295));
-	return 0;
-}
-long Aemmiter__pass_3(long __this, long str, long mb, long k)
-{
-	long vars;
-	long body;
-	long sub;
-
-	sub=0;
-	if (k==(Aclass__Cconstructor)) {
-		sub=1;
-	} else if (k==(Aclass__Cfunction)) {
-		sub=1;
-	} else if (k==(Aclass__Cmethod)) {
-		sub=2;
-	} else if (k==(Aclass__Cvirtual)) {
-		sub=2;
-	}
-	if (sub!=0) {
-		Aemmiter__gen_method_decl(__this, _Aemmiter__head,_Aemmiter_class_name,Amember__get_name_string(mb),mb,k);
-		string__add(_Aemmiter__head,STR(__string_Aemmiter296));
-		if (k==(Aclass__Cvirtual)) {
-			Aemmiter__add_virtual(__this, mb);
-			Aemmiter__gen_virtual_caller(__this, mb);
-			string__set(str,STR(__string_Aemmiter297));
-			string__add(str,Amember__get_name_string(mb));
-			Aemmiter__gen_method_decl(__this, _Aemmiter__head,_Aemmiter_class_name,str,mb,k);
-			string__add(_Aemmiter__head,STR(__string_Aemmiter298));
-			Aemmiter__gen_method_decl(__this, _Aemmiter__data,_Aemmiter_class_name,str,mb,k);
-			string__add(_Aemmiter__data,STR(__string_Aemmiter299));
-		} else {
-			Aemmiter__gen_method_decl(__this, _Aemmiter__data,_Aemmiter_class_name,Amember__get_name_string(mb),mb,k);
-			string__add(_Aemmiter__data,STR(__string_Aemmiter300));
-		}
-		vars=Amember__get_vars(mb);
-		body=Amember__get_body(mb);
-		if (body!=0) {
-			Aemmiter__body_gen(__this, mb,k,vars,body);
-		}
-	}
-	return 0;
-}
-long Aemmiter__pass_4(long __this, long str, long mb, long k)
-{
-
-	return 0;
-}
-long Aemmiter__error(long __this, long t, long e)
-{
-
-	if (t!=0) {
-		console__log_str(Atoken__get_file(t));
-		console__log_str(STR(__string_Aemmiter301));
-		console__log_int(Atoken__get_line(t));
-		console__log_str(STR(__string_Aemmiter302));
-		console__log_str(Atoken__get_data(t));
-		console__log_str(STR(__string_Aemmiter303));
-	}
-	console__log(e);
-	Aemmiter__dump(__this);
-	std__exit(-(1));
-	return 0;
-}
-long Aemmiter__dump(long __this)
-{
-
-	return 0;
-}
-// class array
-long array__new(long size)
-{
-	long a;
-	long t;
-	NEW(array);
-
-	t=__this;
-	a=std__alloc(size);
-	((long*)a)[-(1)]=((long*)t)[-(1)];
-	std__free(t);
-	return a;
-}
-long array___V_dispose(long __this)
-{
-
-	std__free(__this);
-	return 0;
-}
 // class Astatement
 #define _Astatement_type ((long*)__this)[0]
 #define _Astatement_expr ((long*)__this)[1]
@@ -5260,7 +3897,7 @@ long Astatement__set_expression(long __this, long expr_)
 	} else if (_Astatement_type==(Aclass__Creturn)) {
 		_Astatement_expr=expr_;
 	} else {
-		console__log(STR(__string_Astatement304));
+		console__log(STR(__string_Astatement140));
 		std__exit(-(1));
 	}
 	return 0;
@@ -5751,7 +4388,7 @@ long string__substr(long __this, long start_pos, long length_, long result)
 		length_=len;
 	}
 	if (((start_pos>=len))||((length_<1))) {
-		string__set(result,STR(__string_string305));
+		string__set(result,STR(__string_string141));
 		return 0;
 	}
 	string__set_size(result,length_+1);
@@ -5871,7 +4508,7 @@ long Aclass__pad(long __this, long p)
 
 	while (p>0) {
 		p=p-1;
-		console__log_str(STR(__string_Aclass306));
+		console__log_str(STR(__string_Aclass142));
 	}
 	return 0;
 }
@@ -6044,7 +4681,7 @@ long Aclass__expr_op(long __this, long op_, long orig)
 	} else if (op_==(Aclass__Ccomma)) {
 		ex=Aexpr__new(op_,10,Aclass__Clr);
 	} else {
-		console__log(STR(__string_Aclass307));
+		console__log(STR(__string_Aclass143));
 		std__exit(-(1));
 	}
 	if (ex!=0) {
@@ -6077,7 +4714,7 @@ long Aclass__expr_close_par(long __this)
 
 	_Aclass_cur_expr=Aexpr__close(_Aclass_cur_expr,Aclass__Cparenthesis);
 	if (_Aclass_cur_expr==0) {
-		Aclass__error(__this, STR(__string_Aclass308));
+		Aclass__error(__this, STR(__string_Aclass144));
 	} else {
 		Aexpr__set_precedence(_Aclass_cur_expr,1000);
 	}
@@ -6099,7 +4736,7 @@ long Aclass__expr_close_index(long __this)
 
 	_Aclass_cur_expr=Aexpr__close(_Aclass_cur_expr,Aclass__Cindex);
 	if (_Aclass_cur_expr==0) {
-		Aclass__error(__this, STR(__string_Aclass309));
+		Aclass__error(__this, STR(__string_Aclass145));
 	} else {
 		Aexpr__set_precedence(_Aclass_cur_expr,1000);
 	}
@@ -6135,7 +4772,7 @@ long Aclass__expr_finish_sub_call(long __this)
 
 	_Aclass_cur_expr=Aexpr__close(_Aclass_cur_expr,Aclass__Ccall);
 	if (_Aclass_cur_expr==0) {
-		Aclass__error(__this, STR(__string_Aclass310));
+		Aclass__error(__this, STR(__string_Aclass146));
 	} else {
 		Aexpr__set_precedence(_Aclass_cur_expr,1000);
 	}
@@ -6202,38 +4839,1407 @@ long Aclass__expr_constant(long __this, long class_name_, long const_name_, long
 	Aexpr__set_value(ex,const_name_);
 	return 0;
 }
+// class main
+long main__copyto(long f, long output)
+{
+	long fd;
+	long res;
+	long data;
+	long n;
+	long i;
+	long off;
+
+	console__log_str(STR(__string_main147));
+	console__log(f);
+	res=response__new();
+	fd=file__new(STR(__string_main148),res);
+	file__read(fd,f,0,main__Cblock);
+	off=0;
+	while ((response__get_status(res))==200) {
+		data=response__get_bytes(res);
+		n=bytes__get_size(data);
+		i=0;
+		while (i<n) {
+			string__add_char(output,bytes__get_at(data,i));
+			i=i+1;
+		}
+		off=off+(main__Cblock);
+		file__read(fd,f,off,main__Cblock);
+	}
+	file__dispose(fd);
+	response__dispose(res);
+	return 0;
+}
+long main__process_file(long f, long lex)
+{
+	long tmp;
+	long fd;
+	long res;
+	long data;
+	long n;
+	long i;
+	long off;
+
+	console__log_str(STR(__string_main149));
+	console__log(f);
+	Alexer__begin(lex,f);
+	res=response__new();
+	fd=file__new(STR(__string_main150),res);
+	file__read(fd,f,0,main__Cblock);
+	off=0;
+	tmp=string__new(10000);
+	while ((response__get_status(res))==200) {
+		data=response__get_bytes(res);
+		n=bytes__get_size(data);
+		i=0;
+		while (i<n) {
+			string__add_char(tmp,bytes__get_at(data,i));
+			i=i+1;
+		}
+		Alexer__add(lex,tmp);
+		string__set(tmp,STR(__string_main151));
+		off=off+(main__Cblock);
+		file__read(fd,f,off,main__Cblock);
+	}
+	file__dispose(fd);
+	response__dispose(res);
+	Alexer__finish(lex);
+	return 0;
+}
+long main__main()
+{
+	long str;
+	long tmp;
+	long args;
+	long fd;
+	long res;
+	long data;
+	long n;
+	long i;
+	long end;
+	long start;
+	long len;
+	long lex;
+	long par;
+	long emi;
+	long head;
+	long body;
+	long to;
+	long l;
+
+	console__log(main__Chello);
+	args=std__get_args();
+	n=std__get_argc();
+	if (n!=2) {
+		console__log(STR(__string_main152));
+		std__exit(-(1));
+	}
+	head=string__new(2048);
+	body=string__new(2048);
+	str=((long*)args)[1];
+	to=string__new(20);
+	string__add(to,str);
+	string__add(to,STR(__string_main153));
+	res=response__new();
+	fd=file__new(STR(__string_main154),res);
+	file__scandir(fd,str);
+	tmp=string__new(100);
+	lex=Alexer__new();
+	par=Aparser__new();
+	emi=Aemmiter__new();
+	if ((response__get_status(res))==200) {
+		data=response__get_string(res);
+		len=string__length(data);
+		i=0;
+		start=0;
+		i=string__indexof(data,start,STR(__string_main155));
+		while (((i>=0))&&((start<len))) {
+			string__substr(data,start,i-start,tmp);
+			end=i-start;
+			if ((string__indexof(tmp,0,STR(__string_main156)))==((end-5))) {
+				main__process_file(tmp,lex);
+				Aparser__parse(par,lex);
+				Aemmiter__emmit(emi,par);
+				Aparser__release(par);
+			} else if ((string__indexof(tmp,0,STR(__string_main157)))==((end-2))) {
+				main__copyto(tmp,head);
+			} else if ((string__indexof(tmp,0,STR(__string_main158)))==((end-2))) {
+				main__copyto(tmp,body);
+			}
+			start=i+1;
+			i=string__indexof(data,start,STR(__string_main159));
+			string__set(tmp,STR(__string_main160));
+		}
+	}
+	Aemmiter__gen_virtuals(emi);
+	file__unlink(fd,to);
+	i=0;
+	str=head;
+	l=string__length(str);
+	if (l>0) {
+		file__write(fd,to,string__get_buf(str),i,l);
+		if ((response__get_status(res))!=200) {
+			std__exit(-(1));
+		}
+	}
+	i=i+l;
+	str=Aemmiter__get_head(emi);
+	l=string__length(str);
+	if (l>0) {
+		file__write(fd,to,string__get_buf(str),i,l);
+	}
+	i=i+l;
+	str=Aemmiter__get_mid(emi);
+	l=string__length(str);
+	if (l>0) {
+		file__write(fd,to,string__get_buf(str),i,l);
+	}
+	i=i+l;
+	str=body;
+	l=string__length(str);
+	if (l>0) {
+		file__write(fd,to,string__get_buf(str),i,l);
+	}
+	i=i+l;
+	str=Aemmiter__get_data(emi);
+	l=string__length(str);
+	if (l>0) {
+		file__write(fd,to,string__get_buf(str),i,l);
+	}
+	console__log_str(STR(__string_main161));
+	console__log(to);
+	string__dispose(to);
+	file__dispose(fd);
+	response__dispose(res);
+	Alexer__dispose(lex);
+	Aparser__dispose(par);
+	Aemmiter__dispose(emi);
+	return 0;
+}
+// class Aemmiter
+#define _Aemmiter__data ((long*)__this)[0]
+#define _Aemmiter__head ((long*)__this)[1]
+#define _Aemmiter__mid ((long*)__this)[2]
+#define _Aemmiter_clas ((long*)__this)[3]
+#define _Aemmiter_class_name ((long*)__this)[4]
+#define _Aemmiter_cur_memb ((long*)__this)[5]
+#define _Aemmiter__proc ((long*)__this)[6]
+#define _Aemmiter__stk ((long*)__this)[7]
+#define _Aemmiter__expr_stk ((long*)__this)[8]
+#define _Aemmiter_token1 ((long*)__this)[9]
+#define _Aemmiter_token2 ((long*)__this)[10]
+#define _Aemmiter_pass ((long*)__this)[11]
+#define _Aemmiter__virtuals ((long*)__this)[12]
+#define _Aemmiter_class_id ((long*)__this)[13]
+#define _Aemmiter_string_id ((long*)__this)[14]
+long Aemmiter__new()
+{
+	NEW(Aemmiter);
+
+	_Aemmiter__proc=buffer__new(100);
+	_Aemmiter__stk=buffer__new(100);
+	_Aemmiter__expr_stk=buffer__new(100);
+	_Aemmiter__data=string__new(1);
+	_Aemmiter__head=string__new(1);
+	_Aemmiter__mid=string__new(1);
+	_Aemmiter__virtuals=buffer__new(100);
+	_Aemmiter_token1=0;
+	_Aemmiter_token2=0;
+	_Aemmiter_class_id=10;
+	_Aemmiter_string_id=0;
+	return __this;
+}
+long Aemmiter___V_dispose(long __this)
+{
+
+	buffer__dispose(_Aemmiter__proc);
+	buffer__dispose(_Aemmiter__stk);
+	string__dispose(_Aemmiter__data);
+	string__dispose(_Aemmiter__head);
+	string__dispose(_Aemmiter__mid);
+	buffer__dispose(_Aemmiter__virtuals);
+	buffer__dispose(_Aemmiter__expr_stk);
+	std__free(__this);
+	return 0;
+}
+long Aemmiter__emmit(long __this, long par)
+{
+
+	_Aemmiter_clas=Aparser__get_next(par);
+	while (_Aemmiter_clas!=0) {
+		Aemmiter__gen_class(__this);
+		_Aemmiter_clas=Aclass__get_next(_Aemmiter_clas);
+	}
+	return 1;
+}
+long Aemmiter__get_head(long __this)
+{
+
+	return _Aemmiter__head;
+}
+long Aemmiter__get_data(long __this)
+{
+
+	return _Aemmiter__data;
+}
+long Aemmiter__get_mid(long __this)
+{
+
+	return _Aemmiter__mid;
+}
+long Aemmiter__gen_class(long __this)
+{
+	long to;
+	long s;
+	long mem;
+	long i;
+	long l;
+	long m;
+
+	to=Aclass__get_name(_Aemmiter_clas);
+	_Aemmiter_class_name=Atoken__get_data(to);
+	string__add(_Aemmiter__data,STR(__string_Aemmiter162));
+	string__add(_Aemmiter__data,_Aemmiter_class_name);
+	string__add(_Aemmiter__data,STR(__string_Aemmiter163));
+	s=string__new(4);
+	string__set_int(s,Aclass__get_nb_fields(_Aemmiter_clas));
+	string__add(_Aemmiter__head,STR(__string_Aemmiter164));
+	string__add(_Aemmiter__head,_Aemmiter_class_name);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter165));
+	string__add(_Aemmiter__head,s);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter166));
+	_Aemmiter_class_id=_Aemmiter_class_id+1;
+	string__set_int(s,_Aemmiter_class_id);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter167));
+	string__add(_Aemmiter__head,_Aemmiter_class_name);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter168));
+	string__add(_Aemmiter__head,s);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter169));
+	string__dispose(s);
+	_Aemmiter_pass=0;
+	while (_Aemmiter_pass<3) {
+		mem=Aclass__get_members(_Aemmiter_clas);
+		l=buffer__length(mem);
+		i=0;
+		while (i<l) {
+			m=buffer__get_at(mem,i);
+			Aemmiter__gen_member(__this, m);
+			if (_Aemmiter_pass==2) {
+				Amember__dispose_body(m);
+			}
+			i=i+1;
+		}
+		_Aemmiter_pass=_Aemmiter_pass+1;
+	}
+	return 0;
+}
+long Aemmiter__gen_member(long __this, long mb)
+{
+	long k;
+	long str;
+
+	str=string__new(8);
+	k=Amember__get_kind(mb);
+	if (_Aemmiter_pass==0) {
+		Aemmiter__pass_0(__this, str,mb,k);
+		Aemmiter__pass_1(__this, str,mb,k);
+		Aemmiter__pass_2(__this, str,mb,k);
+	} else if (_Aemmiter_pass==1) {
+		Aemmiter__pass_3(__this, str,mb,k);
+	} else if (_Aemmiter_pass==2) {
+		Aemmiter__pass_4(__this, str,mb,k);
+	}
+	string__dispose(str);
+	return 0;
+}
+long Aemmiter__gen_conditional_call(long __this, long v, long mb)
+{
+	long param;
+	long params;
+	long i;
+	long l;
+	long tok;
+
+	string__add(_Aemmiter__data,STR(__string_Aemmiter170));
+	string__add(_Aemmiter__data,Avirtual__get_class_name(v));
+	string__add(_Aemmiter__data,STR(__string_Aemmiter171));
+	params=Amember__get_params(mb);
+	string__add(_Aemmiter__data,Avirtual__get_class_name(v));
+	string__add(_Aemmiter__data,STR(__string_Aemmiter172));
+	string__add(_Aemmiter__data,Amember__get_name_string(mb));
+	string__add(_Aemmiter__data,STR(__string_Aemmiter173));
+	if (params!=0) {
+		l=buffer__length(params);
+		i=0;
+		while (i<l) {
+			param=buffer__get_at(params,i);
+			string__add(_Aemmiter__data,STR(__string_Aemmiter174));
+			tok=Amember__get_name(param);
+			string__add(_Aemmiter__data,Atoken__get_data(tok));
+			i=i+1;
+		}
+	}
+	string__add(_Aemmiter__data,STR(__string_Aemmiter175));
+	return 0;
+}
+long Aemmiter__gen_virtuals(long __this)
+{
+	long i;
+	long v;
+	long mb;
+
+	i=buffer__length(_Aemmiter__virtuals);
+	while (i>0) {
+		i=i-1;
+		v=buffer__get_at(_Aemmiter__virtuals,i);
+		mb=Avirtual__get_member(v);
+		Aemmiter__gen_method_decl(__this, _Aemmiter__head,STR(__string_Aemmiter176),Amember__get_name_string(mb),mb,Aclass__Cvirtual);
+		string__add(_Aemmiter__head,STR(__string_Aemmiter177));
+		Aemmiter__gen_method_decl(__this, _Aemmiter__data,STR(__string_Aemmiter178),Amember__get_name_string(mb),mb,Aclass__Cvirtual);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter179));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter180));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter181));
+		while (v!=0) {
+			Aemmiter__gen_conditional_call(__this, v,mb);
+			v=Avirtual__get_next(v);
+		}
+		string__add(_Aemmiter__data,STR(__string_Aemmiter182));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter183));
+	}
+	return 0;
+}
+long Aemmiter__pass_0(long __this, long str, long mb, long k)
+{
+	long t;
+	long ty;
+
+	if (k==(Aclass__Cconst)) {
+		string__add(_Aemmiter__head,STR(__string_Aemmiter184));
+		string__add(_Aemmiter__head,_Aemmiter_class_name);
+		string__add(_Aemmiter__head,STR(__string_Aemmiter185));
+		string__add(_Aemmiter__head,Amember__get_name_string(mb));
+		string__add(_Aemmiter__head,STR(__string_Aemmiter186));
+		t=Amember__get_initial_value(mb);
+		ty=Atoken__get_type(t);
+		if (ty==(Alexer__Cstring)) {
+			string__add(_Aemmiter__head,STR(__string_Aemmiter187));
+			string__add(_Aemmiter__head,_Aemmiter_class_name);
+			string__add(_Aemmiter__head,Amember__get_name_string(mb));
+			string__add(_Aemmiter__head,STR(__string_Aemmiter188));
+			Aemmiter__gen_string(__this, Amember__get_name_string(mb),Atoken__get_data(t));
+		} else if (ty==(Alexer__Cquote)) {
+			string__add_char(_Aemmiter__head,'\'');
+			string__add(_Aemmiter__head,Atoken__get_data(t));
+			string__add_char(_Aemmiter__head,'\'');
+		} else {
+			string__add(_Aemmiter__head,Atoken__get_data(t));
+		}
+		string__add(_Aemmiter__head,STR(__string_Aemmiter189));
+	}
+	if (k==(Aclass__Cfield)) {
+		string__set_int(str,Amember__get_index(mb));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter190));
+		string__add(_Aemmiter__data,_Aemmiter_class_name);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter191));
+		string__add(_Aemmiter__data,Amember__get_name_string(mb));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter192));
+		string__add(_Aemmiter__data,str);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter193));
+	}
+	return 0;
+}
+long Aemmiter__pass_1(long __this, long str, long mb, long k)
+{
+
+	if (k==(Aclass__Cstatic)) {
+		string__add(_Aemmiter__data,STR(__string_Aemmiter194));
+		string__add(_Aemmiter__data,_Aemmiter_class_name);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter195));
+		string__add(_Aemmiter__data,Amember__get_name_string(mb));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter196));
+	}
+	return 0;
+}
+long Aemmiter__pass_2(long __this, long str, long mb, long k)
+{
+
+	return 0;
+}
+long Aemmiter__pad(long __this, long depth)
+{
+
+	while (depth>0) {
+		string__add(_Aemmiter__data,STR(__string_Aemmiter197));
+		depth=depth-1;
+	}
+	return 0;
+}
+long Aemmiter__find_param(long __this, long stri)
+{
+	long v;
+	long i;
+	long vars;
+	long tok;
+	long s;
+
+	vars=Amember__get_params(_Aemmiter_cur_memb);
+	i=0;
+	if (vars!=0) {
+		i=buffer__length(vars);
+	}
+	while (i>0) {
+		i=i-1;
+		v=buffer__get_at(vars,i);
+		if (v!=0) {
+			tok=Amember__get_name(v);
+			s=Atoken__get_data(tok);
+			if (s!=0) {
+				if ((string__compare(stri,s))==0) {
+					return v;
+				}
+			}
+		}
+	}
+	return 0;
+}
+long Aemmiter__find_member(long __this, long stri)
+{
+	long v;
+	long i;
+	long vars;
+	long tok;
+	long s;
+
+	i=0;
+	vars=Aclass__get_members(_Aemmiter_clas);
+	if (vars!=0) {
+		i=buffer__length(vars);
+	}
+	while (i>0) {
+		i=i-1;
+		v=buffer__get_at(vars,i);
+		if (v!=0) {
+			tok=Amember__get_name(v);
+			s=Atoken__get_data(tok);
+			if ((s!=0)) {
+				if ((string__compare(stri,s))==0) {
+					return v;
+				}
+			}
+		}
+	}
+	return 0;
+}
+long Aemmiter__find_field(long __this, long stri)
+{
+	long v;
+
+	v=Aemmiter__find_member(__this, stri);
+	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cfield)))) {
+		return v;
+	}
+	return 0;
+}
+long Aemmiter__find_static(long __this, long stri)
+{
+	long v;
+
+	v=Aemmiter__find_member(__this, stri);
+	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cstatic)))) {
+		return v;
+	}
+	return 0;
+}
+long Aemmiter__find_meth_virt(long __this, long stri)
+{
+	long v;
+
+	v=Aemmiter__find_member(__this, stri);
+	if (v!=0) {
+		if ((((Amember__get_kind(v))==(Aclass__Cmethod)))||(((Amember__get_kind(v))==(Aclass__Cvirtual)))) {
+			return v;
+		}
+	}
+	return 0;
+}
+long Aemmiter__find_local(long __this, long stri)
+{
+	long v;
+	long i;
+	long vars;
+	long tok;
+	long s;
+
+	vars=Amember__get_vars(_Aemmiter_cur_memb);
+	i=0;
+	if (vars!=0) {
+		i=buffer__length(vars);
+	}
+	while (i>0) {
+		i=i-1;
+		v=buffer__get_at(vars,i);
+		if (v!=0) {
+			tok=Amember__get_name(v);
+			s=Atoken__get_data(tok);
+			if ((s!=0)) {
+				if ((string__compare(stri,s))==0) {
+					return v;
+				}
+			}
+		}
+	}
+	return 0;
+}
+long Aemmiter__expr_gen_call(long __this, long expr)
+{
+	long ex1;
+	long ex2;
+	long s;
+	long tok;
+	long stri;
+	long v;
+	long p;
+	long obj;
+	long fld;
+
+	s=string__new(8);
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	stri=Aexpr__get_value(ex1);
+	obj=Aexpr__get_value2(ex1);
+	if (obj==0) {
+		v=Aemmiter__find_meth_virt(__this, stri);
+		if ((v!=0)) {
+			s=string__new(8);
+			string__add(s,_Aemmiter_class_name);
+			string__add(s,STR(__string_Aemmiter198));
+			string__add(s,stri);
+			p=Aexpr__get_value(ex2);
+			if ((string__length(p))>0) {
+				string__add(s,STR(__string_Aemmiter199));
+				string__add(s,p);
+				string__add(s,STR(__string_Aemmiter200));
+			} else {
+				string__add(s,STR(__string_Aemmiter201));
+			}
+			Aexpr__set_value(expr,s);
+			buffer__push(_Aemmiter__expr_stk,expr);
+			return 0;
+		}
+		Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter202));
+		return 0;
+	}
+	fld=0;
+	v=Aemmiter__find_local(__this, obj);
+	if (v==0) {
+		v=Aemmiter__find_param(__this, obj);
+	}
+	if (v==0) {
+		v=Aemmiter__find_field(__this, obj);
+		if (v!=0) {
+			fld=1;
+		}
+	}
+	if (v!=0) {
+		tok=Amember__get_type_id(v);
+		if (tok==0) {
+			console__log(obj);
+			console__log(Amember__get_name_string(v));
+			Aemmiter__error(__this, Aexpr__get_origin(ex1),STR(__string_Aemmiter203));
+			return 0;
+		}
+		s=string__new(8);
+		string__add(s,Atoken__get_data(tok));
+		string__add(s,STR(__string_Aemmiter204));
+		string__add(s,Aexpr__get_value(ex1));
+		p=Aexpr__get_value(ex2);
+		string__add(s,STR(__string_Aemmiter205));
+		if (fld!=0) {
+			string__add(s,STR(__string_Aemmiter206));
+			string__add(s,_Aemmiter_class_name);
+			string__add(s,STR(__string_Aemmiter207));
+		}
+		string__add(s,Aexpr__get_value2(ex1));
+		if ((string__length(p))>0) {
+			string__add(s,STR(__string_Aemmiter208));
+			string__add(s,Aexpr__get_value(ex2));
+		}
+		string__add(s,STR(__string_Aemmiter209));
+		Aexpr__set_value(expr,s);
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	string__add(s,obj);
+	string__add(s,STR(__string_Aemmiter210));
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter211));
+	string__add(s,Aexpr__get_value(ex2));
+	string__add(s,STR(__string_Aemmiter212));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_sub_expr(long __this, long expr)
+{
+	long s;
+
+	if ((Aexpr__get_right(expr))==0) {
+		s=string__new(8);
+		Aexpr__set_value(expr,s);
+		buffer__push(_Aemmiter__expr_stk,expr);
+	}
+	return 0;
+}
+long Aemmiter__expr_gen_comma(long __this, long expr)
+{
+	long ex1;
+	long ex2;
+	long s;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter213));
+	string__add(s,Aexpr__get_value(ex2));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_index(long __this, long expr)
+{
+	long ex1;
+	long ex2;
+	long s;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,STR(__string_Aemmiter214));
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter215));
+	string__add(s,Aexpr__get_value(ex2));
+	string__add(s,STR(__string_Aemmiter216));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_par(long __this, long expr)
+{
+	long ex1;
+	long s;
+
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,STR(__string_Aemmiter217));
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter218));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_constant(long __this, long expr)
+{
+	long ex1;
+	long ex2;
+	long s;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter219));
+	string__add(s,Aexpr__get_value(ex2));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_dot(long __this, long expr)
+{
+	long ex1;
+	long ex2;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	Aexpr__set_value2(expr,Aexpr__get_value(ex1));
+	Aexpr__set_value(expr,Aexpr__get_value(ex2));
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__gen_string(long __this, long s2, long value)
+{
+
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter220));
+	string__add(_Aemmiter__mid,_Aemmiter_class_name);
+	string__add(_Aemmiter__mid,s2);
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter221));
+	string__add_char(_Aemmiter__mid,'"');
+	string__add(_Aemmiter__mid,value);
+	string__add_char(_Aemmiter__mid,'"');
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter222));
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter223));
+	string__add(_Aemmiter__mid,_Aemmiter_class_name);
+	string__add(_Aemmiter__mid,s2);
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter224));
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter225));
+	string__add(_Aemmiter__mid,_Aemmiter_class_name);
+	string__add(_Aemmiter__mid,s2);
+	string__add(_Aemmiter__mid,STR(__string_Aemmiter226));
+	return 0;
+}
+long Aemmiter__expr_gen_str_const(long __this, long expr)
+{
+	long s;
+	long s2;
+
+	s=string__new(8);
+	s2=string__new(8);
+	_Aemmiter_string_id=_Aemmiter_string_id+1;
+	string__set_int(s2,_Aemmiter_string_id);
+	Aemmiter__gen_string(__this, s2,Aexpr__get_value(expr));
+	string__add(s,STR(__string_Aemmiter227));
+	string__add(s,_Aemmiter_class_name);
+	string__add(s,s2);
+	string__add(s,STR(__string_Aemmiter228));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	string__dispose(s2);
+	return 0;
+}
+long Aemmiter__expr_gen_char_const(long __this, long expr)
+{
+	long s;
+
+	s=string__new(8);
+	string__add(s,STR(__string_Aemmiter229));
+	string__add(s,Aexpr__get_value(expr));
+	string__add(s,STR(__string_Aemmiter230));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen0(long __this, long expr, long op)
+{
+	long s;
+
+	s=string__new(8);
+	string__add(s,op);
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen1(long __this, long expr, long op)
+{
+	long ex1;
+	long s;
+
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,op);
+	string__add(s,STR(__string_Aemmiter231));
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,STR(__string_Aemmiter232));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_assign(long __this, long expr, long op)
+{
+	long ex1;
+	long ex2;
+	long s;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	string__add(s,Aexpr__get_value(ex1));
+	string__add(s,op);
+	string__add(s,Aexpr__get_value(ex2));
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen2(long __this, long expr, long op)
+{
+	long ex1;
+	long ex2;
+	long s;
+	long oper;
+
+	ex2=buffer__pop(_Aemmiter__expr_stk);
+	ex1=buffer__pop(_Aemmiter__expr_stk);
+	s=string__new(8);
+	oper=Aexpr__get_op(ex1);
+	if (oper>(Aclass__Croot)) {
+		string__add(s,STR(__string_Aemmiter233));
+	}
+	string__add(s,Aexpr__get_value(ex1));
+	if (oper>(Aclass__Croot)) {
+		string__add(s,STR(__string_Aemmiter234));
+	}
+	string__add(s,op);
+	oper=Aexpr__get_op(ex2);
+	if (oper>(Aclass__Croot)) {
+		string__add(s,STR(__string_Aemmiter235));
+	}
+	string__add(s,Aexpr__get_value(ex2));
+	if (oper>(Aclass__Croot)) {
+		string__add(s,STR(__string_Aemmiter236));
+	}
+	Aexpr__set_value(expr,s);
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_gen_var(long __this, long expr)
+{
+	long stri;
+	long v;
+	long s;
+	long ex;
+
+	stri=Aexpr__get_value(expr);
+	if (stri==0) {
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	v=Aemmiter__find_local(__this, stri);
+	if (v!=0) {
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	v=Aemmiter__find_param(__this, stri);
+	if (v!=0) {
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	ex=Aexpr__get_parent(expr);
+	v=0;
+	if ((Aexpr__get_op(ex))!=(Aclass__Cdot)) {
+		v=Aemmiter__find_member(__this, stri);
+	}
+	if (((v!=0))&&(((Amember__get_kind(v))==(Aclass__Cfield)))) {
+		s=string__new(8);
+		string__add(s,STR(__string_Aemmiter237));
+		string__add(s,_Aemmiter_class_name);
+		string__add(s,STR(__string_Aemmiter238));
+		string__add(s,stri);
+		Aexpr__set_value(expr,s);
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	v=Aemmiter__find_static(__this, stri);
+	if (v!=0) {
+		s=string__new(8);
+		string__add(s,_Aemmiter_class_name);
+		string__add(s,STR(__string_Aemmiter239));
+		string__add(s,stri);
+		Aexpr__set_value(expr,s);
+		buffer__push(_Aemmiter__expr_stk,expr);
+		return 0;
+	}
+	buffer__push(_Aemmiter__expr_stk,expr);
+	return 0;
+}
+long Aemmiter__expr_process(long __this, long expr)
+{
+	long op;
+	long ex;
+
+	op=Aexpr__get_op(expr);
+	if (op<(Aclass__Croot)) {
+		if (op==(Aclass__Cnull)) {
+			Aemmiter__expr_gen0(__this, expr,STR(__string_Aemmiter240));
+		} else if (op==(Aclass__Cchar_const)) {
+			Aemmiter__expr_gen_char_const(__this, expr);
+		} else if (op==(Aclass__Cint_const)) {
+			buffer__push(_Aemmiter__expr_stk,expr);
+		} else if (op==(Aclass__Cstr_const)) {
+			Aemmiter__expr_gen_str_const(__this, expr);
+		} else if (op==(Aclass__Cthis)) {
+			Aemmiter__expr_gen0(__this, expr,STR(__string_Aemmiter241));
+		} else {
+			Aemmiter__expr_gen_var(__this, expr);
+		}
+		return 0;
+	}
+	if (op==(Aclass__Croot)) {
+		if ((buffer__length(_Aemmiter__expr_stk))!=1) {
+			Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter242));
+			return 0;
+		}
+		ex=buffer__pop(_Aemmiter__expr_stk);
+		string__add(_Aemmiter__data,Aexpr__get_value(ex));
+	} else if (op==(Aclass__Cassign)) {
+		Aemmiter__expr_gen_assign(__this, expr,STR(__string_Aemmiter243));
+	} else if (op==(Aclass__Cequal)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter244));
+	} else if (op==(Aclass__Cnotequal)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter245));
+	} else if (op==(Aclass__Clargerequal)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter246));
+	} else if (op==(Aclass__Clesserequal)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter247));
+	} else if (op==(Aclass__Clarger)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter248));
+	} else if (op==(Aclass__Clesser)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter249));
+	} else if (op==(Aclass__Clogicaland)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter250));
+	} else if (op==(Aclass__Clogicalor)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter251));
+	} else if (op==(Aclass__Cadd)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter252));
+	} else if (op==(Aclass__Csub)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter253));
+	} else if (op==(Aclass__Cmult)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter254));
+	} else if (op==(Aclass__Cdiv)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter255));
+	} else if (op==(Aclass__Cmodulo)) {
+		Aemmiter__expr_gen2(__this, expr,STR(__string_Aemmiter256));
+	} else if (op==(Aclass__Clogicalnot)) {
+		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter257));
+	} else if (op==(Aclass__Cparenthesis)) {
+		Aemmiter__expr_gen_par(__this, expr);
+	} else if (op==(Aclass__Cunaryplus)) {
+		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter258));
+	} else if (op==(Aclass__Cunaryminus)) {
+		Aemmiter__expr_gen1(__this, expr,STR(__string_Aemmiter259));
+	} else if (op==(Aclass__Cdot)) {
+		Aemmiter__expr_gen_dot(__this, expr);
+	} else if (op==(Aclass__Cconstant)) {
+		Aemmiter__expr_gen_constant(__this, expr);
+	} else if (op==(Aclass__Ccall)) {
+		Aemmiter__expr_gen_call(__this, expr);
+	} else if (op==(Aclass__Cindex)) {
+		Aemmiter__expr_gen_index(__this, expr);
+	} else if (op==(Aclass__Ccomma)) {
+		Aemmiter__expr_gen_comma(__this, expr);
+	} else if (op==(Aclass__Cexpr)) {
+		Aemmiter__expr_gen_sub_expr(__this, expr);
+	} else {
+		Aemmiter__error(__this, Aexpr__get_origin(expr),STR(__string_Aemmiter260));
+		return 0;
+	}
+	return 0;
+}
+long Aemmiter__expr_gen(long __this, long expr)
+{
+	long ex;
+	long ex1;
+	long stack;
+
+	stack=buffer__new(4);
+	ex=Aexpr__get_right(expr);
+	ex=expr;
+	Aexpr__set_flags(ex,0);
+	buffer__push(stack,ex);
+	while ((buffer__length(stack))>0) {
+		ex=buffer__get_last(stack);
+		if ((Aexpr__get_flags(ex))!=0) {
+			ex=buffer__pop(stack);
+			Aemmiter__expr_process(__this, ex);
+		} else {
+			ex1=ex;
+			Aexpr__set_flags(ex,1);
+			ex=Aexpr__get_right(ex);
+			if (ex!=0) {
+				Aexpr__set_flags(ex,0);
+				buffer__push(stack,ex);
+			}
+			ex=Aexpr__get_left(ex1);
+			if (ex!=0) {
+				Aexpr__set_flags(ex,0);
+				buffer__push(stack,ex);
+			}
+		}
+	}
+	buffer__dispose(stack);
+	return 0;
+}
+long Aemmiter__body_gen(long __this, long mb, long k, long vars_, long body_)
+{
+	long l;
+	long i;
+	long tok;
+	long va;
+	long stm;
+	long ty;
+	long stack;
+	long padde;
+	long ex;
+	long buf;
+
+	_Aemmiter_cur_memb=mb;
+	string__add(_Aemmiter__data,STR(__string_Aemmiter261));
+	stack=buffer__new(4);
+	if (vars_!=0) {
+		l=buffer__length(vars_);
+	} else {
+		l=0;
+	}
+	i=0;
+	while (i<l) {
+		va=buffer__get_at(vars_,i);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter262));
+		tok=Amember__get_name(va);
+		string__add(_Aemmiter__data,Atoken__get_data(tok));
+		string__add(_Aemmiter__data,STR(__string_Aemmiter263));
+		i=i+1;
+	}
+	if (k==(Aclass__Cconstructor)) {
+		string__add(_Aemmiter__data,STR(__string_Aemmiter264));
+		string__add(_Aemmiter__data,_Aemmiter_class_name);
+		string__add(_Aemmiter__data,STR(__string_Aemmiter265));
+	}
+	l=buffer__length(body_);
+	i=0;
+	padde=1;
+	while (i<l) {
+		stm=buffer__get_at(body_,i);
+		ty=Astatement__get_type(stm);
+		if (((ty!=(Aclass__Celseif)))&&((ty!=(Aclass__Celse)))) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter266));
+			Aemmiter__pad(__this, padde);
+		}
+		if (((ty==(Aclass__Cif)))||((ty==(Aclass__Celseif)))) {
+			if (ty==(Aclass__Celseif)) {
+				string__add(_Aemmiter__data,STR(__string_Aemmiter267));
+			} else {
+				string__add(_Aemmiter__data,STR(__string_Aemmiter268));
+			}
+			ex=Astatement__get_expression(stm);
+			if (ex!=0) {
+				Aemmiter__expr_gen(__this, ex);
+			}
+			string__add(_Aemmiter__data,STR(__string_Aemmiter269));
+			buffer__push(stack,l);
+			buffer__push(stack,i+1);
+			buffer__push(stack,body_);
+			buf=Astatement__get_else(stm);
+			if (buf!=0) {
+				buffer__push(stack,buffer__length(buf));
+				buffer__push(stack,0);
+				buffer__push(stack,buf);
+			}
+			padde=padde+1;
+			i=-(1);
+			l=0;
+			if (body_!=0) {
+				body_=Astatement__get_statements(stm);
+				if (body_!=0) {
+					l=buffer__length(body_);
+				}
+			}
+		} else if (ty==(Aclass__Celse)) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter270));
+			padde=padde+1;
+		} else if (ty==(Aclass__Cbreak)) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter271));
+		} else if (ty==(Aclass__Creturn)) {
+			ex=Astatement__get_expression(stm);
+			if (ex!=0) {
+				string__add(_Aemmiter__data,STR(__string_Aemmiter272));
+				Aemmiter__expr_gen(__this, ex);
+				string__add(_Aemmiter__data,STR(__string_Aemmiter273));
+			} else {
+				string__add(_Aemmiter__data,STR(__string_Aemmiter274));
+			}
+		} else if (ty==(Aclass__Cdo)) {
+			ex=Astatement__get_expression(stm);
+			if (ex!=0) {
+				Aemmiter__expr_gen(__this, ex);
+			}
+			string__add(_Aemmiter__data,STR(__string_Aemmiter275));
+		} else if (ty==(Aclass__Clet)) {
+			ex=Astatement__get_expression(stm);
+			if (ex!=0) {
+				Aemmiter__expr_gen(__this, ex);
+			}
+			string__add(_Aemmiter__data,STR(__string_Aemmiter276));
+		} else if (ty==(Aclass__Cwhile)) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter277));
+			ex=Astatement__get_expression(stm);
+			if (ex!=0) {
+				Aemmiter__expr_gen(__this, ex);
+			}
+			string__add(_Aemmiter__data,STR(__string_Aemmiter278));
+			buffer__push(stack,l);
+			buffer__push(stack,i+1);
+			buffer__push(stack,body_);
+			i=-(1);
+			l=0;
+			body_=Astatement__get_statements(stm);
+			if (body_!=0) {
+				l=buffer__length(body_);
+			}
+			padde=padde+1;
+		} else {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter279));
+		}
+		i=i+1;
+		if (i>=l) {
+			padde=padde-1;
+			string__add(_Aemmiter__data,STR(__string_Aemmiter280));
+			Aemmiter__pad(__this, padde);
+			string__add(_Aemmiter__data,STR(__string_Aemmiter281));
+		}
+		while (((i>=l))&&(((buffer__length(stack))>0))) {
+			body_=buffer__pop(stack);
+			i=buffer__pop(stack);
+			l=buffer__pop(stack);
+			if (i>=l) {
+				padde=padde-1;
+				string__add(_Aemmiter__data,STR(__string_Aemmiter282));
+				Aemmiter__pad(__this, padde);
+				string__add(_Aemmiter__data,STR(__string_Aemmiter283));
+			}
+		}
+	}
+	string__add(_Aemmiter__data,STR(__string_Aemmiter284));
+	buffer__dispose(stack);
+	return 0;
+}
+long Aemmiter__gen_type(long __this, long mb)
+{
+	long ty;
+	long tok;
+
+	tok=Amember__get_type_id(mb);
+	if (tok!=0) {
+		string__add(_Aemmiter__data,Atoken__get_data(tok));
+	} else {
+		ty=Amember__get_type(mb);
+		if (ty==(Aclass__Cint)) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter285));
+		} else if (ty==(Aclass__Cvoid)) {
+			string__add(_Aemmiter__data,STR(__string_Aemmiter286));
+		} else {
+			Aemmiter__error(__this, Amember__get_name(mb),STR(__string_Aemmiter287));
+		}
+	}
+	return 0;
+}
+long Aemmiter__add_virtual(long __this, long mb)
+{
+	long n;
+	long v;
+	long nv;
+	long i;
+	long s;
+
+	n=Amember__get_name_string(mb);
+	nv=Avirtual__new(mb,_Aemmiter_class_name);
+	i=buffer__length(_Aemmiter__virtuals);
+	while (i>0) {
+		i=i-1;
+		v=buffer__get_at(_Aemmiter__virtuals,i);
+		if (v!=0) {
+			s=Avirtual__get_member_name(v);
+			if (((s!=0))&&(((string__compare(n,s))==0))) {
+				Avirtual__set_next(nv,Avirtual__get_next(v));
+				Avirtual__set_next(v,nv);
+				return 0;
+			}
+		}
+	}
+	buffer__push(_Aemmiter__virtuals,nv);
+	return 0;
+}
+long Aemmiter__gen_virtual_caller(long __this, long mb)
+{
+	long param;
+	long params;
+	long i;
+	long l;
+	long tok;
+
+	params=Amember__get_params(mb);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter288));
+	string__add(_Aemmiter__head,_Aemmiter_class_name);
+	string__add(_Aemmiter__head,STR(__string_Aemmiter289));
+	string__add(_Aemmiter__head,Amember__get_name_string(mb));
+	string__add(_Aemmiter__head,STR(__string_Aemmiter290));
+	if (params!=0) {
+		l=buffer__length(params);
+		i=0;
+		while (i<l) {
+			param=buffer__get_at(params,i);
+			string__add(_Aemmiter__head,STR(__string_Aemmiter291));
+			tok=Amember__get_name(param);
+			string__add(_Aemmiter__head,Atoken__get_data(tok));
+			i=i+1;
+		}
+	}
+	string__add(_Aemmiter__head,STR(__string_Aemmiter292));
+	string__add(_Aemmiter__head,Amember__get_name_string(mb));
+	string__add(_Aemmiter__head,STR(__string_Aemmiter293));
+	if (params!=0) {
+		l=buffer__length(params);
+		i=0;
+		while (i<l) {
+			param=buffer__get_at(params,i);
+			string__add(_Aemmiter__head,STR(__string_Aemmiter294));
+			tok=Amember__get_name(param);
+			string__add(_Aemmiter__head,Atoken__get_data(tok));
+			i=i+1;
+		}
+	}
+	string__add(_Aemmiter__head,STR(__string_Aemmiter295));
+	return 0;
+}
+long Aemmiter__gen_method_decl(long __this, long dest, long c_name, long name, long mb, long k)
+{
+	long param;
+	long params;
+	long i;
+	long l;
+	long sub;
+	long tok;
+
+	string__add(dest,STR(__string_Aemmiter296));
+	string__add(dest,c_name);
+	string__add(dest,STR(__string_Aemmiter297));
+	string__add(dest,name);
+	params=Amember__get_params(mb);
+	string__add(dest,STR(__string_Aemmiter298));
+	sub=1;
+	if (((k==(Aclass__Cmethod)))||((k==(Aclass__Cvirtual)))) {
+		string__add(dest,STR(__string_Aemmiter299));
+		sub=2;
+	}
+	if (params!=0) {
+		l=buffer__length(params);
+		i=0;
+		while (i<l) {
+			param=buffer__get_at(params,i);
+			if (((i>0))||((sub==2))) {
+				string__add(dest,STR(__string_Aemmiter300));
+			}
+			string__add(dest,STR(__string_Aemmiter301));
+			tok=Amember__get_name(param);
+			string__add(dest,Atoken__get_data(tok));
+			i=i+1;
+		}
+	}
+	string__add(dest,STR(__string_Aemmiter302));
+	return 0;
+}
+long Aemmiter__pass_3(long __this, long str, long mb, long k)
+{
+	long vars;
+	long body;
+	long sub;
+
+	sub=0;
+	if (k==(Aclass__Cconstructor)) {
+		sub=1;
+	} else if (k==(Aclass__Cfunction)) {
+		sub=1;
+	} else if (k==(Aclass__Cmethod)) {
+		sub=2;
+	} else if (k==(Aclass__Cvirtual)) {
+		sub=2;
+	}
+	if (sub!=0) {
+		Aemmiter__gen_method_decl(__this, _Aemmiter__head,_Aemmiter_class_name,Amember__get_name_string(mb),mb,k);
+		string__add(_Aemmiter__head,STR(__string_Aemmiter303));
+		if (k==(Aclass__Cvirtual)) {
+			Aemmiter__add_virtual(__this, mb);
+			Aemmiter__gen_virtual_caller(__this, mb);
+			string__set(str,STR(__string_Aemmiter304));
+			string__add(str,Amember__get_name_string(mb));
+			Aemmiter__gen_method_decl(__this, _Aemmiter__head,_Aemmiter_class_name,str,mb,k);
+			string__add(_Aemmiter__head,STR(__string_Aemmiter305));
+			Aemmiter__gen_method_decl(__this, _Aemmiter__data,_Aemmiter_class_name,str,mb,k);
+			string__add(_Aemmiter__data,STR(__string_Aemmiter306));
+		} else {
+			Aemmiter__gen_method_decl(__this, _Aemmiter__data,_Aemmiter_class_name,Amember__get_name_string(mb),mb,k);
+			string__add(_Aemmiter__data,STR(__string_Aemmiter307));
+		}
+		vars=Amember__get_vars(mb);
+		body=Amember__get_body(mb);
+		if (body!=0) {
+			Aemmiter__body_gen(__this, mb,k,vars,body);
+		}
+	}
+	return 0;
+}
+long Aemmiter__pass_4(long __this, long str, long mb, long k)
+{
+
+	return 0;
+}
+long Aemmiter__error(long __this, long t, long e)
+{
+
+	if (t!=0) {
+		console__log_str(Atoken__get_file(t));
+		console__log_str(STR(__string_Aemmiter308));
+		console__log_int(Atoken__get_line(t));
+		console__log_str(STR(__string_Aemmiter309));
+		console__log_str(Atoken__get_data(t));
+		console__log_str(STR(__string_Aemmiter310));
+	}
+	console__log(e);
+	Aemmiter__dump(__this);
+	std__exit(-(1));
+	return 0;
+}
+long Aemmiter__dump(long __this)
+{
+
+	return 0;
+}
+// class array
+long array__new(long size)
+{
+	long a;
+
+	a=std__alloc(size);
+	((long*)a)[-(1)]=array___DcidD;
+	return a;
+}
+long array___V_dispose(long __this)
+{
+
+	std__free(__this);
+	return 0;
+}
 long virtual__dispose(long __this)
 {
 	long cid;
 	cid = ((long*)__this)[-1];
 	switch (cid) {
-	case D__buffer___ID:
+	case buffer___DcidD:
 		return buffer___V_dispose(__this);
-	case D__Aclass___ID:
-		return Aclass___V_dispose(__this);
-	case D__string___ID:
-		return string___V_dispose(__this);
-	case D__response___ID:
-		return response___V_dispose(__this);
-	case D__hash___ID:
-		return hash___V_dispose(__this);
-	case D__file___ID:
-		return file___V_dispose(__this);
-	case D__Avirtual___ID:
-		return Avirtual___V_dispose(__this);
-	case D__Atoken___ID:
-		return Atoken___V_dispose(__this);
-	case D__Astatement___ID:
-		return Astatement___V_dispose(__this);
-	case D__array___ID:
+	case array___DcidD:
 		return array___V_dispose(__this);
-	case D__Aparser___ID:
+	case Aemmiter___DcidD:
+		return Aemmiter___V_dispose(__this);
+	case Aclass___DcidD:
+		return Aclass___V_dispose(__this);
+	case string___DcidD:
+		return string___V_dispose(__this);
+	case response___DcidD:
+		return response___V_dispose(__this);
+	case hash___DcidD:
+		return hash___V_dispose(__this);
+	case file___DcidD:
+		return file___V_dispose(__this);
+	case Avirtual___DcidD:
+		return Avirtual___V_dispose(__this);
+	case Atoken___DcidD:
+		return Atoken___V_dispose(__this);
+	case Astatement___DcidD:
+		return Astatement___V_dispose(__this);
+	case Aparser___DcidD:
 		return Aparser___V_dispose(__this);
-	case D__Amember___ID:
+	case Amember___DcidD:
 		return Amember___V_dispose(__this);
-	case D__Aexpr___ID:
+	case Aexpr___DcidD:
 		return Aexpr___V_dispose(__this);
-	case D__Alexer___ID:
+	case Alexer___DcidD:
 		return Alexer___V_dispose(__this);
 	default:
 		std__panic();
