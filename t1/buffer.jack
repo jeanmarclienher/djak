@@ -99,21 +99,6 @@ method void push(in array elem)
 	return 0;
 }
 
-method void append(in buffer buf)
-{
-	var int l;
-	var int j;
-	j := buf.length();
-	l := length() + j;
-	pos := l;
-	while (j > 0) {
-		l := l - 1;
-		j := j - 1;
-		set_at(l, buf.get_at(j));
-	}
-	return;
-}
-
 method void set_last(in array elem)
 {
 	if (pos < 1) {

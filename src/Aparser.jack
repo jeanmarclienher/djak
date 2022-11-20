@@ -1,4 +1,4 @@
-class Aparser {
+class Aparser implements object {
 field buffer _states;
 field Alexer lex;
 field Atoken lookahead;
@@ -95,6 +95,9 @@ method int parse(in Alexer lexer_)
 		} else {
 			state_machine();
 		}
+		if (lex.empty() != 0) {
+			return 0;
+		}
 		if (lookahead.get_type() == Alexer.$Cend) {
 			eat();
 			return 0;
@@ -158,6 +161,25 @@ method void class_dec()
 	_class := Aclass.new(lookahead);
 	_class.set_next(c);
 	eat();
+
+	if (match_id("implements") != 0) {
+		eat();
+		if (match_id(null) == 0) {
+			error("expecting class identifier");
+			return;
+		}
+		_class.add_implement(lookahead);
+		eat();
+		while (match_op(",") != 0) {
+			eat();
+			if (match_id(null) == 0) {
+				error("expecting class identifier");
+				return;
+			}
+			_class.add_implement(lookahead);
+			eat();
+		}
+	}
 
 	if (match_op("{") == 0) {
 		error("expecting '{'");
@@ -967,6 +989,11 @@ method void expr_list1()
 method void eat()
 {
 	lex.shift();
+	if (lex.empty() != 0) {
+		lookstring := null;
+		lookahead := null;
+		return;
+	}
 	lookahead := lex.get_at(0);
 	if (lookahead == null) {
 		lookstring := null;
@@ -976,6 +1003,11 @@ method void eat()
 		 	|| (lookahead.get_type() == Alexer.$Ccomment))
 	{
 		lex.shift();
+		if (lex.empty() != 0) {
+			lookstring := null;
+			lookahead := null;
+			return;
+		}
 		lookahead := lex.get_at(0);
 	}
 	lookstring := lookahead.get_data();

@@ -8,6 +8,14 @@ all: zjc
 	gcc -m64 -ggdb -Wall -o dj src.jack.c -lX11 -lGL -lGLU 
 	./dj src
 
+grind:
+	scc -c src.jack.c
+	ld -Map=map src.jack.o /u/scc/lib/libscc.a /u/scc/lib/crt0.o
+	rm -f callgrind.out.*
+	#cc src.jack.c
+	valgrind --tool=callgrind ./a.out t1
+	kcachegrind callgrind.out.*
+
 zjc: zjc.c
 	gcc -m64 -ggdb -Wall -o zjc zjc.c -lX11 -lGL -lGLU 
 
@@ -69,6 +77,7 @@ clean:
 	rm -rf jack-linux
 	rm -f jack-linux.tar.gz
 	rm -f dj src.jack.c hello.jack.c zdj hi
+	rm -f callgrind.* vgcore.*
 
 hello:
 	cc -o jack.run tools/jackc.c -lX11 -lGL -lGLU 

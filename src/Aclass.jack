@@ -6,6 +6,7 @@ field int prep_kind;
 field int prep_type;
 field Atoken prep_type_id;
 field Atoken prep_name;
+field buffer implement;
 field buffer members;
 field Amember member;
 field int field_index;
@@ -80,6 +81,7 @@ constructor Aclass new(in Atoken token)
 	tok := token;
 	next := null;
 	members := buffer.new(256);
+	implement := buffer.new(1);
 	field_index := -1;
 	statement := null;
 	stm_stack := buffer.new(2);
@@ -91,6 +93,7 @@ virtual void dispose()
 {
 	// FIXME free children and data
 	members.dispose();
+	implement.dispose();
 	std.free(this);
 	return;
 }
@@ -99,6 +102,17 @@ method void error(in string err)
 {
 	console.log(err);
 	std.exit(-1);
+	return;
+}
+
+method buffer get_implement()
+{
+	return implement;
+}
+
+method void add_implement(in Atoken x)
+{
+	implement.push(x);
 	return;
 }
 

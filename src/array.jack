@@ -1,4 +1,5 @@
 class array {
+field int dummy;
 function array new(in int size)
 {
 	var array a;

@@ -41,7 +41,7 @@ method void set_size(in int ns)
 		return;
 	}
 	ops := string.new(ns+1);
-	std.strcat(ops, this, ns);
+	std.append(ops, 0,  this, 0, size);
 	b := _str;
 	_str := ops.get_buf();
 	ops.set_buf(b);
@@ -71,7 +71,7 @@ method void set(in string src)
 		size := sl;
 	}
 	std.str_set_at(this, 0, '\0');
-	std.strcat(this, src, sl);
+	std.append(this, 0, src, 0, sl);
 	return;
 }
 
@@ -96,15 +96,22 @@ method void add_char(in int num)
 
 method void add(in string src)
 {
-	var int sl, tl, ns;
-	sl := std.strlen(src);
-	tl := std.strlen(this);
-	ns := sl + tl + 1;
-	set_size(ns);
-	std.strcat(this, src, ns);
-	size := ns;
+	add_at(std.strlen(this), src);
 	return;
 }
+
+method void add_at(in int tl, in string src)
+{
+	var int sl, ns;
+	sl := std.strlen(src);
+	ns := sl + tl + 1;
+	if (ns >= size) {	
+		set_size(ns * 2);
+	}
+	std.append(this, tl, src, 0,  ns);
+	return sl + tl;
+}
+
 
 method int indexof(in int start_pos, in string needle)
 {
@@ -134,7 +141,7 @@ method void substr(in int start_pos, in int length_, out string result)
 	}	
 	result.set_size(length_ + 1);
 	std.str_set_at(result, 0, '\0');
-	std.strsub(result, start_pos, this, length_);
+	std.append(result, 0, this, start_pos, length_);
 	return;
 }
 

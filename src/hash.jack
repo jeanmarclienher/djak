@@ -30,7 +30,7 @@ virtual void dispose()
 	while (i < size) {
 		cur := _arr[i];
 		while (cur != null) {
-			next := next[hash.$Cnext];
+			next := cur[hash.$Cnext];
 			cur.dispose();
 			cur := next;
 		}
@@ -54,8 +54,9 @@ method array add(in string key, in array value)
 	var int cmp;
 	h := key.get_hash();
 	hh := h;
-	h := h - ((h / size) * size); //FIXME  modulo
+	h := h % size; 
 	old := _arr[h];
+	cur := null;
 	if (old == null) {
 		cur := array.new(4);
 		cur[hash.$Cnext] := null;
@@ -115,7 +116,7 @@ method array get(in string key)
 	var int cmp;
 	h := key.get_hash();
 	hh := h;
-	h := h - ((h / size) * size); //FIXME  modulo
+	h := h % size;
 	next := _arr[h];
 	while (next != null) {
 		if (next[hash.$Chash] == hh) {

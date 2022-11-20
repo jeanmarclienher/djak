@@ -108,19 +108,31 @@ var std__strlen(var str)
 }
 
 // dest size must be maxlen+1
-var std__append(var dest, var dpos, var src, var start, var maxlen)
+var std__strsub(var dest, var start,  var src, var maxlen)
 {
+#ifdef __SUBC__
+	int dl;
 	char *d;
 	char *s;
-	d = (char*)string__get_buf(dest) + dpos;
+	var n;
+
+	d = (char*)string__get_buf(dest);
 	s = (char*)string__get_buf(src) + start;
-	maxlen -= dpos;
-	if (maxlen < 0) {
-		maxlen = 0;
+	dl = _strlen(d);
+	n = dl;
+	d += dl;
+	n = 0;
+	while (n < maxlen && *s) {
+		*d = *s;
+		s++;
+		d++;
+		n++;
 	}
-	memmove(d, s, maxlen);
-	d += maxlen;
 	*d = '\0';
+#else
+	strncat((char*)string__get_buf(dest), 
+		((char*)string__get_buf(src))+start, maxlen);
+#endif
 	return 0;
 }
 
@@ -177,14 +189,8 @@ var std__strhash(var s)
 	var h = 0;
        	p = (char*)string__get_buf(s);
 	while (*p) {
-		h += (h << 4) ^ *p;
+		h = (h << 4) ^ *p;
 		p++;
-	}
-	if (h < 0) {
-		h = -h;
-		if (h < 0) {
-			h = 0;
-		}
 	}
 	return h;
 }

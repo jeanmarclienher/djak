@@ -6,12 +6,13 @@ field string _str;
 field buffer _pool;
 field int pos;
 field int line;
-field buffer _files;
 field string _token;
 field int type;
 field int c;
 field int len;
 field int enable_escape;
+field hash _stringh;
+field buffer _syms;
 
 field int in_string;
 field int in_quote;
@@ -41,7 +42,9 @@ constructor Alexer new()
 	_str := string.new(1024);
 	_token := string.new(256);
 	_pool := buffer.new(32);
-	_files := buffer.new(32);
+	_stringh := hash.new(4096);
+	_syms := buffer.new(2048);
+	_syms.push(0);
 	pos := 0;
 	line := 1;
 	c := 0;
@@ -69,7 +72,8 @@ virtual void dispose()
 	_pool.dispose();
 	_token.dispose();
 	_str.dispose();
-	_files.dispose();
+	_syms.dispose();
+	_stringh.dispose();
 	std.free(this);
 	return;
 }
@@ -78,9 +82,7 @@ method void begin(in string file_)
 {
 	pos := 0;
 	line := 1;
-	_src := string.new(12);
-	_src.add(file_);
-	_files.push(_src);
+	_src := get_string(file_);
 	return;
 }
 
@@ -104,6 +106,27 @@ method void set_enable_escape(in int v)
 {
 	enable_escape := v;
 	return;
+}
+
+method string get_string(in string str_)
+{
+	var string s;
+	var int i;
+	i := _stringh.get(str_);
+	if (i > 0) {
+		return _syms.get_at(i);
+	}
+	s := string.new(str_.length() + 2);
+	s.add(str_);
+	_stringh.add(s, _syms.length());
+	_syms.push(s);
+	return s;	
+
+}
+
+method int get_string_id(in string str_) 
+{
+	return _stringh.get(str_);
 }
 
 method void add(in string str_)
@@ -198,9 +221,9 @@ method void validate(in int type_)
 	if (type_ == Alexer.$Cnewline) {
 		line := line + 1;
 	}
-	t := Atoken.new(type_, _token, line, _src);
+	t := Atoken.new(type_, get_string(_token), line, _src);
 	_pool.push(t);
-	_token := string.new(3);
+	_token.set_at(0, '\0');
 	return;
 }
 
@@ -255,7 +278,7 @@ method int state()
 		in_escape := 0;
 		return 1;
 	} else if (in_string != 0) {
-		if (c == '\"') { 
+		if (c == '"') { 
 			in_string := 0;
 			validate(Alexer.$Cstring);
 		} else  if (c == '\\') { 
@@ -503,7 +526,6 @@ method int state()
 
 		}
 	}
-	console.log("TOKEN");
 	return 0;
 }
 
@@ -515,6 +537,5 @@ method void finish()
 	validate(Alexer.$Cend);
 	return;
 }
-
 
 } // class

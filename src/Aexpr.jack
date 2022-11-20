@@ -10,6 +10,7 @@ field string value;
 field string value2;
 field int flags;
 field Atoken origin;
+field buffer data;
 
 constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
 {
@@ -23,6 +24,7 @@ constructor Aexpr new(in int op_, in int precedence_, in int associativity_)
 	value2 := null;
 	flags := 0;
 	origin := null;
+	data := null;
 	return this;
 }
 
@@ -30,6 +32,70 @@ virtual void dispose()
 {
 	std.free(this);
 	return;
+}
+
+method void clear_data()
+{
+	if (data != null) {
+		data.dispose();
+	}
+	data := null;
+	return;
+}
+
+method void add_data(in string value)
+{
+	if (value == null) {
+		return;
+	}
+	if (value.length() < 1) {
+		return;
+	}
+	if (data == null) {
+		data := buffer.new(3);
+	}
+	data.push(value);
+	return;
+}
+
+method buffer get_data()
+{
+	return data;
+}
+
+method void merge_data(in buffer buf)
+{
+	var int l;
+	l := 1;
+	if (buf != null) {
+		l := buf.length();
+	}
+	if (data == null) {
+		data := buffer.new(l);	
+	}
+	if (buf == null) {
+		return;
+	}
+	data.append(buf);
+	return;
+}
+
+method string data_to_string(in string s)
+{
+	var int l;
+	var int i;
+	var int ol;
+	if (data == null) {
+		return s;
+	}
+	ol := s.length();
+	l := data.length();
+	i := 0;
+	while (i < l) {
+		ol := s.add_at(ol, data.get_at(i));
+		i := i + 1;
+	}
+	return s;
 }
 
 method Atoken get_origin()
@@ -67,7 +133,6 @@ method void set_left(in Aexpr l)
 }
 
 method Aexpr get_parent()
-
 {
 	return parent;
 }
@@ -91,16 +156,25 @@ method void set_value2(in string v)
 
 method string get_value()
 {
-	return value;
+	if (data == null) {
+		return null;
+	}
+	return data.get_at(0);
 }
 
 method void set_value(in string v)
 {
-	value := v;
+	// FIXME
+	if (data != null) {
+		data.dispose();
+	}
+	data := buffer.new(1);
+	data.push(v);
+	//value := v;
 	return;
 }
 
-method string get_op()
+method int get_op()
 {
 	return op;
 }
